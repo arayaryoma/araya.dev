@@ -1,0 +1,235 @@
+
+<!doctype>
+<html lang="ja">
+
+<head>
+  <meta content='package.jsonに指定するdependencies, devDependenciesなどの使い方 - Allajah&#39;s Reservoir' name='title' />
+  <meta content='package.jsonに指定するdependencies, devDependenciesなどの使い方 - Allajah&#39;s Reservoir' name='og:title' />
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="//necolas.github.io/normalize.css/7.0.0/normalize.css">
+  <title>package.jsonに指定するdependencies, devDependenciesなどの使い方 - Allajah&#39;s Reservoir</title>
+  <link href='http://blog.araya.dev/images/favicon.png' rel='shortcut icon'>
+<link href='http://blog.araya.dev/assets/main.css' rel='stylesheet' type='text/css' />
+
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type' />
+
+  <meta content='http://blog.araya.dev/posts/package-json-dependencies.html' property='og:url' />
+  <meta content="dependenciesmodule名をkey、バージョンをvalueとしたObjectで定義する。"dependencies": {  "react": "^15.6.0"  }tarballやgitのURLも使うことができる。de..." property='og:description' />
+  <meta content="article" property="og:type" />
+
+<!-- - -->
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-104175258-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+
+</head>
+
+<body>
+  <header class="site-title">
+    <a href="http://blog.araya.dev">
+        <img src="http://blog.araya.dev/images/icon_circle.png" alt="Home" width="80" height="80">
+      </a>
+    <p>Allajah's Reservoir</p>
+  </header>
+  <div class="container">
+      <nav aria-label="Main">
+        <ul>
+          
+          <li>
+            <a class="" href="http://blog.araya.dev/">
+          Posts
+        </a> 
+          </li>
+        </ul>
+      </nav>
+      <main class="">
+        
+          
+          <div class="">03 Jul 2017</div>
+          
+          <h1 class="page-title"> package.jsonに指定するdependencies, devDependenciesなどの使い方 </h1>
+          
+          <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+          <script>
+            ! function(d, s, id) {
+              var js, fjs = d.getElementsByTagName(s)[0];
+              if (!d.getElementById(id)) {
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "//platform.twitter.com/widgets.js";
+                fjs.parentNode.insertBefore(js, fjs);
+              }
+            }(document, "script", "twitter-wjs");
+          </script>
+          <a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+<script
+  type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+
+
+          
+        
+        <div class="markdown-body">
+          <h2 id="dependencies">dependencies</h2>
+<p>module名をkey、バージョンをvalueとしたObjectで定義する。</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="s2">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="s2">"react"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^15.6.0"</span><span class="w">
+  </span><span class="p">}</span></code></pre></figure>
+
+<p>tarballやgitのURLも使うことができる。</p>
+
+<h2 id="devdependencies">devDependencies</h2>
+<p>書き方は<code class="highlighter-rouge">dependencies</code>と同じ。ビルドやテスト、ドキュメント作成のためのフレームワークなど、対象となるmoduleの<em>開発</em>に必要な依存関係を記述する。
+あるmoduleをインストールしたとき、そのmoduleにdevDependenciesとして指定されているmoduleは依存関係として解決されない。
+CoffeeScript, TypeScriptなどのAltJSやES最新版をCommonJS向けにコンパイル/トランスパイルする必要があるmoduleの場合は、 <code class="highlighter-rouge">scripts.prepare</code> にビルドスクリプトを指定しておくとよい。</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="s2">"devDependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="s2">"coffee-script"</span><span class="p">:</span><span class="w"> </span><span class="s2">"~1.6.3"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="s2">"scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="s2">"prepare"</span><span class="p">:</span><span class="w"> </span><span class="s2">"coffee -o lib/ -c src/index.coffee"</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<p>これによってnpm registryにpublishされる前に <code class="highlighter-rouge">scripts.prepare</code> で指定したコマンドが実行される。</p>
+
+<h2 id="peerdependencies">peerDependencies</h2>
+<p>書き方は<code class="highlighter-rouge">dependencies</code>と同じ。</p>
+
+<p>対象となるmoduleが特定のmoduleの特定のバージョンに依存している時に使用する。
+タスクランナーのプラグインが、そのタスクランナーの特定のバージョンでしか動作しないときなどに指定する。
+peerDependenciesに指定されているmoduleがプロジェクトにインストールされてない場合警告が出る。</p>
+
+<p>例えば、webpack-dev-serverはpeerDependencyとして<a href="https://github.com/webpack/webpack-dev-server/blob/master/package.json#L7">webpackを指定している</a>ので、webpack-dev-server単体でインストールしたときには動作せず、npmは警告を出してくれる。</p>
+
+<p class="filename">package.json</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npm-sample"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"webpack-dev-server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^2.6.1"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ npm install
+npm WARN webpack-dev-server@2.6.1 requires a peer of webpack@^2.2.0 || ^3.0.0 but none was installed.
+npm WARN webpack-dev-middleware@1.12.0 requires a peer of webpack@^1.0.0 || ^2.0.0 || ^3.0.0 but none was installed.
+</code></pre></div></div>
+
+<p>peerDependencyのエラーが出た時は指定されているdependencyが解決できるようにしなければならない。</p>
+
+<p class="filename">package.json</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npm-sample"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"webpack"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^3.4.1"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"webpack-dev-server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^2.6.1"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<h2 id="bundleddependencies-または-bundledependencies">bundledDependencies または bundleDependencies</h2>
+<p>package名を配列で記述する。<br />
+<code class="highlighter-rouge">npm pack</code>によりnpm packageをtarball形式で作成し、他のプロジェクトからそのtgzファイルを<code class="highlighter-rouge">npm install</code>したときに、bundleDependenciesで指定した依存が解決される。</p>
+
+<p class="filename">/tmp/npm-sample/package.json</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npm-sample"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v0.0.0"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"bundledDependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"colorpack"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ npm pack
+npm-sample-0.0.0.tgz
+</code></pre></div></div>
+
+<p class="filename">/tmp/bundle-sample/package.json</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bundle-sample"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"npm-sample"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file:../npm-sample/npm-sample-0.0.0.tgz"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<p class="filename">/tmp/bundle-sample/package-lock.json</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bundle-sample"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"lockfileVersion"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"requires"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"colorpack"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0.2"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"resolved"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://registry.npmjs.org/colorpack/-/colorpack-0.0.2.tgz"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"npm-sample"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file:../npm-sample/npm-sample-0.0.0.tgz"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"requires"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"colorpack"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0.2"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<p><code class="highlighter-rouge">/tmp/npm-sample</code>のpackage.json内でbundledDependenciesとして指定した<code class="highlighter-rouge">colorpack</code>が、依存関係として解決されてるのがわかる。</p>
+
+<h2 id="optionaldependencies">optionalDependencies</h2>
+
+<p>名前の通り、必須ではないオプショナルなdependencyを指定する。optionalDependencyをコード内で使用する場合、dependencyがインストールされているかを判定する必要がある。</p>
+
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="k">try</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">foo</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'foo'</span><span class="p">)</span>
+  <span class="kd">var</span> <span class="nx">fooVersion</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'foo/package.json'</span><span class="p">).</span><span class="nx">version</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">er</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">foo</span> <span class="o">=</span> <span class="kc">null</span>
+<span class="p">}</span>
+<span class="k">if</span> <span class="p">(</span> <span class="nx">notGoodFooVersion</span><span class="p">(</span><span class="nx">fooVersion</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+  <span class="nx">foo</span> <span class="o">=</span> <span class="kc">null</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nx">foo</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">foo</span><span class="p">.</span><span class="nx">doFooThings</span><span class="p">()</span>
+<span class="p">}</span></code></pre></figure>
+
+<h1 id="まとめ">まとめ</h1>
+<p>ライブラリを作る時は<code class="highlighter-rouge">dependencies</code>, <code class="highlighter-rouge">devDependencies</code>, <code class="highlighter-rouge">peerDependencies</code>を使い分ける必要があるけど、製品作る時は全部<code class="highlighter-rouge">dependencies</code>もしくは<code class="highlighter-rouge">devDependencies</code>にまとめて書いちゃって問題なさそう。
+分かりやすさのためにテストやビルドツールなんかは<code class="highlighter-rouge">devDependencies</code>、コード内で使用しているライブラリは<code class="highlighter-rouge">dependencies</code>に書いてもいいかなとは思う。</p>
+
+<p>bundledDependenciesは使いどころがよく分からない 🤔</p>
+
+        </div>
+        <p class="mt4">
+  Allajah
+  <span class="silver">at 11:09</span>
+</p>
+
+
+      </main>
+  </div>
+  <footer class="footer">
+    <div class="footer-sns">
+      <a href="https://twitter.com/_araya_" target="_blank" rel="noopener noreferrer"><i class="fa fa-twitter"></i></a>
+      <a href="https://github.com/allajah" target="_blank" rel="noopener noreferrer"><i class="fa fa-github"></i></a>
+      <a href="/feed.xml" target="_blank" rel="noopener noreferrer"><i class="fa fa-rss"></i></a>
+    </div>
+  </footer>
+</body>
+
+</html>

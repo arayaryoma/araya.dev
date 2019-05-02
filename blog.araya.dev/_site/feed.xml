@@ -1,0 +1,1465 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://blog.araya.dev/feed.xml" rel="self" type="application/atom+xml" /><link href="http://blog.araya.dev/" rel="alternate" type="text/html" /><updated>2019-05-03T08:25:41+09:00</updated><id>http://blog.araya.dev/</id><title type="html">Allajah’s Reservoir</title><subtitle>Allajah(Rio)'s blog</subtitle><entry><title type="html">ECMAScriptのproposalで個人的に気になっているものを紹介する</title><link href="http://blog.araya.dev/posts/ecmascript-proposals.html" rel="alternate" type="text/html" title="ECMAScriptのproposalで個人的に気になっているものを紹介する" /><published>2018-12-06T00:00:00+09:00</published><updated>2018-12-06T00:00:00+09:00</updated><id>http://blog.araya.dev/posts/ecmascript-proposals</id><content type="html" xml:base="http://blog.araya.dev/posts/ecmascript-proposals.html">&lt;p&gt;これは&lt;a href=&quot;https://adventar.org/calendars/3004&quot;&gt;#kosen10s Advent Calendar 2018&lt;/a&gt;６日目の記事です。&lt;/p&gt;
+
+&lt;p&gt;自分の担当日を1日勘違いしていたため遅刻です。&lt;/p&gt;
+
+&lt;p&gt;今日はECMAScriptのproposalについて書きます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://babeljs.io/blog/2018/12/03/7.2.0&quot;&gt;12/3のBabel 7.2.0のリリース&lt;/a&gt;で、Pipeline OperatorとPrivate Instance Methodsの実装が入りました。
+特にPipeline OperatorはJavaScript界隈以外でも各所で話題になっていました。&lt;/p&gt;
+
+&lt;p&gt;JavaScriptの仕様標準であるECMAScriptにはこれらの他にも面白く利便性の高い提案(proposal)がたくさん出されています。
+この記事ではその中でも僕が気になっている・期待しているものをいくつか紹介します。&lt;/p&gt;
+
+&lt;h2 id=&quot;ecmascriptの仕様追加の進められ方&quot;&gt;ECMAScriptの仕様追加の進められ方&lt;/h2&gt;
+&lt;p&gt;proposalを紹介する前に、proposalが出されてからECMAScriptに正式に入るまでの流れについて、
+少しだけ触れておこうと思います。&lt;/p&gt;
+
+&lt;p&gt;ECMAScriptは&lt;a href=&quot;https://www.ecma-international.org/memento/tc39.htm&quot;&gt;tc39&lt;/a&gt;という団体で仕様の策定が進められています。
+proposalは&lt;a href=&quot;https://github.com/tc39/proposals&quot;&gt;GitHubのリポジトリ&lt;/a&gt;にまとめられていて、
+&lt;a href=&quot;https://github.com/tc39/ecma262/blob/master/CONTRIBUTING.md&quot;&gt;Contributing guideline&lt;/a&gt;に従えば、誰でも出すことができます。&lt;/p&gt;
+
+&lt;p&gt;新たに出されたproposalはstage0からstage4まで５つのプロセスを通って行き、最終的にECMAScriptに正式に入ることになります。&lt;/p&gt;
+
+&lt;p&gt;stage0からstage4までどのような条件で上がっていくかは&lt;a href=&quot;https://tc39.github.io/process-document/&quot;&gt;EcmaScriptのドキュメント&lt;/a&gt;に
+まとめられていますが、ここで各ステージに進むための代表的な条件を簡単に紹介します。&lt;/p&gt;
+
+&lt;h3 id=&quot;stage0-strawmanたたき台&quot;&gt;Stage0 Strawman(たたき台)&lt;/h3&gt;
+&lt;p&gt;新しい提案が出されただけの状態です。
+Stage0のproposalは、&lt;a href=&quot;https://github.com/tc39/proposals/blob/master/stage-0-proposals.md&quot;&gt;Stage1~4とは別けてまとめられています&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h3 id=&quot;stage1-proposal提案&quot;&gt;Stage1 Proposal(提案)&lt;/h3&gt;
+&lt;p&gt;Stage1に進むための条件は、&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;対象の新仕様追加を誰が牽引するか(“Champion”)が定められている。&lt;/li&gt;
+  &lt;li&gt;問題性または必要性についてと、解決策についての概説がある。&lt;/li&gt;
+  &lt;li&gt;仕様自体の横断的な懸念と実装難易度について述べられている。&lt;/li&gt;
+  &lt;li&gt;ユースケースの説明がある&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;などです。
+Stage1では実際にPolyfillやdemoが実装され、実装難易度やもたらす可能性のある副作用について議論されます。&lt;/p&gt;
+
+&lt;p&gt;前述した&lt;a href=&quot;https://github.com/tc39/proposal-pipeline-operator&quot;&gt;Pipeline Operator&lt;/a&gt;は現在このStageです。&lt;/p&gt;
+
+&lt;h3 id=&quot;stage2-draft下書き&quot;&gt;Stage2 Draft(下書き)&lt;/h3&gt;
+&lt;p&gt;Stage2に進むための条件は&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;spec text(仕様書)の初期案&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;です。
+Stage2では具体的にSyntaxやsemanticsを正確に定めます。
+TC39はここで、仕様が開発され、最終的に標準仕様に組み込まれることを期待します。&lt;/p&gt;
+
+&lt;h3 id=&quot;stage3-candidate候補&quot;&gt;Stage3 Candidate(候補)&lt;/h3&gt;
+&lt;p&gt;Stage3に進むための条件は&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;仕様書の完了&lt;/li&gt;
+  &lt;li&gt;指定されたレビューアーが仕様書を承認している&lt;/li&gt;
+  &lt;li&gt;全てのECMAScript編集者が仕様書を承認している&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;です。
+Stage3では仕様の策定は完了し、ブラウザの実装や、ユーザーからのフィードバックを待ちます。
+この時点でECMAScript標準に入る可能性は非常に高いと言えます。もちろんここで落ちる可能性もあります。&lt;/p&gt;
+
+&lt;h3 id=&quot;stage4-finished完了&quot;&gt;Stage4 Finished(完了)&lt;/h3&gt;
+&lt;p&gt;Stage4に進むための条件は&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;2つ以上の競合する主要なJSエンジンで実装されている&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/tc39/test262&quot;&gt;tc39/test262&lt;/a&gt;の受け入れテストが主要なユースシナリオ用に作成され、マージされている。&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/tc39/ecma262&quot;&gt;tc39/ecma262&lt;/a&gt;に、統合された仕様書とともに全てのPRが提出されている。&lt;/li&gt;
+  &lt;li&gt;全てのECMAScript編集者がPRを全て承認している。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;などです。Stage4に入った仕様は、次回のECMAScriptのリリースで標準仕様としてリリースされることが決定しています。&lt;/p&gt;
+
+&lt;p&gt;Stage4のproposalは&lt;a href=&quot;https://github.com/tc39/proposals/blob/master/finished-proposals.md&quot;&gt;ここ&lt;/a&gt;から確認できます。&lt;/p&gt;
+
+&lt;h2 id=&quot;個人的に気になっているproposalをいくつか&quot;&gt;個人的に気になっているproposalをいくつか&lt;/h2&gt;
+&lt;p&gt;現在Stage1~3で80個ほど、Stage0も含めると100程度のproposalが出されていて、全て紹介するのは厳しいので、
+個人的に気になっているものをかいつまんで紹介します。&lt;/p&gt;
+
+&lt;p&gt;※Stageの状態は2018年12月6日現在のものです。&lt;/p&gt;
+
+&lt;h3 id=&quot;optional-catch-binding-stage4&quot;&gt;&lt;a href=&quot;https://github.com/tc39/proposal-optional-catch-binding&quot;&gt;Optional catch binding&lt;/a&gt; (Stage4)&lt;/h3&gt;
+&lt;p&gt;JavaScriptのtry-catch構文では、catchでerrorの値を受け取らなければなりません。&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Do something expected error may be threw&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;error&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;このproposalは、 &lt;code class=&quot;highlighter-rouge&quot;&gt;catch&lt;/code&gt;でエラーの値を受け取らなくてもいいとするものです。&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Do something expected error may be threw&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;error&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;try&lt;/code&gt;ブロックで&lt;code class=&quot;highlighter-rouge&quot;&gt;throw&lt;/code&gt; された値が不要なとき、無駄な変数を作らずに済みます。
+Babelでtranspileする際は&lt;a href=&quot;https://www.npmjs.com/package/@babel/plugin-proposal-optional-catch-binding&quot;&gt;@babel/plugin-proposal-optional-catch-binding&lt;/a&gt;を利用します。
+Babelでtranspileすると以下のコードが出力されます。&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;s2&quot;&gt;&quot;use strict&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// Do something expected error may be threw&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;_unused&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;error&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Optional catch bindingは2019年にリリースされるECMAScriptに搭載予定です。&lt;/p&gt;
+
+&lt;h3 id=&quot;import-stage3&quot;&gt;&lt;a href=&quot;https://github.com/tc39/proposal-dynamic-import&quot;&gt;import()&lt;/a&gt; (Stage3)&lt;/h3&gt;
+&lt;p&gt;ESModuleをロードするための&lt;code class=&quot;highlighter-rouge&quot;&gt;import&lt;/code&gt;構文はトップレベルでの静的なローディングのみサポートしています。&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// valid&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'some-module'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// invalid&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;expression&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;variable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;moduleName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;このproposalは、ESModuleを動的にロードするための&lt;code class=&quot;highlighter-rouge&quot;&gt;import()&lt;/code&gt; 関数を追加するためのものです。&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;moduleSpecifier&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'./utils.mjs'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;import&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;moduleSpecifier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// Use the module after loaded&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#Browser_compatibility&quot;&gt;IEを除く最新のメジャーブラウザではすでに利用可能になっています&lt;/a&gt;。
+ESModuleの動的importについては&lt;a href=&quot;https://developers.google.com/web/updates/2017/11/dynamic-import&quot;&gt;この記事&lt;/a&gt;がわかりやすいと思います。　&lt;/p&gt;
+
+&lt;h3 id=&quot;bigint-stage3&quot;&gt;&lt;a href=&quot;https://github.com/tc39/proposal-bigint&quot;&gt;BigInt&lt;/a&gt; (Stage3)&lt;/h3&gt;
+&lt;p&gt;BigIntはJavaScriptのIntegerを拡張するためのものです。
+現状JavaScriptで扱える整数の最大値は&lt;code class=&quot;highlighter-rouge&quot;&gt;Number.MAX_SAFE_INTEGER + 1&lt;/code&gt;で取得できます。&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;MAX_SAFE_INTEGER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// ↪ 9007199254740991, 2^53 - 1&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// ↪ 9007199254740992&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;z&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// ↪ 9007199254740992&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;BigIntはこれより大きい整数値を扱えます。
+BigIntは整数値の最後に&lt;code class=&quot;highlighter-rouge&quot;&gt;n&lt;/code&gt;をつけることで表現します。&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;number&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;9007199254740993&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; 9007199254740992&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;bigIntNumber&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;9007199254740993&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; 9007199254740993n&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;若しくは、&lt;code class=&quot;highlighter-rouge&quot;&gt;BigInt()&lt;/code&gt;関数にNumberまたはStringを渡すことで作成できます。&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;value1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;BigInt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;9007199254740993&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; 9007199254740993n&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;value2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;BigInt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'9007199254740993'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; 9007199254740993n&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;また、BigIntはNumber型に属していなく、JavaScriptの全く新しいprimitiveです。&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;typeof&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; 'number' &lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;typeof&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; 'bigint'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;numeric-separator-stage2&quot;&gt;&lt;a href=&quot;https://github.com/tc39/proposal-numeric-separator&quot;&gt;Numeric Separator&lt;/a&gt; (Stage2)&lt;/h3&gt;
+&lt;p&gt;Number型の値を読みやすくするためのものです。数値の先頭および末尾以外の、任意の場所に &lt;code class=&quot;highlighter-rouge&quot;&gt;_&lt;/code&gt; を挿入することができます。&lt;/p&gt;
+
+&lt;p&gt;読みやすくするためだけなので、 &lt;code class=&quot;highlighter-rouge&quot;&gt;_&lt;/code&gt; を挿入する位置で、数値が変わることはなく、単に取り除かれます。&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;_000_000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; 1000000&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;_00&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; 100&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mh&quot;&gt;0xFF&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;_BA_54&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; 16759380&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;throw-expressions-stage2&quot;&gt;&lt;a href=&quot;https://github.com/tc39/proposal-throw-expressions&quot;&gt;throw expressions&lt;/a&gt; (Stage2)&lt;/h3&gt;
+&lt;p&gt;JavaScriptの&lt;code class=&quot;highlighter-rouge&quot;&gt;throw&lt;/code&gt;文を式としても使えるようにしようというproposalです。&lt;/p&gt;
+
+&lt;p&gt;例えば、引数を1つ受取り、引数がなかった場合は &lt;code class=&quot;highlighter-rouge&quot;&gt;'required!'&lt;/code&gt;、引数が文字列出なかった場合は &lt;code class=&quot;highlighter-rouge&quot;&gt;'argument must be string'&lt;/code&gt;
+とErrorをthrowし、文字列であれば標準出力に出力する関数&lt;code class=&quot;highlighter-rouge&quot;&gt;test&lt;/code&gt;を、現行のJavaScriptで書くと&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;test&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;param&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;param&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;undefined&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'required!'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;typeof&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;param&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!==&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'string'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'argument must be string'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;param&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;このようになります。throw expressionを用いると以下のように書けるようになります。&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;test&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;param&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'required'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;typeof&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;param&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'string'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;param&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'argument must be string'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;top-level-await-stage2&quot;&gt;&lt;a href=&quot;https://github.com/tc39/proposal-top-level-await&quot;&gt;Top-level await&lt;/a&gt; (Stage2)&lt;/h3&gt;
+&lt;p&gt;EcmaScriptで入ったasync/awaitの拡張で、今までasync function内でしか使用できなかった&lt;code class=&quot;highlighter-rouge&quot;&gt;await&lt;/code&gt;をトップレベルで
+使えるようにしようという提案です。&lt;/p&gt;
+
+&lt;p&gt;前述した&lt;code class=&quot;highlighter-rouge&quot;&gt;import()&lt;/code&gt;は非同期で実行されPromiseを返すため、モジュールをロードしてから処理をしたい時などに有用です。&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;strings&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;import&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;`/i18n/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;navigator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;language&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'https://reservoir.allajah.com'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;手元で試したかったのですがbabelのPluginがまだ不完全なようで動きませんでした。&lt;/p&gt;
+
+&lt;h3 id=&quot;temporal-stage2&quot;&gt;&lt;a href=&quot;https://github.com/tc39/proposal-temporal&quot;&gt;Temporal&lt;/a&gt; (Stage2)&lt;/h3&gt;
+&lt;p&gt;JavaScriptのDate Objectは非常に使い勝手が悪く、それを解決するために新しく追加が提案されているObjectです。&lt;/p&gt;
+
+&lt;p&gt;Temporalは、dateやtimeといった時間を扱うためのAPIを持っていて、時差などの扱いが非常に簡潔になっています。
+TemporalがStage4まで進めば、&lt;a href=&quot;https://momentjs.com/&quot;&gt;moment&lt;/a&gt;や&lt;a href=&quot;https://github.com/iamkun/dayjs&quot;&gt;dayjs&lt;/a&gt;
+を使わなくても、標準ライブラリのみで時間が容易に扱えるようになるかもしれません。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/tc39/proposal-temporal&quot;&gt;Polyfill&lt;/a&gt;があるためすぐに使うことができますが、
+仕様が変わる可能性がまだまだあるので注意です。&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// 現在の時刻を取得&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Instant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ZonedDateTime&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;tc39-proposal-temporal&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;instant&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Instant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fromMilliseconds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// UTC&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;instant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt; 
+&lt;span class=&quot;c1&quot;&gt;// -&amp;gt; 2018-12-06T20:14:01.876000000Z&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Asia/Tokyo&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ZonedDateTime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;instant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Asia/Tokyo'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// -&amp;gt;  2018-12-07T05:14:01.876000000+09:00[Asia/Tokyo]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;realms-api-stage2&quot;&gt;&lt;a href=&quot;https://github.com/tc39/proposal-realms&quot;&gt;Realms API&lt;/a&gt; (Stage2)&lt;/h3&gt;
+&lt;p&gt;RealmsはJavaScriptを実行する環境で、global空間を仮想的に作り出すAPIです。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;new Realm()&lt;/code&gt;で作成したインスタンスで&lt;code class=&quot;highlighter-rouge&quot;&gt;evaluate&lt;/code&gt;メソッドを呼ぶと、Realm内のコンテキストで実行されるfunctionを作成できます。&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;g&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// outer global&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;r1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Realm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// root realm&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;r2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;r1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;global&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Realm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;intrinsics&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;inherit&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// realm compartment&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;f&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;r1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;evaluate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;(function() { return 17 })&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;17&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;Reflect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getPrototypeOf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;prototype&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// false&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;Reflect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getPrototypeOf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;r1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;global&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;prototype&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;Reflect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getPrototypeOf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;r2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;global&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;prototype&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;セキュリティ上の都合でglobalから切り離したり、ブラウザ上のエディタ開発で有用(らしい)です。&lt;/p&gt;
+
+&lt;h3 id=&quot;observable-stage1&quot;&gt;&lt;a href=&quot;https://github.com/tc39/proposal-observable&quot;&gt;Observable&lt;/a&gt; (Stage1)&lt;/h3&gt;
+&lt;p&gt;みんな大好き(?)ObservableもECMAScript標準にしようというproposalも出ています。
+Rx.jsのような潤沢なoperatorはまだありませんが、
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Observable.of()&lt;/code&gt;や&lt;code class=&quot;highlighter-rouge&quot;&gt;Observable.from()&lt;/code&gt;でObservableなobjectを作り、&lt;code class=&quot;highlighter-rouge&quot;&gt;subsucribe&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;unsubscribe&lt;/code&gt;するという
+馴染み深いインターフェースになっています。&lt;/p&gt;
+&lt;div class=&quot;language-typescript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;SubscriberFunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;observer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;SubscriptionObserver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Subscription&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Observable&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;constructor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;subscriber&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;SubscriberFunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;subscribe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;observer&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Observer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Subscription&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;subscribe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;onNext&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+              &lt;span class=&quot;nx&quot;&gt;onError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+              &lt;span class=&quot;nx&quot;&gt;onComplete&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Subscription&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;observable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Observable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;kr&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(...&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Observable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;kr&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;observable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Observable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Subscription&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;unsubscribe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;closed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Boolean&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;optional-chaining-stage1&quot;&gt;&lt;a href=&quot;https://github.com/tc39/proposal-optional-chaining&quot;&gt;Optional Chaining&lt;/a&gt; (Stage1)&lt;/h3&gt;
+&lt;p&gt;JavaScriptを書いてる人にとっては待望の機能だと思います。&lt;/p&gt;
+
+&lt;p&gt;JavaScriptでは下記のようなコードを書くと、7行目で例外が発生します。&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// -&amp;gt; { a: {} }&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// -&amp;gt; { }&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// -&amp;gt; undefined&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// -&amp;gt; TypeError: Cannot read property 'c' of undefined&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これはアプリケーション開発では頻繁に起こりうることで、例えばWeb APIからJSONを受取り、ネストが深い位置にある
+プロパティにアクセスする時です。&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'https://api.reservoir.allajah.com/posts'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;posts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;post&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;authorName&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;author&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;//...&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;この例だと&lt;code class=&quot;highlighter-rouge&quot;&gt;post.author&lt;/code&gt;が存在しなかった(undefined)時、&lt;code class=&quot;highlighter-rouge&quot;&gt;TypeError: Cannot read property 'name' of undefined&lt;/code&gt;が発生します。&lt;/p&gt;
+
+&lt;p&gt;Optional Chainingでこの問題を解決できるようになります。&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// -&amp;gt; { a: {} }&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// -&amp;gt; { }&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// -&amp;gt; undefined&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// undefined&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;undefined&lt;/code&gt;もしくは&lt;code class=&quot;highlighter-rouge&quot;&gt;null&lt;/code&gt;な可能性があるobjectの末尾に?をつけると、実際に&lt;code class=&quot;highlighter-rouge&quot;&gt;undefined | null&lt;/code&gt;だったとき、プロパティアクセスを行わずに&lt;code class=&quot;highlighter-rouge&quot;&gt;undefined&lt;/code&gt;が返ります。&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// ES2018&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'https://api.reservoir.allajah.com/posts'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;posts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;post&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;authorName&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;author&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;author&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'defaultName'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;//...&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// with Optional Chaining&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'https://api.reservoir.allajah.com/posts'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;posts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;post&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;authorName&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;author&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'defaultName'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;//...&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;簡潔に書けますね。&lt;/p&gt;
+
+&lt;h3 id=&quot;pipeline-operator-stage1&quot;&gt;&lt;a href=&quot;https://github.com/tc39/proposal-pipeline-operator&quot;&gt;Pipeline Operator&lt;/a&gt; (Stage1)&lt;/h3&gt;
+
+&lt;p&gt;最近少し話題になったパイプライン演算子です。
+F#やOcaml、Elixirなどを書く人にとってはおなじみだと思います。&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;double&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&amp;gt;&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;double&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// -&amp;gt; 7&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;個人的にパイプライン演算子は好きなのですが、proposalで上がってきた時は「絶対途中で落ちる」と思っていましたが、
+意外とparserの実装などが進んでいるようで驚いています。&lt;/p&gt;
+
+&lt;p&gt;TypeScriptなどの型システムがないと、JavaScriptでは使うのが難しいかも知れません。&lt;/p&gt;
+
+&lt;p&gt;Pipeline OperatorのSyntaxをどういったものにするかは&lt;a href=&quot;https://github.com/tc39/proposal-pipeline-operator/wiki&quot;&gt;何度も議論されているよう&lt;/a&gt;で、
+まだまだ不安定なので、実際に手を出すのはせめてSyntaxが決まってからにするのをお薦めします。&lt;/p&gt;
+
+&lt;h3 id=&quot;pattern-matching-stage1&quot;&gt;&lt;a href=&quot;https://github.com/tc39/proposal-pattern-matching&quot;&gt;Pattern Matching&lt;/a&gt; (Stage1)&lt;/h3&gt;
+&lt;p&gt;関数型のパラダイムを輸入してこよう、というproposalはまだまだあります。
+おなじみのPattern Matchingです。&lt;/p&gt;
+
+&lt;p&gt;まだbabel-pluginも公開されてないですが、下記のようなSemanticsになるようです。&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;jsonService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Content-Length'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;`size is &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;404&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'JSON not found'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;status&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;400&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;RequestError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;case&lt;/code&gt;で評価された値が&lt;code class=&quot;highlighter-rouge&quot;&gt;when&lt;/code&gt;ブロックとマッチした時&lt;code class=&quot;highlighter-rouge&quot;&gt;-&amp;gt; {}&lt;/code&gt; ブロックが実行されます。&lt;/p&gt;
+
+&lt;h3 id=&quot;standard-library-stage1&quot;&gt;&lt;a href=&quot;https://github.com/tc39/proposal-javascript-standard-library&quot;&gt;Standard Library&lt;/a&gt; (Stage1)&lt;/h3&gt;
+&lt;p&gt;Date Objectなどのglobal空間に置かれているものを標準ライブラリとしてimportすることによって、名前空間を切ろうという提案です。&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Date&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;std:Date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Date&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;std:Date+2.1.6-alpha.1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;まだSemanticsや仕様も決まっていなく、Polyfillもありません。&lt;/p&gt;
+
+&lt;h3 id=&quot;asset-references-stage1&quot;&gt;&lt;a href=&quot;https://github.com/sebmarkbage/ecmascript-asset-references&quot;&gt;Asset References&lt;/a&gt; (Stage1)&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;import&lt;/code&gt;はES modulesをロードするための構文ですが、imageやCSSなどのassetをロードする構文を追加しようという提案です。&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;asset&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Logo&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;./logo.gif&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;loadLogo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;img&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;createElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;img&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;src&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;URL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;createObjectURL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Logo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Stage2,3と上がっていくか微妙ではありますが、機能としては非常に大きいので、数年後に業界を揺るがしているかも知れないです。&lt;/p&gt;
+
+&lt;h2 id=&quot;edgeのjsエンジンがv8に&quot;&gt;EdgeのJSエンジンがV8に&lt;/h2&gt;
+&lt;p&gt;ちょうどこの記事を書いている間に、&lt;a href=&quot;https://github.com/MicrosoftEdge/MSEdge&quot;&gt;MicrosoftがEdgeをChromiumベースに置き換える発表&lt;/a&gt;がでていました。
+EdgeのJavaScriptのエンジンがChakraからV8になると、
+前述したproposalがstep4に上がるための条件である
+「2つ以上の競合する主要なJSエンジンで実装されている(原文: Two compatible implementations which pass the acceptance tests)」
+を満たすことに影響が出るかも知れません。&lt;/p&gt;
+
+&lt;p&gt;現在主要なJavaScriptエンジンといえば&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Blink (Google)&lt;/li&gt;
+  &lt;li&gt;SpiderMonkey (Mozilla)&lt;/li&gt;
+  &lt;li&gt;JavaScriptCore (Apple)&lt;/li&gt;
+  &lt;li&gt;Chakra (Microsoft)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;の4つで、ここからChakraを抜いた3つのうち2つのブラウザで実装される必要があります。&lt;/p&gt;
+
+&lt;p&gt;10年後くらいにはV8大統一時代が来て、ECMAScriptは実質V8の仕様になるかも・・・？&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;ECMAScriptには新しい機能仕様がどんどん提案・追加されていて、JavaScriptは進化し続けています。&lt;/p&gt;
+
+&lt;p&gt;JavaScriptは使われている環境の性質上、後方互換性を保つのが必須になっています。
+古いAPIが消えるようなことはなかなかないですが、
+JS開発者は新しくモダンなAPIを追いかけ、きれいでバグの少ないコードを書くことが求められています。&lt;/p&gt;
+
+&lt;p&gt;明日は&lt;a href=&quot;https://twitter.com/ysakasin&quot;&gt;@ysakasin&lt;/a&gt;の&lt;a href=&quot;https://sakasin.net/blog/solving-othello&quot;&gt;オセロの完全解析を解説する&lt;/a&gt;
+です！もう上がってます！&lt;/p&gt;</content><author><name></name></author><summary type="html">これは#kosen10s Advent Calendar 2018６日目の記事です。</summary></entry><entry><title type="html">React Nativeの一部のライブラリが原因でAndroidのビルドが失敗する件について</title><link href="http://blog.araya.dev/posts/react-native-packages-build-error-by-gms.html" rel="alternate" type="text/html" title="React Nativeの一部のライブラリが原因でAndroidのビルドが失敗する件について" /><published>2018-03-22T10:00:00+09:00</published><updated>2018-03-22T10:00:00+09:00</updated><id>http://blog.araya.dev/posts/react-native-packages-build-error-by-gms</id><content type="html" xml:base="http://blog.araya.dev/posts/react-native-packages-build-error-by-gms.html">&lt;h2 id=&quot;何が起こっているか&quot;&gt;何が起こっているか&lt;/h2&gt;
+&lt;p&gt;React Nativeプロジェクトで、react-native-cameraなどの一部のライブラリに依存しているとAndroidのビルドが失敗する現象が起きています。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Execution failed for task ':react-native-camera:processReleaseResources'.
+
+&amp;gt; Error: more than one library with package name 'com.google.android.gms.license'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;僕が気づいたのは21日の23:00頃でした。&lt;/p&gt;
+
+&lt;h2 id=&quot;原因&quot;&gt;原因&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://developers.google.com/android/guides/releases&quot;&gt;Google Play servicesの12.0.0がリリースされた&lt;/a&gt;ことにより、ライブラリ内の &lt;code class=&quot;highlighter-rouge&quot;&gt;build.gradle&lt;/code&gt; で&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;compile 'com.google.android.gms:play-services-vision:+'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;のように、Google Play Servicesの最新バージョンを指定しているとビルドが失敗します。
+(この例ではplay-services-vision)&lt;/p&gt;
+
+&lt;h2 id=&quot;解決策&quot;&gt;解決策&lt;/h2&gt;
+
+&lt;p&gt;Google Play Servicesのバージョンを11.8.0に固定することで、ひとまずこの問題は解決します。&lt;/p&gt;
+
+&lt;p&gt;しかし、本来は各ライブラリが12.0.0に対応すべきなので、あくまで一時的な対応であることに留意してください。&lt;/p&gt;
+
+&lt;p&gt;具体的には、次のAもしくはBどちらかを施すことでビルドエラーを回避することができます。&lt;/p&gt;
+
+&lt;h3 id=&quot;a-package内のbuildgradleを書き換える&quot;&gt;A. package内のbuild.gradleを書き換える&lt;/h3&gt;
+&lt;p&gt;問題が起きているpackage(今回の例ではreact-native-camera)内のbuild.gradle(&lt;code class=&quot;highlighter-rouge&quot;&gt;node_modules/react-native-camera/android/build.gradle&lt;/code&gt;)を編集し、Google Play Servicesのバージョンを11.8.0に固定します。&lt;/p&gt;
+
+&lt;p&gt;before: &lt;code class=&quot;highlighter-rouge&quot;&gt;'com.google.android.gms:play-services-vision:+'&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;after: &lt;code class=&quot;highlighter-rouge&quot;&gt;'com.google.android.gms:play-services-vision:11.8.0'&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;b-プロジェクトのbuildgradleでgoogle-play-servicesのバージョンを1180に固定する&quot;&gt;B. プロジェクトのbuild.gradleでGoogle Play Servicesのバージョンを11.8.0に固定する&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;android/build.gradle&lt;/code&gt;に以下のように記述することで、Google Play Servicesのバージョンを固定します。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;allprojects {
+    repositories {
+        configurations.all {
+            resolutionStrategy {
+                force &quot;com.google.android.gms:play-services-vision:11.8.0&quot;
+            }
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;react-native-cameraでは現在、Gradleの他のConfigの修正と合わせて対応が進んでいます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/react-native-community/react-native-camera/pull/1374&quot;&gt;https://github.com/react-native-community/react-native-camera/pull/1374&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/react-native-community/react-native-camera/pull/1380&quot;&gt;https://github.com/react-native-community/react-native-camera/pull/1380&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;参考&quot;&gt;参考&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/facebook/react-native/issues/18479&quot;&gt;https://github.com/facebook/react-native/issues/18479&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/react-native-community/react-native-camera/issues/1370&quot;&gt;https://github.com/react-native-community/react-native-camera/issues/1370&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="React Native" /><summary type="html">何が起こっているか React Nativeプロジェクトで、react-native-cameraなどの一部のライブラリに依存しているとAndroidのビルドが失敗する現象が起きています。</summary></entry><entry><title type="html">InsideFrontend #2 に参加してきた</title><link href="http://blog.araya.dev/posts/inside-frontend-2.html" rel="alternate" type="text/html" title="InsideFrontend #2 に参加してきた" /><published>2018-02-19T16:00:00+09:00</published><updated>2018-02-19T16:00:00+09:00</updated><id>http://blog.araya.dev/posts/inside-frontend-2</id><content type="html" xml:base="http://blog.araya.dev/posts/inside-frontend-2.html">&lt;p&gt;2/11に日経カンファレンスルームで開催された&lt;a href=&quot;https://inside-frontend.com/&quot;&gt;Inside Frontend #2&lt;/a&gt;に参加してきました。&lt;/p&gt;
+
+&lt;p&gt;このイベントには去年も参加していて、非常にいいイベントだったので今年も参加させてもらいました。&lt;/p&gt;
+
+&lt;p&gt;Inside Frontendはほとんどのセッションの資料や、録画映像が配信されているので、
+この投稿では各セッションを聴いての感想とかAMAを中心に書こうと思います。&lt;/p&gt;
+
+&lt;p&gt;配信: &lt;a href=&quot;https://freshlive.tv/tech-conference/189060&quot;&gt;セミナーA&lt;/a&gt; / &lt;a href=&quot;https://freshlive.tv/tech-conference/189061&quot;&gt;セミナーB&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;資料: &lt;a href=&quot;https://inside-frontend.connpass.com/event/74625/presentation/&quot;&gt;connpassで公開されている資料&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;opening&quot;&gt;Opening&lt;/h2&gt;
+&lt;p&gt;オープニングでは会場説明やWiFi、行動規範などの諸注意がありました。&lt;/p&gt;
+
+&lt;p&gt;その後、スポンサーである&lt;a href=&quot;https://moffers.jp/&quot;&gt;moffers&lt;/a&gt;さんからサービスの紹介がありました。
+また、moffersさんの提供で、AMAの会場でコーヒーが配られていて、ありがたく頂きました。&lt;/p&gt;
+
+&lt;p&gt;moffersはレジュメをサブミットすると企業からスカウトが届く転職支援サービスで、
+オファーの時点で年収が確約されてるのは個人的にかなり好みなので、次転職する機会があったときは使いたいです。&lt;/p&gt;
+
+&lt;h2 id=&quot;varyヘッダとキャッシュバリエーションの将来the-vary-header-and-the-future-of-cache-variation-by-andrew-betts&quot;&gt;Varyヘッダとキャッシュバリエーションの将来(The Vary header and the future of cache variation) by &lt;a href=&quot;https://twitter.com/triblondon&quot;&gt;Andrew Betts&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;FastlyのAndrew Bettsによるキャッシュ周りのトークでした。(&lt;a href=&quot;https://speakerdeck.com/triblondon/vary-and-the-future-of-cache-variation&quot;&gt;資料&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;概要&quot;&gt;概要&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;フロントエンドエンジニアはマークアップやJSの知識だけ持っていれば良いわけではなく、キャッシュなどを適切に扱うためにはHTTPの知識が重要。&lt;/li&gt;
+  &lt;li&gt;キャッシュを適切に扱うためにはVaryヘッダーとCDNの理解が必要&lt;/li&gt;
+  &lt;li&gt;余分なレスポンスを受け取らなきゃいけないためコンテントネゴシエーションの原案は死んだと言っていい&lt;/li&gt;
+  &lt;li&gt;Varyヘッダを適切に利用することで、キャッシュサーバーを経由していても同じURLから異なるレスポンス(Language, ファイル形式など)を得ることが可能　&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Vary: Accept-Language&lt;/code&gt;をヘッダーに付与すると、Accept-Languageによってレスポンスが異なることをキャッシュサーバーに伝えることができる。&lt;/li&gt;
+  &lt;li&gt;同じURLへのリクエストに対しては常に同じVaryヘッダーを含めるべき&lt;/li&gt;
+  &lt;li&gt;ブラウザは6段階のキャッシュの仕組みを持っている。すべてVaryをサポートすべきだが状況は微妙&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;感想&quot;&gt;感想&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Varyヘッダーの存在は知ってたけど正しい使い方がよく分かってなかったので、そのあたりを知れたのはよかった。&lt;/li&gt;
+  &lt;li&gt;ブラウザキャッシュとCDNでキャッシュの流れが複雑化してるので、しっかり理解してクールにキャッシュするWebサイトを作りたい。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;ama-webpayments-api&quot;&gt;AMA WebPayments API&lt;/h2&gt;
+&lt;p&gt;1つめのAMAでは&lt;a href=&quot;https://twitter.com/agektmr&quot;&gt;Eiji Kitamura&lt;/a&gt;さんのブースでPayment Request APIの話を聞きました。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/insidefrontend/issue2-ama/labels/C1-3%3A%20Payment&quot;&gt;質疑一覧&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;概要-1&quot;&gt;概要&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Payment Request APIでブラウザのNativeUIを使える。&lt;/li&gt;
+  &lt;li&gt;ユーザーはブラウザに保存されているクレジットカードなどの決済情報を使用することができる。&lt;/li&gt;
+  &lt;li&gt;クレジットカード以外にも、サードパーティのPaymentサービスを自分で追加できる&lt;/li&gt;
+  &lt;li&gt;参考になる記事: https://blog.agektmr.com/2017/12/web-payment-misconception.html&lt;/li&gt;
+  &lt;li&gt;ユーザーが支払い情報を入力してサブミットすると、JSON形式でPayment Request APIから返却される。&lt;/li&gt;
+  &lt;li&gt;従来の入力フォームより75%少ない時間で決済が完了するというケーススタディ&lt;/li&gt;
+  &lt;li&gt;クレジットカードの生の情報じゃなくて、Tokenを扱うのでセキュア&lt;/li&gt;
+  &lt;li&gt;現実的には、実際にサイトの開発者がPayment Request APIを直に触ることはない。決済代行業者のSDKが基本的にやってくれる。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;現場の-es201x-とアーキテクチャの変遷と未来-by-koutaro-chikuba&quot;&gt;現場の ES201x とアーキテクチャの変遷と未来 by &lt;a href=&quot;https://twitter.com/mizchi&quot;&gt;Koutaro Chikuba&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;mizchiさんによるフロントエンドの歴史と未来の話でした。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://speakerdeck.com/mizchi/real-world-es201x-and-future&quot;&gt;資料&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;概要-2&quot;&gt;概要&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;みんな消耗してる(IE11, webpack.config.js, 現場で動くjQuery…)&lt;/li&gt;
+  &lt;li&gt;自分のコードに必要なもの、腐る部分、腐らない部分を見極める力をつけてほしい&lt;/li&gt;
+  &lt;li&gt;セルフスクレイピングの時代 -&amp;gt; テンプレーティングの時代 -&amp;gt; データバインディングの時代 -&amp;gt; Flux/Observableの時代&lt;/li&gt;
+  &lt;li&gt;フロントエンドは富豪的設計とマイクロチューニングを繰り返して、その先にある”理想”に近づいてる&lt;/li&gt;
+  &lt;li&gt;AltJSは文法追加とか機能提案をしてきて、それがどんどんES201xに入ってきた&lt;/li&gt;
+  &lt;li&gt;最近の流行はとにかく型&lt;/li&gt;
+  &lt;li&gt;Observableとか、静的型検査がないとしんどい&lt;/li&gt;
+  &lt;li&gt;お祈りデプロイ50%の時代から5%くらいの時代になった&lt;/li&gt;
+  &lt;li&gt;WebComponentsで「xxxデザインのyyy(フレームワーク)実装」みたいなのは死ぬはず。&lt;/li&gt;
+  &lt;li&gt;まずは現場にある古いコードを手懐けるところから&lt;/li&gt;
+  &lt;li&gt;いいコード: 静的検査、インターフェースが明らか、簡単に捨てられる&lt;/li&gt;
+  &lt;li&gt;悪いコード: モジュール境界が明らかじゃない&lt;/li&gt;
+  &lt;li&gt;今のフロントエンド: OOP, FP, GUI設計論の知見がごった煮の、様々な思想をぶつけあう戦場&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;感想-1&quot;&gt;感想&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;前半は今までのフロントエンドの変遷がよくまとめられていて分かりやすかった。自分が若いフロントエンジニアってのもあって、
+4割くらいは知らない時代の話だった。&lt;/li&gt;
+  &lt;li&gt;トーク中に出てきた「型がないとRxかけない」って話は全力で同意だった。自分が途中で参加したプロジェクトでは絶対に&lt;code class=&quot;highlighter-rouge&quot;&gt;someFunc(): Observable&amp;lt;any&amp;gt;&lt;/code&gt;を殺すという強い意気込みを持ってやっていきたい。&lt;/li&gt;
+  &lt;li&gt;良いコードの例で「簡単に捨てられる」というのがあったが、これはあんまり今まで意識してなかったので、意識してやってみる。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;ama-現場の-es201x-とアーキテクチャの変遷と未来&quot;&gt;AMA 現場の ES201x とアーキテクチャの変遷と未来&lt;/h2&gt;
+
+&lt;p&gt;前の時間枠でmizchiさんのセッションを聴いたので、AMAもmizchiさんのブースでお話を聴いた。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/insidefrontend/issue2-ama/labels/C2-1%3A%20ES201x&quot;&gt;質疑一覧&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;概要-3&quot;&gt;概要&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;ほとんどの消耗はIE11が原因。&lt;/li&gt;
+  &lt;li&gt;IE11をサポートから外す言い訳はいくらでもできる。&lt;/li&gt;
+  &lt;li&gt;フロントエンドエンジニアっていうラベル付は破綻してる&lt;/li&gt;
+  &lt;li&gt;デザイン方面から来た人と、node.jsから来た人だと価値観が違う。前者は供給が多いので、フロントエンドってくくりで一緒にすると全体の給与水準は下がる&lt;/li&gt;
+  &lt;li&gt;URLがマスターなのか内部状態がマスターなのかは意識してRouterを書くべき&lt;/li&gt;
+  &lt;li&gt;WebComponentsはまだエコシステムが整ってないので、現場で使える状態ではないと思う&lt;/li&gt;
+  &lt;li&gt;ようやくState管理で議論ができるようになったのでいい時代&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;攻めつづける-fresh-の-web-ver新春--by-すちを&quot;&gt;攻めつづける FRESH! の Web ver.新春  by &lt;a href=&quot;https://twitter.com/sutiwo&quot;&gt;すちを&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;sutiwoさんによるFRESH!のフロントエンドの進化のお話でした。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://speakerdeck.com/sutiwo/gong-metudukeru-fresh-falseweb-ver-dot-xin-chun&quot;&gt;資料&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;概要-4&quot;&gt;概要&lt;/h3&gt;
+&lt;p&gt;-　今まで決済代行サービスを使っていたが、購入手続きのたびに別ドメインに遷移するのを避けたかったし、FRESH!のサービス側で決済情報を持ちたくなかった -&amp;gt; Payment Request API&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;現段階では対応ブラウザはChromeだけで、対応している決済方法はクレジットカードのみ。&lt;/li&gt;
+  &lt;li&gt;EdgeはMicroSoftアカウントを使わないといけなかった。それはユーザー体験が悪すぎた。&lt;/li&gt;
+  &lt;li&gt;Reactをv15からv16にあげた。Fragmentやrender()の修正で余分な要素(div, spanなど)を作らなくてよくなった。&lt;/li&gt;
+  &lt;li&gt;パフォーマンスの改善はとくに見られなかった&lt;/li&gt;
+  &lt;li&gt;デプロイフローで、チェックシートにあるテスト項目を手で確認するのが大変だった。&lt;/li&gt;
+  &lt;li&gt;Puppeteerとmochaでテスト自動化&lt;/li&gt;
+  &lt;li&gt;CIでスナップショットのテストとかもやりたい&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;感想-2&quot;&gt;感想&lt;/h3&gt;
+&lt;p&gt;新しい技術をとりいれて、非効率なフローを効率化して、どんどん攻めていく姿勢はすごく良いと思ったし、こういう環境で仕事がしたいと思った。&lt;/p&gt;
+
+&lt;h2 id=&quot;ama-現場の-es201x-とアーキテクチャの変遷と未来-1&quot;&gt;AMA 現場の ES201x とアーキテクチャの変遷と未来&lt;/h2&gt;
+
+&lt;p&gt;前時間枠のAMAに引き続きmizchiさんのAMAブースでお話を聴ききました。&lt;/p&gt;
+
+&lt;p&gt;質問を消化しきったので、同時間枠に別のAMAブースで&lt;a href=&quot;https://twitter.com/ahomu&quot;&gt;@ahomu&lt;/a&gt;さんと&lt;a href=&quot;https://twitter.com/1000ch&quot;&gt;@1000ch&lt;/a&gt;さんがやっている
+超速本の裏話をするというまさかの会でした。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://mizchi.hatenablog.com/entry/2017/11/24/141301&quot;&gt;mizchiさんの書評記事&lt;/a&gt;をベースに、いろいろおもしろい話が聴けました。&lt;/p&gt;
+
+&lt;p&gt;その中で「ChromeのDevToolsはUIがすぐ変わるから読むなら早く読んだほうがいい」と話していて、たしかに…と思い僕は買っていてまだ手をつけてなかった超速本をすぐ読むことにしました。&lt;/p&gt;
+
+&lt;h3 id=&quot;日経電子版を速くするためにやっていること-by-sisidovski&quot;&gt;日経電子版を速くするためにやっていること by &lt;a href=&quot;https://twitter.com/sisidovski&quot;&gt;sisidovski&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;sisidovskiさんによる話題の日経電子版がなぜこんなに速いかというお話でした。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://speakerdeck.com/sisidovski/nikkei-inside-frontend&quot;&gt;資料&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;概要-5&quot;&gt;概要&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;モバイルサイトは全面刷新。表示速度は約2倍になり、Hearstのランキングで2位になった&lt;/li&gt;
+  &lt;li&gt;Financial Timesの調査で サイトの速度が1秒落ちるとユーザーエンゲージメントは5%下がることがわかった&lt;/li&gt;
+  &lt;li&gt;チーム発足時からチーム内でスピードを最重要KPIにした&lt;/li&gt;
+  &lt;li&gt;r.nikkei.comとネイティブアプリのバックエンドでFastlyを使ってる&lt;/li&gt;
+  &lt;li&gt;CDNでできるところは任せる&lt;/li&gt;
+  &lt;li&gt;VCLで柔軟にキャッシュを制御。ただVCLは辛い。&lt;/li&gt;
+  &lt;li&gt;キャッシュヒット率90%, 有料会員に対しても70%以上&lt;/li&gt;
+  &lt;li&gt;あとでいいことはあとでする。&lt;/li&gt;
+  &lt;li&gt;必要なことは先にする。&lt;/li&gt;
+  &lt;li&gt;使いまわせるものは使い回す&lt;/li&gt;
+  &lt;li&gt;クライアントにとって最適なものを配信&lt;/li&gt;
+  &lt;li&gt;まずは分析すること。Lighthouseやwebpagetestなどのツールを使う。&lt;/li&gt;
+  &lt;li&gt;手がつけられるところから手を付ける&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;感想-3&quot;&gt;感想&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;高速化やCDN(Fastly)の使い方の知見が濃く詰まった非常に良いセッションだった。自分の中でパフォーマンス向上やっていきが非常に高まった。&lt;/li&gt;
+  &lt;li&gt;既存のサービスと現実的にどう向き合って、ユーザーが喜ぶようなパフォーマンス改善を施していくか、よくまとめられていて良かった。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;ama-日経電子版の高速化について何でも訊いて下さい&quot;&gt;AMA 日経電子版の高速化について何でも訊いて下さい&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://twitter.com/sisidovski&quot;&gt;sisidovski&lt;/a&gt;さんと&lt;a href=&quot;https://twitter.com/cssradar&quot;&gt;cssradar&lt;/a&gt;さんの
+日経電子版の高速化のAMAブースでお話を聴きました。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/insidefrontend/issue2-ama/labels/C4-1%3A%20Nikkei&quot;&gt;質疑一覧&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;概要-6&quot;&gt;概要&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;BabelでPolifyllやらせると、無駄なコードを作ってしまうので、ランタイムでPolyfillしてる&lt;/li&gt;
+  &lt;li&gt;広告の表示を高速にするために全部同じAd Serverから受け取ってたり、document.writeを吸収して書き換えてる。そのあとevalして、shadowDOMでレンダリングしてる&lt;/li&gt;
+  &lt;li&gt;仮にAdServerが死んでも影響が出ないようにしている&lt;/li&gt;
+  &lt;li&gt;prerenderがChrome58から無効化されてる(chromeの内部ロジック置き換えのため一時的に)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;デザインシステムとコードを密結合するワークフロー-by-takanori-sugawara&quot;&gt;デザインシステムとコードを密結合するワークフロー by &lt;a href=&quot;https://twitter.com/oligin020&quot;&gt;Takanori Sugawara&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Takanori Sugawaraさんによる、デザインシステムとコーディングを蜜に連携させるフローを構築するお話でした。&lt;/p&gt;
+
+&lt;p&gt;資料は公開されていないようです。&lt;/p&gt;
+
+&lt;h3 id=&quot;概要-7&quot;&gt;概要&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;チームでは基本みんなリモートなので認識合わせのコストが高い&lt;/li&gt;
+  &lt;li&gt;現状の実装構造が複雑化 -&amp;gt; プロダクトの変化速度が低下して身動き取れなくなる&lt;/li&gt;
+  &lt;li&gt;企画から実装まで、職種による翻訳や出戻りが多く発生する&lt;/li&gt;
+  &lt;li&gt;全員でUIデザインしたらレビューいらなくね? -&amp;gt; Figmaでやってみた&lt;/li&gt;
+  &lt;li&gt;企画には具象度を高めてもらって、エンジニアには抽象度を高めてもらう&lt;/li&gt;
+  &lt;li&gt;全員同じ土俵でUIを作った&lt;/li&gt;
+  &lt;li&gt;UI実装の依存関係も定義する&lt;/li&gt;
+  &lt;li&gt;UIデザインにないものは絶対に実装されないルールにした&lt;/li&gt;
+  &lt;li&gt;Figmaの実践とVue.jsのライブコーディングによるデモ&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;感想-4&quot;&gt;感想&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;「UIデザインにないものは絶対に実装されないルール」というのが個人的に刺さった。これを徹底できるとデザインされたコンポーネントは破綻しづらいし、
+コーディングでスタイルも書きやすいのでいい。&lt;/li&gt;
+  &lt;li&gt;最後のセッションはAMAがなくて、質問できなかったのが残念だった。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;全体を通して&quot;&gt;全体を通して&lt;/h2&gt;
+&lt;p&gt;今年も数多くの有益な知見全開のセッションを聴けて大変勉強になりました！運営の皆様、発表者の皆様、本当にお疲れ様でした、ありがとうございました！！&lt;/p&gt;
+
+&lt;p&gt;また来年予定が合ったら参加したいし、トークも応募したいと思います！&lt;/p&gt;
+
+&lt;p&gt;数日後に、Rebuild.fmの&lt;a href=&quot;http://rebuild.fm/201/&quot;&gt;このエピソード&lt;/a&gt;を聴いていたら、Inside Frontendや超速本の話が出ていて面白かったです笑&lt;/p&gt;</content><author><name></name></author><category term="勉強会レポート" /><summary type="html">2/11に日経カンファレンスルームで開催されたInside Frontend #2に参加してきました。</summary></entry><entry><title type="html">Chrome 65 Beta</title><link href="http://blog.araya.dev/posts/chrome-65-beta.html" rel="alternate" type="text/html" title="Chrome 65 Beta" /><published>2018-02-09T04:00:00+09:00</published><updated>2018-02-09T04:00:00+09:00</updated><id>http://blog.araya.dev/posts/chrome-65-beta</id><content type="html" xml:base="http://blog.araya.dev/posts/chrome-65-beta.html">&lt;p&gt;Chrome Betaの最新版65がでました。(&lt;a href=&quot;http://blog.chromium.org/2018/02/chrome-65-beta-css-paint-api-and.html&quot;&gt;元記事&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;今回特に大きいのはCSS Paint APIですね。&lt;/p&gt;
+
+&lt;h2 id=&quot;css-paint-api&quot;&gt;CSS Paint API&lt;/h2&gt;
+&lt;p&gt;CSS Paint APIを使うと、CSSのプロパティの要求に合わせて動的に画像を生成することができます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://storage.googleapis.com/webfundamentals-assets/paintapi/checkercast_vp8.webm&quot;&gt;デモ動画&lt;/a&gt;
+を観るとわかりますが、カスタムプロパティを変更すると、JSがそれを検知してイメージを動的に更新しています。&lt;/p&gt;
+
+&lt;p&gt;これをうまく使うとDOMツリーを軽くしたり普通に画像をつかうよりもファイルサイズを小さくすることができます。&lt;/p&gt;
+
+&lt;h2 id=&quot;server-timing-api&quot;&gt;Server Timing API&lt;/h2&gt;
+&lt;p&gt;Server Timing APIにより、Webサーバーがブラウザにパフォーマンス情報を送信することができます。&lt;br /&gt;
+サーバーからのHTTPレスポンスに&lt;code class=&quot;highlighter-rouge&quot;&gt;Server-Timing&lt;/code&gt;ヘッダーを追加し、そのヘッダー内に任意のパフォーマンス情報を記述します。&lt;br /&gt;
+たとえば、データベースからの読み込みに何ms、書き込みに何ms、ファイルシステムからの読み込みに何msかかったというような情報をブラウザに送ってあげることにより、Webサーバーからのレスポンスタイムだけでなく更に深いところまでパフォーマンスメトリクスをブラウザ上で確認することができます。&lt;/p&gt;
+
+&lt;h2 id=&quot;その他の機能&quot;&gt;その他の機能&lt;/h2&gt;
+
+&lt;h3 id=&quot;css&quot;&gt;CSS&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;擬似クラス &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/CSS/:any-link&quot;&gt;:any-link&lt;/a&gt;が使えるようになった。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;color&lt;/code&gt;プロパティの色指定が&lt;a href=&quot;https://drafts.csswg.org/css-color/&quot;&gt;CSS Color Module Level 4&lt;/a&gt;準拠になった。&lt;/li&gt;
+  &lt;li&gt;自身のboxは作らないが、子要素や疑似要素のboxは生成する&lt;code class=&quot;highlighter-rouge&quot;&gt;display: contents&lt;/code&gt;が使えるようになった。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;dom&quot;&gt;DOM&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;assignedNodes()&lt;/code&gt;を補完するために&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;slot&amp;gt;&lt;/code&gt;要素が&lt;code class=&quot;highlighter-rouge&quot;&gt;assignedElements()&lt;/code&gt;メソッドを持つようになった。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;HTMLAnchorElement.relList&lt;/code&gt;をサポート。&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;a&amp;gt;&lt;/code&gt;要素で指定されたリソースと現在のリソースの関係性を示すための機能。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;feature-policy&quot;&gt;Feature Policy&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://xhr.featurepolicy.rocks/&quot;&gt;sync-xhr feature policy&lt;/a&gt;が使えるようになった。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;network&quot;&gt;Network&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;TLSの仕様との互換性を取るため、&lt;a href=&quot;https://tools.ietf.org/html/draft-ietf-tls-tls13-23&quot;&gt;TLS1.3のdraft-23&lt;/a&gt;をサポート。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Request.destination&lt;/code&gt;でどのリソースをService Workerがfetchしてるか評価できるようになった。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;performance-api&quot;&gt;Performance API&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;PerformanceResourceTiming&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;PerformanceLongTaskTiming&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;TaskAttributionTiming&lt;/code&gt;が &lt;code class=&quot;highlighter-rouge&quot;&gt;toJSON&lt;/code&gt;メソッドをサポート。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;security&quot;&gt;Security&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cross-origin&lt;/code&gt;属性付きの&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;a&amp;gt;&lt;/code&gt;要素の&lt;code class=&quot;highlighter-rouge&quot;&gt;download&lt;/code&gt;属性を無視する。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;廃止と相互運用性の改善&quot;&gt;廃止と相互運用性の改善&lt;/h2&gt;
+
+&lt;h3 id=&quot;bindings&quot;&gt;Bindings&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;HTMLの仕様と合わせ、&lt;code class=&quot;highlighter-rouge&quot;&gt;document.all&lt;/code&gt;は上書き禁止となる。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;network-1&quot;&gt;Network&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;2017/12/01以降に発行されたSymantecのレガシーなPKI(Public Key Infrastructure)を信頼しない。
+これが影響するのはDigiCertの新しいPKIへの移行を明示的にオプトアウトしたサイト運営者だけで、このインフラから独立した、前もって公開されたサブ認証局には影響しない。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="Chrome" /><category term="Browser" /><category term="翻訳" /><summary type="html">Chrome Betaの最新版65がでました。(元記事)</summary></entry><entry><title type="html">Safari Technology Preview 49</title><link href="http://blog.araya.dev/posts/safari-technology-preview-49-ja.html" rel="alternate" type="text/html" title="Safari Technology Preview 49" /><published>2018-02-09T03:30:00+09:00</published><updated>2018-02-09T03:30:00+09:00</updated><id>http://blog.araya.dev/posts/safari-technology-preview-49-ja</id><content type="html" xml:base="http://blog.araya.dev/posts/safari-technology-preview-49-ja.html">&lt;p&gt;Safari Technology Preview 49の変更点を訳しただけ。
+(&lt;a href=&quot;https://webkit.org/blog/8088/release-notes-for-safari-technology-preview-49/&quot;&gt;元記事&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;service-workers&quot;&gt;Service Workers&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;永続的ストレージからリストアされたService Workerが&lt;code class=&quot;highlighter-rouge&quot;&gt;activated&lt;/code&gt;状態を持つように変更。&lt;/li&gt;
+  &lt;li&gt;応答しないService Workerは終了させるように変更。&lt;/li&gt;
+  &lt;li&gt;JavaScriptが&lt;code class=&quot;highlighter-rouge&quot;&gt;register()&lt;/code&gt;を再度呼び出したときに、ディスクからService Workerの登録がリストアされるのを防ぐ。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;fetch&quot;&gt;Fetch&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Fetchレスポンスのチャンクデータが受け取られた際のConsumeDataコールバックをサポート&lt;/li&gt;
+  &lt;li&gt;ロードされている不明瞭なレスポンスにおいてそのbodyがクローンされるように変更。&lt;/li&gt;
+  &lt;li&gt;不明瞭なレスポンスからFetchヘッダーを除外&lt;/li&gt;
+  &lt;li&gt;Fetchのリダイレクトが&lt;code class=&quot;highlighter-rouge&quot;&gt;no-cors&lt;/code&gt;モードと互換性のあるように修正&lt;/li&gt;
+  &lt;li&gt;リクエストがnullだったらリクエストからURLをコピーするようにFetchレスポンスを修正&lt;/li&gt;
+  &lt;li&gt;スクリプトとCSSをロードするためのFetchのオプションに整合性を設定&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;intelligent-tracking-prevention&quot;&gt;Intelligent Tracking Prevention&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;ユーザーのインタラクションがない状態での一般的なリソースへのクッキーをブロックする&lt;/li&gt;
+  &lt;li&gt;Service Workerのローディングとリクエストが正しくIntelligent Tracking Preventionにより正しくクリアされることを保証&lt;/li&gt;
+  &lt;li&gt;試験的機能として、デバッグモードを導入&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;css&quot;&gt;CSS&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;column-gap&lt;/code&gt;でのパーセンテージ指定をサポート&lt;/li&gt;
+  &lt;li&gt;CSSメディアクエリ内での&lt;code class=&quot;highlighter-rouge&quot;&gt;calc()&lt;/code&gt;のパースをサポート&lt;/li&gt;
+  &lt;li&gt;block/cross-axisのアラインメントプロパティから&lt;code class=&quot;highlighter-rouge&quot;&gt;left&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;right&lt;/code&gt;を削除。&lt;/li&gt;
+  &lt;li&gt;CSSワーキンググループの勧告を採用し、&lt;code class=&quot;highlighter-rouge&quot;&gt;css-align&lt;/code&gt;プロパティ内の&lt;code class=&quot;highlighter-rouge&quot;&gt;self-position&lt;/code&gt;もしくは&lt;code class=&quot;highlighter-rouge&quot;&gt;content-position&lt;/code&gt;に先行する&lt;code class=&quot;highlighter-rouge&quot;&gt;overflow-position&lt;/code&gt;を必須とする。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;justify-content&lt;/code&gt;プロパティの値としてとして有効な&lt;code class=&quot;highlighter-rouge&quot;&gt;baseline&lt;/code&gt;を削除。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;scale&lt;/code&gt;が1より大きい時の&lt;code class=&quot;highlighter-rouge&quot;&gt;position:fixed&lt;/code&gt;な要素のスクロール位置の演算を修正&lt;/li&gt;
+  &lt;li&gt;色彩反転がオンになってたとき、オリジナルのimage、picture要素の色を保存する&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;rendering&quot;&gt;Rendering&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;数式を表示するときのoverflowを修正&lt;/li&gt;
+  &lt;li&gt;複数のiframeを持つ高速でないスクロール可能領域の構築を最適化&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;svg&quot;&gt;SVG&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;軸の半径の0を許容し、エフェクトを適用できるように&lt;code class=&quot;highlighter-rouge&quot;&gt;feMorphology&lt;/code&gt;フィルターを修正&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;javascript&quot;&gt;JavaScript&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;trimStart&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;trimEnd&lt;/code&gt;の実装&lt;/li&gt;
+  &lt;li&gt;JavaScriptのJSONサブセットを作成するStringの改行コードの制限を緩くする。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;web-inspector&quot;&gt;Web Inspector&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;兄弟を持たないpath要素をクリックして選択できるように変更&lt;/li&gt;
+  &lt;li&gt;Layersタブが動くポップオーバーの代わりに静的に位置づけられたレイヤー詳細パネルを使用するように変更。&lt;/li&gt;
+  &lt;li&gt;Web InspectorがRTL(Right To Left)レイアウトになっていてもStylesサイドバーが常にCSSルールを左から右に表示するように修正&lt;/li&gt;
+  &lt;li&gt;Canvasタブが複数の”waiting for frames”メッセージを表示するときに発生する問題を修正。&lt;/li&gt;
+  &lt;li&gt;Canvasタブのレコードボタンがマウスオーバーしても出現しないことがある問題を修正&lt;/li&gt;
+  &lt;li&gt;Networkタブが、ソートされたカラムが非表示され再表示された時に、インディケーターをソートして非表示にしてしまうバグを修正。&lt;/li&gt;
+  &lt;li&gt;デフォルトのズームレベルでないとときにNetworkタブのテーブルカラムが揺れないように修正&lt;/li&gt;
+  &lt;li&gt;Stylesサイドバーを素早く更新することによって発生するデータの破損問題を修正。&lt;/li&gt;
+  &lt;li&gt;コメントアウトされた過去のプロパティを移動するときにStylesサイドバーがエラーを吐かないように修正。&lt;/li&gt;
+  &lt;li&gt;Resourceタブの詳細サイドバーが非常に長いURLをより良くラップしてくれるようにWindowのりサイズを修正。&lt;/li&gt;
+  &lt;li&gt;すべてのカラムが必須だったらテーブルヘッダーを右クリックしても”Displayed Columns”を表示しない。&lt;/li&gt;
+  &lt;li&gt;幅が小さいときのNetworkタブのCookiesテーブルの挙動を改善。&lt;/li&gt;
+  &lt;li&gt;高さが小さい時のナビゲーションバーのレイアウトを改善。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;media&quot;&gt;Media&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;CDMinstanceClearKeyの異なるセッションからの複数のキーをサポート。&lt;/li&gt;
+  &lt;li&gt;media要素がなかったらNowPlayingステータスを終了させるように変更。&lt;/li&gt;
+  &lt;li&gt;新規作成された色空間の代わりに既存のRGB色空間を使用するように変更。&lt;/li&gt;
+  &lt;li&gt;WebVTTがHLS経由でサーブされる合図を修正&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;storage&quot;&gt;Storage&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;AppCacheを使っていたらdeprecation警告をコンソールに表示する。&lt;/li&gt;
+  &lt;li&gt;割当などのキャシュストレージのエラーのためのコンソールメッセージを追加。&lt;/li&gt;
+  &lt;li&gt;Sevice Workerが登録されてなかったらメインリソースをロードしている時にストレージのプロセスを使わないように変更。&lt;/li&gt;
+  &lt;li&gt;Sevice Workerが登録されてなかったらService Workerクライアントを登録している時にストレージのプロセスを使わないように変更。&lt;/li&gt;
+  &lt;li&gt;同タイミングで呼ばれた &lt;code class=&quot;highlighter-rouge&quot;&gt;caches.open&lt;/code&gt;のプロミスをCache APIが解決することを保証する。&lt;/li&gt;
+  &lt;li&gt;指定されたオリジンのデータをクリアするときにDOMCacheデータが正しく削除されない問題を修正。&lt;/li&gt;
+  &lt;li&gt;デフォルトのキャッシュストレージの割当を50MBに増量。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;security&quot;&gt;Security&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;JavaScript URLに遷移するときに、対象となるwindowのポリシーチェックを追加。&lt;/li&gt;
+  &lt;li&gt;Service WorkerのレスポンスをチェックするCSPポストを追加。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;allow-same-origin&lt;/code&gt;フラグがないサンドボックスフレームでの、Service WorkerとCache APIへのアクセスを無効にする。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;frame-ancestor&lt;/code&gt;指令をContent Security Policy Level3に適合するように更新。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;accessibility&quot;&gt;Accessibility&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;ARIA active-descendantをサポート。&lt;/li&gt;
+  &lt;li&gt;VoiceOverにWebセッションを一意に識別する方法を追加。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;graphics-document&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;graphics-object&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;graphics-symbol&lt;/code&gt;のGraphics ARIAロールをサポート。&lt;/li&gt;
+  &lt;li&gt;SVGルートの場合にARIAロールの属性の上書きからSVG AAMマッピングを保護する。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;bug-fixes&quot;&gt;Bug Fixes&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;サブリソースのロードのリダイレクトがService Workerのコントローラーを変更できるように保証することによって、&lt;a href=&quot;https://formus.swift.org&quot;&gt;formus.swift.org&lt;/a&gt;でのGitHubログインを修正。&lt;/li&gt;
+  &lt;li&gt;Microsoft Word for Mac 2011のblob変換とサニタイズを修正。&lt;/li&gt;
+  &lt;li&gt;PostScriptの名前が指定されていたら、許可されていないユーザーインストールのフォントが使用されないように変更。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;所感&quot;&gt;所感&lt;/h2&gt;
+&lt;p&gt;46でService Workerが入ってからService Worker周りの修正が続々と入ってますね。&lt;/p&gt;
+
+&lt;p&gt;ところどころ知識が追いついていないせいで怪しいところがあったりするので、間違い等あったら指摘してください。&lt;/p&gt;</content><author><name></name></author><category term="Safari" /><category term="Browser" /><category term="翻訳" /><summary type="html">Safari Technology Preview 49の変更点を訳しただけ。 (元記事)</summary></entry><entry><title type="html">JavaScript の NaN について</title><link href="http://blog.araya.dev/posts/javascript-nan.html" rel="alternate" type="text/html" title="JavaScript の NaN について" /><published>2017-12-15T15:44:13+09:00</published><updated>2017-12-15T15:44:13+09:00</updated><id>http://blog.araya.dev/posts/javascript-nan</id><content type="html" xml:base="http://blog.araya.dev/posts/javascript-nan.html">&lt;p&gt;この記事は&lt;a href=&quot;https://adventar.org/calendars/2199&quot;&gt;#kosen10s Advent Calendar 2017&lt;/a&gt;の15日目の記事です。&lt;/p&gt;
+
+&lt;p&gt;昨日は&lt;a href=&quot;http://cycloneo.hatenablog.com/entry/2017/12/14/215238&quot;&gt;寒い日は紅茶に砂糖を入れて飲むとおいしい - 死後裁きにあう&lt;/a&gt;でした。
+美味しい紅茶が飲みたくなりました。&lt;/p&gt;
+
+&lt;p&gt;2つとった枠のうち1つは技術系の記事を書こうと思ってたのですが、準備不足もあり小ネタです。&lt;/p&gt;
+
+&lt;p&gt;JavaScriptでコードを書いていると、まれに&lt;code class=&quot;highlighter-rouge&quot;&gt;NaN(Not a Number)&lt;/code&gt;に遭遇することがあります。
+別に知ってれば大したことないのですが、若干ややこしくて厄介なのでNaNについて解説したいと思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;どういうときに遭遇するか&quot;&gt;どういうときに遭遇するか&lt;/h2&gt;
+&lt;p&gt;NaNは&lt;code class=&quot;highlighter-rouge&quot;&gt;Math&lt;/code&gt; objectの関数に引数として不適な値を渡したり、&lt;code class=&quot;highlighter-rouge&quot;&gt;parseInt()&lt;/code&gt;などで文字列を数値に変換させようとすると返ってくることがあります。&lt;/p&gt;
+
+&lt;p&gt;また、&lt;code class=&quot;highlighter-rouge&quot;&gt;let x = NaN&lt;/code&gt;のように代入可能です。&lt;/p&gt;
+
+&lt;p&gt;例:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;nb&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sqrt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; NaN 虚数は返ってこない&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;parseInt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'hello'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; NaN&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;https://example.com?page=18&lt;/code&gt;というURLから&lt;code class=&quot;highlighter-rouge&quot;&gt;page&lt;/code&gt;パラメータを取得し、その値に応じて表示する内容を書き換える
+といったコードを書いた時、&lt;code class=&quot;highlighter-rouge&quot;&gt;https://example.com?page=hello&lt;/code&gt;に対しては例外処理が必要です。&lt;/p&gt;
+
+&lt;p&gt;ちなみに、数値&lt;code class=&quot;highlighter-rouge&quot;&gt;x(!==0)&lt;/code&gt;を&lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt;で割ったときには&lt;code class=&quot;highlighter-rouge&quot;&gt;Infinity&lt;/code&gt;もしくは&lt;code class=&quot;highlighter-rouge&quot;&gt;-Infinity&lt;/code&gt;となり、&lt;code class=&quot;highlighter-rouge&quot;&gt;0 / 0&lt;/code&gt;は&lt;code class=&quot;highlighter-rouge&quot;&gt;NaN&lt;/code&gt;となります&lt;/p&gt;
+
+&lt;h2 id=&quot;truthy-falsy&quot;&gt;Truthy, Falsy&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NaN&lt;/code&gt;を単体で評価するとFalsyになります。直感的ですね。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kc&quot;&gt;NaN&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'foo'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'hoge'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; 'hoge'&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;比較&quot;&gt;比較&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;NaN&lt;/code&gt;は比較演算子で評価した場合、どんな値とも等価にはなりません。
+ここで気をつけなければいけないのが、&lt;code class=&quot;highlighter-rouge&quot;&gt;NaN === NaN&lt;/code&gt;が&lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt;になることです。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kc&quot;&gt;NaN&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; false&lt;/span&gt;
+&lt;span class=&quot;kc&quot;&gt;NaN&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; false&lt;/span&gt;
+&lt;span class=&quot;kc&quot;&gt;NaN&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; false&lt;/span&gt;
+&lt;span class=&quot;kc&quot;&gt;NaN&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; false&lt;/span&gt;
+&lt;span class=&quot;kc&quot;&gt;NaN&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;NaN&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; false&lt;/span&gt;
+&lt;span class=&quot;kc&quot;&gt;NaN&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; true&lt;/span&gt;
+&lt;span class=&quot;kc&quot;&gt;NaN&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; true&lt;/span&gt;
+&lt;span class=&quot;kc&quot;&gt;NaN&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;NaN&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; true&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;nanの検出&quot;&gt;NaNの検出&lt;/h2&gt;
+&lt;p&gt;JavaScriptには&lt;code class=&quot;highlighter-rouge&quot;&gt;isNaN()&lt;/code&gt;というトップレベル関数が用意されています。引数を一つとり、boolean(true | false)を返します。
+ただ、この&lt;code class=&quot;highlighter-rouge&quot;&gt;isNaN()&lt;/code&gt;にも一癖あって、渡された引数が&lt;code class=&quot;highlighter-rouge&quot;&gt;NaN&lt;/code&gt;以外にも、文字列、undefined、Object、 Functionだった場合も&lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;を返します。&lt;br /&gt;
+そのため、&lt;code class=&quot;highlighter-rouge&quot;&gt;isNaN(x)&lt;/code&gt;により&lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;が返却されても、&lt;code class=&quot;highlighter-rouge&quot;&gt;x&lt;/code&gt;が&lt;code class=&quot;highlighter-rouge&quot;&gt;NaN&lt;/code&gt;である保証はありません。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;NaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; true&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;undefined&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; true&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'hello'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; true&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({})&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; true&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; true&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; false&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; false&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; false&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;引数がArrayの場合はlengthが0か、要素1つだけで値が数値またはnullの場合のみ&lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt;が返ります&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; true&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'hello'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; true&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; true&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([])&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; false&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; false&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; false&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;非常にややこしいですね。覚えなくて大丈夫です。&lt;br /&gt;
+というのも、ECMAScript2015で&lt;code class=&quot;highlighter-rouge&quot;&gt;Number.isNaN()&lt;/code&gt;が導入され、これを用いることにより&lt;code class=&quot;highlighter-rouge&quot;&gt;NaN&lt;/code&gt;かどうかを正しく評価することができるようになりました。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;nb&quot;&gt;Number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;NaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; true&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;Number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;undefined&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; false&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;Number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'hello'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; false&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;Number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({})&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; false&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;Number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; false&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;Number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; false&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;Number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; false&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;Number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; false&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;すばらしいですね。非常にわかりやすくなりました。とはいえ、前時代のJavaScriptを書かなければいけないこともあるかもしれません。
+そのときは先に述べた、&lt;code class=&quot;highlighter-rouge&quot;&gt;NaNは比較演算子で評価した場合、どんな値とも等価にはならない&lt;/code&gt;という性質を利用します。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;nb&quot;&gt;Number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!==&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;Number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;NaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; true;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;Number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;isNaN&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// =&amp;gt; false;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;トップレベル関数の&lt;code class=&quot;highlighter-rouge&quot;&gt;isNaN()&lt;/code&gt;は使ってはいけません。&lt;code class=&quot;highlighter-rouge&quot;&gt;Number.isNaN()&lt;/code&gt;を使いましょう。&lt;/p&gt;
+
+&lt;p&gt;明日はruryushamさんの記事です。&lt;/p&gt;</content><author><name></name></author><category term="JavaScript" /><summary type="html">この記事は#kosen10s Advent Calendar 2017の15日目の記事です。</summary></entry><entry><title type="html">フラー株式会社を退職し、合同会社ヘマタイトに入社しました</title><link href="http://blog.araya.dev/posts/f-to-h.html" rel="alternate" type="text/html" title="フラー株式会社を退職し、合同会社ヘマタイトに入社しました" /><published>2017-12-02T00:00:00+09:00</published><updated>2017-12-02T00:00:00+09:00</updated><id>http://blog.araya.dev/posts/f-to-h</id><content type="html" xml:base="http://blog.araya.dev/posts/f-to-h.html">&lt;p&gt;この記事は&lt;a href=&quot;https://adventar.org/calendars/2158&quot;&gt;退職者 Advent Calendar 2017&lt;/a&gt;の2日目の記事です。&lt;/p&gt;
+
+&lt;h2 id=&quot;前置き&quot;&gt;前置き&lt;/h2&gt;
+
+&lt;p&gt;2017年9月30日に、&lt;a href=&quot;https://fuller-inc.com&quot;&gt;フラー株式会社&lt;/a&gt;を退職しました。
+フラーに入社したのが2015年10月半ばで、その前も1ヶ月ほどインターンをしていたので、
+2年ほどお世話になっていました。&lt;/p&gt;
+
+&lt;blockquote class=&quot;twitter-tweet&quot; data-lang=&quot;ja&quot;&gt;&lt;p lang=&quot;ja&quot; dir=&quot;ltr&quot;&gt;フラー株式会社での最終出勤日を終えました。&lt;br /&gt;退職エントリーは後ほど &lt;a href=&quot;https://t.co/Y5C6slYICS&quot;&gt;pic.twitter.com/Y5C6slYICS&lt;/a&gt;&lt;/p&gt;&amp;mdash; あらや (@_araya_) &lt;a href=&quot;https://twitter.com/_araya_/status/908626234342465537?ref_src=twsrc%5Etfw&quot;&gt;2017年9月15日&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async=&quot;&quot; src=&quot;https://platform.twitter.com/widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+
+&lt;p&gt;翌日、10月1日に&lt;a href=&quot;https://fe2o3.jp&quot;&gt;合同会社ヘマタイト&lt;/a&gt;に入社し、現在楽しく働いています。&lt;/p&gt;
+
+&lt;p&gt;退職エントリを書き途中で長らく放置していたのですが、
+ちょうど退職者Advent Calendarが目に留まりこれは良いと思って即参加登録しました。&lt;/p&gt;
+
+&lt;h2 id=&quot;フラーでやっていたこと&quot;&gt;フラーでやっていたこと&lt;/h2&gt;
+&lt;p&gt;フラーでは主にWebフロントエンドを担当していて、同社が展開している&lt;a href=&quot;https://appa.pe/&quot;&gt;App Ape&lt;/a&gt;
+の開発に携わったり、
+グロースハック的なもので色々なLandingPageを作るなどしました。&lt;/p&gt;
+
+&lt;p&gt;たまに、サーバーサイドやAndroidなんかもやりましたが、7割以上Webフロントをやっていたんじゃないかと思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;なぜフラーfullerに入ったか&quot;&gt;なぜフラー(FULLER)に入ったか&lt;/h2&gt;
+&lt;p&gt;FULLERと出会ったのは高専時代にFULLERのCEOが学校に講演に来たのがきっかけでした。
+FULLERのようなベンチャー企業との出会いは学校に閉じこもっていた僕にとってかなりの衝撃で、
+それからベンチャーで働くことに興味を持ち、FULLERという存在が憧れになりました。&lt;/p&gt;
+
+&lt;p&gt;それから3年ほど経ち、高専専攻科に在学中の夏休みにFULLERでインターン、
+その直後に専攻科を休学し入社しました。(同年度3月に退学しています。)&lt;/p&gt;
+
+&lt;p&gt;FULLERに入った決め手はシンプルで、「めっちゃワクワクしたから」というのが最大でした。&lt;br /&gt;
+今思うと決め手に若さを感じます。&lt;br /&gt;
+インターンしているとき、&lt;strong&gt;これからFULLERはどんどん成長していきクールな製品を
+世の中に生み出していく&lt;/strong&gt; ということを確信していた僕は、FULLERという会社に心を奪われ、入社を決意しました。&lt;/p&gt;
+
+&lt;p&gt;学校を休学してFULLERに入るという決断をしたとき、応援してくれた研究室の先生方や両親に今でもとても感謝しています。頭が上がりません。  :bow:&lt;/p&gt;
+
+&lt;h2 id=&quot;fullerに入社してから&quot;&gt;FULLERに入社してから&lt;/h2&gt;
+&lt;p&gt;入社後すぐにアメリカでの開発合宿に連れていってもらったり、
+その直後にそこそこの規模の新プロジェクトにアサインされたり、
+入社後1ヶ月後にはすでに最前線で戦っていました。&lt;br /&gt;
+CEOやCTOは「戦いの中でしか成長できない」ということを言っていて、
+これは今でも僕のマインドセットのコアになっています。&lt;/p&gt;
+
+&lt;p&gt;僕が入社した頃、FULLERは創業4年を迎えようとしていて、20人くらいの会社でした。&lt;br /&gt;
+それから5周年を迎え、&lt;a href=&quot;https://5th.fuller-inc.com/&quot;&gt;会社名をフラー株式会社に改め、ロゴも新しくなりました&lt;/a&gt;。&lt;br /&gt;
+それからさらに1年後、僕が退社するころには社員数は50人ほどになっていました。&lt;br /&gt;
+フラーという会社や、そのサービスが大きくなっていく過程を自分自身で感じることができた経験は大きかったと思っています。&lt;/p&gt;
+
+&lt;p&gt;フラーは5周年を迎えたときに、「フラーメンバーの心得」という、行動規範のものを作っていて、
+「フラーの良さ」がそこに凝縮されいます。&lt;br /&gt;
+その中の1つの項目が今も僕の心に強く焼き付いていて、座右の銘を聞かれたらこれを答えます。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;本当に迷ったら、楽しい方を選べ。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;転職&quot;&gt;転職&lt;/h2&gt;
+&lt;p&gt;フラーで働き始めて1年半ほど経った頃、他の事業や技術に挑戦したくなってきました。&lt;br /&gt;
+それとは別に、単純にお金を稼ぎたかったので、2017年の3月から、以前から知り合いだった
+&lt;a href=&quot;https://twitter.com/umisama&quot;&gt;@umisama&lt;/a&gt;がやっているヘマタイトという会社で、
+パートタイム契約で副業を始めました。&lt;br /&gt;
+転職活動を始めたのはそれから2ヶ月くらい後のことで、いくつかの会社の人事の方々とお話させていただきましたが、最終的にヘマタイトに正社員として入社することに決めました。&lt;/p&gt;
+
+&lt;p&gt;最大の決め手となったのは、リモート・フルフレックスタイムで働けるという点でした。&lt;br /&gt;
+この働き方はフラーにいるときからやってみたかったことで、現在はこの制度を最大限いかして仕事しています。&lt;br /&gt;&lt;/p&gt;
+
+&lt;blockquote class=&quot;twitter-tweet&quot; data-lang=&quot;ja&quot;&gt;&lt;p lang=&quot;ja&quot; dir=&quot;ltr&quot;&gt;転職して業務開始1日目なんですが、「自宅でけものフレンズをスピーカーとサブディスプレイで垂れ流しながら仕事できる職場、最高かよ」ってなってます&lt;/p&gt;&amp;mdash; あらや (@_araya_) &lt;a href=&quot;https://twitter.com/_araya_/status/914720135541178368?ref_src=twsrc%5Etfw&quot;&gt;2017年10月2日&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async=&quot;&quot; src=&quot;https://platform.twitter.com/widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+
+&lt;p&gt;リモート・フルフレックスで働いてみての所感は今度またブログに書きたいと思います。&lt;/p&gt;
+
+&lt;p&gt;最初の会社に入るときも、今回の転職も、&lt;code class=&quot;highlighter-rouge&quot;&gt;履歴書・職務経歴書 -&amp;gt; 面接&lt;/code&gt;といった採用フローをまともに
+受けてないので、もし次があったらそういうのも経験したいなと思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;退職直前にやったこと&quot;&gt;退職直前にやったこと&lt;/h2&gt;
+&lt;p&gt;プロジェクト的には、機能開発のほうからフェードアウトし、
+フレームワークのバージョンをあげたり、lintをちゃんと回すようにしたり、CIまわりを整備したりしていました。&lt;/p&gt;
+
+&lt;p&gt;あとは、フラーメンバーに対して、「これだけは絶対にやるべき」というあることをプレゼンしたり、
+退職日に社内ドキュメント共有ツールにポエムを投稿したりしました。&lt;/p&gt;
+
+&lt;p&gt;なお、このポエムは1ヶ月後抹消することに成功しています。&lt;/p&gt;
+
+&lt;blockquote class=&quot;twitter-tweet&quot; data-lang=&quot;ja&quot;&gt;&lt;p lang=&quot;ja&quot; dir=&quot;ltr&quot;&gt;前職を退職する直前にQiita::Teamに投稿したポエム、そろそろ賞味期限切れだと思うのでこのツイートを見た方は消しておいてください...&lt;/p&gt;&amp;mdash; あらや (@_araya_) &lt;a href=&quot;https://twitter.com/_araya_/status/927929698738245632?ref_src=twsrc%5Etfw&quot;&gt;2017年11月7日&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async=&quot;&quot; src=&quot;https://platform.twitter.com/widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+
+&lt;blockquote class=&quot;twitter-tweet&quot; data-lang=&quot;ja&quot;&gt;&lt;p lang=&quot;ja&quot; dir=&quot;ltr&quot;&gt;放った刺客により、前職のQiita::Teamに投稿したポエムを削除することに成功した&lt;/p&gt;&amp;mdash; あらや (@_araya_) &lt;a href=&quot;https://twitter.com/_araya_/status/928878620357009409?ref_src=twsrc%5Etfw&quot;&gt;2017年11月10日&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async=&quot;&quot; src=&quot;https://platform.twitter.com/widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+
+&lt;p&gt;数百行のlintエラーを直し、言いたかったことを言ってすっきり退職しました。&lt;br /&gt;
+退職直前に負債を出来る限り返済するの、気持ちよく退職できるのでおすすめです。&lt;/p&gt;
+
+&lt;h2 id=&quot;ヘマタイトでやっていることやりたいこと&quot;&gt;ヘマタイトでやっていること・やりたいこと&lt;/h2&gt;
+&lt;p&gt;ヘマタイトでは受託開発をやったり、「セキュリティと教育」をメインの事業領域として、自社開発をやっています。&lt;/p&gt;
+
+&lt;p&gt;ヘマタイトはフルタイムの社員が4,5名程度の小さな会社です。
+少ない人数で多くの開発を回しているおかげで、多様な技術に触れられ、技術者としてかなり楽しく働いています。&lt;/p&gt;
+
+&lt;p&gt;まだ入社したばかりだというのもありますが、ヘマタイトでやりたいことは本当に色々あって、&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;ヘマタイトって何の会社？って聞かれたときに「これ作っている会社です」ってドヤ顔で言えるような製品を作る&lt;/li&gt;
+  &lt;li&gt;収益あげて社員全員で富豪になる&lt;/li&gt;
+  &lt;li&gt;実装も見た目もかっこいいプロダクトを作る&lt;/li&gt;
+  &lt;li&gt;技術の共有を効率良く行い、社内の技術レベルをあげる&lt;/li&gt;
+  &lt;li&gt;とにかく楽しくものづくりをする&lt;/li&gt;
+  &lt;li&gt;エンジニアリング以外にも、UI/UX、マーケティングのスキルを少しでも身につける&lt;/li&gt;
+  &lt;li&gt;対外的発信能力の向上(テックブログとかやりたい)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;などなど。僕が勝手に言っているだけなので他のメンバーからストップがかかるかもしれませんが、こんなことを目指してやっていきたいです。&lt;/p&gt;
+
+&lt;h2 id=&quot;最後に&quot;&gt;最後に&lt;/h2&gt;
+&lt;p&gt;今までお世話になった皆様に感謝しつつ、これからもやっていきます:muscle: &lt;br /&gt;
+よろしくおねがいします :clap:&lt;/p&gt;</content><author><name></name></author><category term="雑記" /><category term="転職" /><summary type="html">この記事は退職者 Advent Calendar 2017の2日目の記事です。</summary></entry><entry><title type="html">2017年にあったKosen10’sの動きまとめ</title><link href="http://blog.araya.dev/posts/kosen10s-summary-2017.html" rel="alternate" type="text/html" title="2017年にあったKosen10'sの動きまとめ" /><published>2017-12-01T00:00:00+09:00</published><updated>2017-12-01T00:00:00+09:00</updated><id>http://blog.araya.dev/posts/kosen10s-summary-2017</id><content type="html" xml:base="http://blog.araya.dev/posts/kosen10s-summary-2017.html">&lt;p&gt;この記事は&lt;a href=&quot;https://adventar.org/calendars/2199&quot;&gt;#kosen10s Advent Calendar 2017&lt;/a&gt;
+の1日目の記事です。&lt;/p&gt;
+
+&lt;p&gt;2017年も残すところあと1ヶ月となったので、僕は2017年にKosen10’sであった動きを振り返りたいと思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;kosen10sとは&quot;&gt;Kosen10’sとは&lt;/h2&gt;
+&lt;p&gt;初日なので一応書いておきます。&lt;br /&gt;
+Kosen10’sとはなにかというと、2010年4月に高専本科に入学した人たちで遊んでいるグループです。
+&lt;a href=&quot;https://kosen10s.connpass.com/event/69541/&quot;&gt;connpassのイベントページ&lt;/a&gt;に掲載
+されている言葉を借りると、&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;2010年に選択を間違えた人たちでワイワイする&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;ということだそうです。&lt;/p&gt;
+
+&lt;p&gt;具体的に何をやっているかというと、
+Slackで与太話をしたり、
+たまにLT大会をやったり、ダーツやビリヤード、麻雀などをして遊んだり飲み会をしたりしています。&lt;/p&gt;
+
+&lt;p&gt;Kosen10’sの団体名について、
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Kosen10's&lt;/code&gt;とか&lt;code class=&quot;highlighter-rouge&quot;&gt;kosen10's&lt;/code&gt;とか&lt;code class=&quot;highlighter-rouge&quot;&gt;KOSEN10's&lt;/code&gt;とか&lt;code class=&quot;highlighter-rouge&quot;&gt;kosen10s&lt;/code&gt;とかとか色々表記ゆれがありますが、
+なんでも良いので気にしなくて大丈夫です。&lt;/p&gt;
+
+&lt;p&gt;読み方は「こーせんてんず」です。 縮めて、「てんず」とか言ったりします。&lt;/p&gt;
+
+&lt;h2 id=&quot;whats-new-in-2017&quot;&gt;What’s new in 2017&lt;/h2&gt;
+&lt;p&gt;前置きの紹介も一通り終わったので、アドベントカレンダー1日目の本題に移ろうと思います。&lt;/p&gt;
+
+&lt;p&gt;2017年1月から2017年11月にKosen’10sであった新しい動きやイベントを、以下の項目について振り返ろうと思います。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;イベント&lt;/li&gt;
+  &lt;li&gt;Slack channel&lt;/li&gt;
+  &lt;li&gt;emoji&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;イベント&quot;&gt;イベント&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://kosen10s.connpass.com/&quot;&gt;connpassのイベント一覧&lt;/a&gt;からスクショを撮ってきました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://blog.araya.dev/images/2017-11-28-kosen10s-summary-2017/s.png&quot; alt=&quot;&quot; class=&quot;full-size-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;LT、花見、ダーツ・ビリヤード、バドミントン、3周年パーティと結構色々やっています。
+この他にもConnpassは立ててないけど集まって遊んだりしているので、月一以上のペースで何かしら活動が行われていると思います。&lt;/p&gt;
+
+&lt;h3 id=&quot;slack-channel&quot;&gt;Slack channel&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://api.slack.com&quot;&gt;Slack API&lt;/a&gt;を駆使して、2017年内に作られたSlack channelを見てみます。&lt;/p&gt;
+
+&lt;p&gt;Slackの&lt;code class=&quot;highlighter-rouge&quot;&gt;channels.list&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;users.profile.get&lt;/code&gt;を駆使して、2017年に作られたchannelと作者をリストにしたものがこちらです。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Channel Name: #___
+Created by: allajah
+Created at: 2017/3/17
+Purpose:
+Topic:
+
+Channel Name: #3rd-anniversary
+Created by: denari
+Created at: 2017/9/23
+Purpose: kosen10s(さんさい)
+Topic: &amp;lt;http://kosen10s.net/3rd-anniversary/|kosen10s.net/3rd-anniversary/&amp;gt;
+
+Channel Name: #badminton
+Created by: denari
+Created at: 2017/5/29
+Purpose: する。一時的なchannelのつもりだけど、運動系全体channelにして長期運用もアリ
+Topic: &amp;lt;https://kosen10s.connpass.com/event/69887/&amp;gt;
+
+Channel Name: #board-game
+Created by: tsudukami
+Created at: 2017/6/28
+Purpose: 非電源ゲームを楽しむ
+Topic:
+
+Channel Name: #datz-botch
+Created by: denari
+Created at: 2017/3/24
+Purpose: ふとした時に 「ぼっち」 を回避するため、各位に「今日飯イケる人〜」みたいなのを聞くchannel(試験運用)
+Topic:
+
+Channel Name: #dtm部
+Created by: unasuke
+Created at: 2017/8/8
+Purpose: 部活
+Topic:
+
+Channel Name: #freelance
+Created by: c-bata
+Created at: 2017/9/30
+Purpose:
+Topic:
+
+Channel Name: #game
+Created by: allajah
+Created at: 2017/7/20
+Purpose:
+Topic:
+
+Channel Name: #gender
+Created by: tsudukami
+Created at: 2017/2/21
+Purpose:
+Topic:
+
+Channel Name: #golang
+Created by: allajah
+Created at: 2017/1/2
+Purpose: We love go-gopher &amp;amp;lt;3
+Topic: :golang:
+
+Channel Name: #heya
+Created by:
+Created at: 2017/1/7
+Purpose: 部屋
+Topic:
+
+Channel Name: #kusa
+Created by: puhitaku
+Created at: 2017/6/28
+Purpose: :kusa: 生やしたらこちらへ流しましょう。
+Topic: :kusa:
+
+Channel Name: #lt08
+Created by: denari
+Created at: 2017/6/5
+Purpose: 7月
+Topic: https://kosen10s.connpass.com/event/62398/
+
+Channel Name: #lt09
+Created by: sakasin
+Created at: 2017/7/31
+Purpose:
+Topic: 日程調整
+
+Channel Name: #lt10
+Created by: allajah
+Created at: 2017/10/12
+Purpose: 3周年記念 :tada:
+Topic:
+
+Channel Name: #pool
+Created by: zero
+Created at: 2017/1/27
+Purpose:
+Topic: :zero_: pool is a place that people play billiards.
+
+Channel Name: #うどん
+Created by: denari
+Created at: 2017/4/17
+Purpose: 思い立ったが吉日。うどん県でうどん食う。時期すら未定
+Topic: 時期を決めるだけの決定材料を探そう！
+
+Channel Name: #おしゃれスポーツ
+Created by: denari
+Created at: 2017/3/20
+Purpose: :darts: :eight_ball:
+Topic: おしゃれスポーツダサい問題
+
+Channel Name: #お花見
+Created by: denari
+Created at: 2017/3/22
+Purpose: OHANAMI
+Topic: 4/9開催 任意のN次会について飯田橋駅にて集合
+
+Channel Name: #ジャパリパーク
+Created by: allajah
+Created at: 2017/3/17
+Purpose: Welcome to ようこそ ジャパリパーク！
+Topic:
+
+Channel Name: #てすと
+Created by:
+Created at: 2017/3/17
+Purpose:
+Topic:
+
+Channel Name: #どうぶつの森ポケットキャンプ
+Created by: denari
+Created at: 2017/11/25
+Purpose: 使い道ないけどともかく作った。IDを置いておく場所になりそう
+Topic:
+
+Channel Name: #秋吉会
+Created by: unasuke
+Created at: 2017/7/16
+Purpose: 秋吉に行く
+Topic:
+
+Channel Name: #麻雀
+Created by: allajah
+Created at: 2017/10/9
+Purpose: :mahjong:  初心者・これから始めたい人歓迎
+Topic:
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;実に24ものchannelが2017年中に作られていることがわかりますね。
+作成者はdenariが多いみたいです。&lt;/p&gt;
+
+&lt;p&gt;今年の3月頃に日本語名のChannelが作成できるようになったので、いくつか日本語名のChannelもあります。&lt;br /&gt;
+今生き残ってるもので最初に作られたのは&lt;code class=&quot;highlighter-rouge&quot;&gt;#ジャパリパーク&lt;/code&gt;channelです。&lt;/p&gt;
+
+&lt;p&gt;僕が3/17に&lt;code class=&quot;highlighter-rouge&quot;&gt;#___&lt;/code&gt;なるChannelを作ってるみたいですが、全く記憶にありません。&lt;/p&gt;
+
+&lt;p&gt;また、この記事を書いた直後に自らの手で&lt;code class=&quot;highlighter-rouge&quot;&gt;#job&lt;/code&gt;channelを追加したので、2017年に作られたchannelは25になりました。&lt;/p&gt;
+
+&lt;h3 id=&quot;emoji&quot;&gt;emoji&lt;/h3&gt;
+&lt;p&gt;Kosen10sのSlackといえばemojiの数が尋常ではないと内輪でよく話題になります。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://blog.araya.dev/images/2017-11-28-kosen10s-summary-2017/e.png&quot; alt=&quot;&quot; class=&quot;full-size-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;aliasも含めると750あるみたいです。&lt;/p&gt;
+
+&lt;p&gt;試したら、残念ながら Slack APIではemojiの作成日が取得できなかったため、2017年に追加されたemojiをリスト化することはできませんでした。
+(おそらく、&lt;code class=&quot;highlighter-rouge&quot;&gt;#emoji&lt;/code&gt; channelのログを漁れば分かると思うので誰かやってくれるかも…)&lt;/p&gt;
+
+&lt;p&gt;emoji関連で大きな動きといえば、最近日本語でもemojiが登録できるようになったので、こんなことになっています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://blog.araya.dev/images/2017-11-28-kosen10s-summary-2017/e2.png&quot; alt=&quot;&quot; class=&quot;full-size-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;ぽのか先輩の別称がわかって便利ですね。&lt;/p&gt;
+
+&lt;p&gt;最近はA~Zのアルファベットを全部企業やサービスのロゴで埋めようという動きもあって、 &lt;code class=&quot;highlighter-rouge&quot;&gt;#emoji&lt;/code&gt; channelの動向は要チェックです。&lt;/p&gt;
+
+&lt;p&gt;ちなみに、こんな話もあります。&lt;/p&gt;
+&lt;blockquote class=&quot;twitter-tweet&quot; data-partner=&quot;tweetdeck&quot;&gt;&lt;p lang=&quot;ja&quot; dir=&quot;ltr&quot;&gt;&lt;a href=&quot;https://twitter.com/hashtag/kosen10s?src=hash&amp;amp;ref_src=twsrc%5Etfw&quot;&gt;#kosen10s&lt;/a&gt; に麻雀部ができたら牌全種のemojiを追加することを宣言します&lt;/p&gt;&amp;mdash; あらや (@_araya_) &lt;a href=&quot;https://twitter.com/_araya_/status/917389997686251522?ref_src=twsrc%5Etfw&quot;&gt;October 9, 2017&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async=&quot;&quot; src=&quot;https://platform.twitter.com/widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;こんな雰囲気で、Kosen10’sはゆるく楽しく遊んでいます。
+2010年に高専入学していて、僕達と遊んでくれる人がいたらぜひ&lt;a href=&quot;https://kosen10s-invite.herokuapp.com/&quot;&gt;Slackに参加&lt;/a&gt;してください！&lt;/p&gt;
+
+&lt;p&gt;明日は&lt;a href=&quot;https://twitter.com/puhitaku&quot;&gt;@puhitaku&lt;/a&gt;の記事です。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://adventar.org/calendars/2199&quot;&gt;#kosen10s Advent Calendar 2017&lt;/a&gt;
+は参加者の80%くらいが何を書くのか全くわからないので、当日まで目が離せません :eyes:&lt;/p&gt;</content><author><name></name></author><summary type="html">この記事は#kosen10s Advent Calendar 2017 の1日目の記事です。</summary></entry><entry><title type="html">Firebase Hostingを使って静的Webサイトを独自ドメインかつSSL証明書付きで公開する</title><link href="http://blog.araya.dev/posts/firebase-hosting-jekyll.html" rel="alternate" type="text/html" title="Firebase Hostingを使って静的Webサイトを独自ドメインかつSSL証明書付きで公開する" /><published>2017-10-26T15:41:04+09:00</published><updated>2017-10-26T15:41:04+09:00</updated><id>http://blog.araya.dev/posts/firebase-hosting-jekyll</id><content type="html" xml:base="http://blog.araya.dev/posts/firebase-hosting-jekyll.html">&lt;p&gt;ブログのホスティング先をGitHub PagesからFirebase Hostingに変えてみた。&lt;/p&gt;
+
+&lt;h2 id=&quot;firebase-hostingとは&quot;&gt;Firebase Hostingとは&lt;/h2&gt;
+&lt;p&gt;その名の通りFirebaseがWebサイトをホスティングしてくれるサービス。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://firebase.google.com/docs/hosting/&quot;&gt;https://firebase.google.com/docs/hosting/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;嬉しいポイントは&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;Zero-configuration SSL is built into Firebase Hosting so content is always delivered securely.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;ここにあって、なんと独自ドメインでもSSLをサポートしてくれる。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://firebase.google.com/pricing/&quot;&gt;料金&lt;/a&gt;も、フリーでそこそこ使えて、ホスティングしてくれるファイルの最大容量は計1GB・
+月10GBまで配信できる。
+個人ブログくらいならフリーで間に合うし、足りなくなっても月$25払えば10GBストア・月50GB配信できるので安くすむ。&lt;/p&gt;
+
+&lt;h2 id=&quot;firebaseでのセットアップ&quot;&gt;Firebaseでのセットアップ&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://console.firebase.google.com/&quot;&gt;FirebaseのConsole&lt;/a&gt;にログインして新規プロジェクトを作成する。&lt;/p&gt;
+
+&lt;h2 id=&quot;セットアップ&quot;&gt;セットアップ&lt;/h2&gt;
+&lt;p&gt;Firebase CLIをnpmでインストールする&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm install -g firebase-tools
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;firebase-cliでログインする&quot;&gt;Firebase CLIでログインする&lt;/h2&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;firebase login
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;ブラウザが起動して、Googleアカウントでサインインが求められるのでサインインする。&lt;/p&gt;
+
+&lt;h2 id=&quot;プロジェクトの設定をする&quot;&gt;プロジェクトの設定をする&lt;/h2&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;firebase init
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;対話型でまずカレントディレクトリを設定する目的を聞いてくる。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Which Firebase CLI features do you want to setup for this folder?
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;ここでは &lt;code class=&quot;highlighter-rouge&quot;&gt;Hosting&lt;/code&gt; を選択する。&lt;/p&gt;
+
+&lt;p&gt;次に、設定するFirebaseのプロジェクトを聞いてくるので、さきほど作成したFirebaseプロジェクトを選択する。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Select a default Firebase project for this directory:
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;次に、どのディレクトリをpublic directoryに選択するか聞かれる。
+ここに設定したディレクトリがrootとしてFirebaseにデプロイされるので、
+Webサイトの場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;index.html&lt;/code&gt;が格納されている、ビルドしたディレクトリ(&lt;code class=&quot;highlighter-rouge&quot;&gt;dist&lt;/code&gt;など)を指定する。
+jekyllの場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;_site&lt;/code&gt;が該当するので、それを指定する。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; What do you want to use as your public directory?
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;次に、プロジェクトをSingle Page Applicationとして設定するか聞いてくる。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;yes&lt;/code&gt;にするとURLを全て/index.htmlにリダイレクトさせる。
+今回の場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;NO&lt;/code&gt;でいい。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Configure as a single-page app (rewrite all urls to /index.html)? (y/N)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; Firebase initialization complete!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;ここまで完了すると、&lt;code class=&quot;highlighter-rouge&quot;&gt;.firebaserc&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;firebase.json&lt;/code&gt;が作成される。
+プロジェクトIDや、&lt;code class=&quot;highlighter-rouge&quot;&gt;firebase init&lt;/code&gt;で設定した項目を変えたい場合は編集する。&lt;/p&gt;
+
+&lt;h2 id=&quot;ビルド&quot;&gt;ビルド&lt;/h2&gt;
+&lt;p&gt;jekyllの場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;_config.yml&lt;/code&gt;の&lt;code class=&quot;highlighter-rouge&quot;&gt;url&lt;/code&gt;フィールドを変更する必要がある
+Firebaseのコンソールにアクセスし、projectIDを確認する。
+デプロイ先のURLは&lt;code class=&quot;highlighter-rouge&quot;&gt;https://{project_id}.firebaseapp.com&lt;/code&gt;になるので、これを&lt;code class=&quot;highlighter-rouge&quot;&gt;url&lt;/code&gt;フィールドに設定する(&lt;code class=&quot;highlighter-rouge&quot;&gt;{project_id}&lt;/code&gt;は置き換える)。&lt;/p&gt;
+
+&lt;h2 id=&quot;デプロイ&quot;&gt;デプロイ&lt;/h2&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;firebase deploy
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;デプロイ完了。Firebase ConsoleのメニューからHostingを選ぶと、ダッシュボードにデプロイ履歴が記載されてる。&lt;/p&gt;
+
+&lt;p&gt;とりあえずここまででFirebaseにWebサイトを公開するところまで完了。&lt;/p&gt;
+
+&lt;h2 id=&quot;カスタムドメインの設定&quot;&gt;カスタムドメインの設定&lt;/h2&gt;
+&lt;p&gt;Firebaseの管理コンソールから、 Hostingを選択して、「ドメインを接続」　ボタンを押して、ウィザードの通りに実行する。
+自分の場合はAWSのRoute 53でポチポチやった。
+流れとしては、&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;DNSにTXTレコードを設定して、ドメインの管理者であることを証明&lt;/li&gt;
+  &lt;li&gt;与えられたIPv4をDNSにAレコードを貼る&lt;/li&gt;
+  &lt;li&gt;SSL証明書がプロビジョニングされるまで待つ(Firebaseがやってくれる)
+すでにGitHub PagesなどにホスティングしていてCNAMEやAレコードを貼っている場合は、2の前に外しておく。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;ここまででWebサイトをFirebaseにホスティングしてもらい、独自ドメインを使ってさらにHTTPSに対応することができた。&lt;/p&gt;
+
+&lt;h2 id=&quot;自動デプロイ&quot;&gt;自動デプロイ&lt;/h2&gt;
+&lt;p&gt;GitHub Pagesの魅力の一つに、GitHub上のリポジトリにpushしたら自動でデプロイしてくれるというものがあったが、
+今のままの構成だとその恩恵をウケられないのでCIにデプロイしてもらう。今回はCirlceCI 2.0を使う。　&lt;/p&gt;
+
+&lt;h3 id=&quot;ci用のtokenの発行&quot;&gt;CI用のtokenの発行&lt;/h3&gt;
+&lt;p&gt;firebase CLIでCI用のtokenを発行する&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;firebase login:ci
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;ブラウザでGoogleサインインすると、tokenが出力されるので控えておく。&lt;/p&gt;
+
+&lt;h3 id=&quot;circleciの設定&quot;&gt;CircleCIの設定&lt;/h3&gt;
+
+&lt;p&gt;.circleci/config.ymlを書く&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;na&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;2&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;jobs&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;working_directory&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;~/repo&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;docker&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;circleci/ruby:latest&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;steps&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;checkout&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Install firebase-tools&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;|&lt;/span&gt;
+            &lt;span class=&quot;no&quot;&gt;curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -&lt;/span&gt;
+            &lt;span class=&quot;no&quot;&gt;sudo apt-get install -y nodejs&lt;/span&gt;
+            &lt;span class=&quot;no&quot;&gt;echo prefix=${HOME}/.local &amp;gt;&amp;gt; ~/.npmrc&lt;/span&gt;
+            &lt;span class=&quot;no&quot;&gt;npm install -g firebase-tools&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Install dependencies&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;bundle install&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Build&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;make build&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Deploy&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;~/.local/bin/firebase deploy --token $FIREBASE_TOKEN&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;CircleCIのprojectに、さっき取得したCI用tokenを環境変数として指定する。ここでは&lt;code class=&quot;highlighter-rouge&quot;&gt;FIREBASE_TOKEN&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;これでGitHubにpushするとデプロイされるようになった。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;このブログはCircleCI, GitHub, Firebase Hostingに支えられています。&lt;/p&gt;</content><author><name></name></author><summary type="html">ブログのホスティング先をGitHub PagesからFirebase Hostingに変えてみた。</summary></entry><entry><title type="html">npm v5.5.0の新機能</title><link href="http://blog.araya.dev/posts/npm-v550.html" rel="alternate" type="text/html" title="npm v5.5.0の新機能" /><published>2017-10-24T18:15:01+09:00</published><updated>2017-10-24T18:15:01+09:00</updated><id>http://blog.araya.dev/posts/npm-v550</id><content type="html" xml:base="http://blog.araya.dev/posts/npm-v550.html">&lt;p&gt;npm v5.5.0が10/4にリリースされました。若干今更感もありますが、v5.5.0で入った新機能について触れたいと思います。&lt;/p&gt;
+
+&lt;p&gt;今回のリリースでプロフィール周りの設定をコマンドラインから行いやすくなりました。　&lt;/p&gt;
+
+&lt;h2 id=&quot;2要素認証&quot;&gt;2要素認証&lt;/h2&gt;
+&lt;p&gt;npmのアカウントに2要素認証を設定できるようになりました。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm profile enable-tfa
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;で設定できます。npmjs.comのWebサイト内から設定する項目は見つかりませんでした。&lt;/p&gt;
+
+&lt;h2 id=&quot;トークン管理&quot;&gt;トークン管理&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;npm token&lt;/code&gt;コマンドで、tokenのCreate, List, Updateができるようになりました。
+また、token作成時に&lt;code class=&quot;highlighter-rouge&quot;&gt;npm token create --read-only&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;--read-only&lt;/code&gt;オプションをつけることで、
+対象tokenを使ってのnpm moduleの更新や新規作成ができなくなります。
+ただ、&lt;code class=&quot;highlighter-rouge&quot;&gt;read-only&lt;/code&gt;の名の通りプライベートなnpm moduleをダウンロードすることが出来るので、
+CIなどに設定するトークンとして有効です。&lt;/p&gt;
+
+&lt;h2 id=&quot;パスワードの変更とeメールアドレスの設定&quot;&gt;パスワードの変更とEメールアドレスの設定&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;npm profile set password&lt;/code&gt; でCLIからパスワードを変更することができるようになりました。&lt;/p&gt;
+
+&lt;p&gt;また、&lt;code class=&quot;highlighter-rouge&quot;&gt;npm profile set email &amp;lt;e-mail address&amp;gt;&lt;/code&gt;でメールアドレスを変更できるようになりました。
+Eメールアドレスを変更した後は、npmから送られてくるverification mailから、承認する必要があります。&lt;/p&gt;
+
+&lt;h2 id=&quot;その他プロフィールの変更&quot;&gt;その他プロフィールの変更&lt;/h2&gt;
+&lt;p&gt;CLIから、npm profileのTwitterやGitHubなども更新することができるようになりました。
+例えば、Twitterアカウントを変更するには、&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm profile set twitter _araya_
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;とします。&lt;/p&gt;
+
+&lt;h2 id=&quot;スタンドアローンなnpm-packageとしても利用可能&quot;&gt;スタンドアローンなnpm packageとしても利用可能&lt;/h2&gt;
+&lt;p&gt;ここまで紹介した機能は全て&lt;a href=&quot;https://www.npmjs.com/package/npm-profile&quot;&gt;npm-profile&lt;/a&gt;
+でも利用可能です。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;2FA設定できるようになったのは良いですね。
+private npm module使ったことないけど、常用してる人にとっては、Read only tokenは便利そうです。&lt;/p&gt;</content><author><name></name></author><category term="npm" /><summary type="html">npm v5.5.0が10/4にリリースされました。若干今更感もありますが、v5.5.0で入った新機能について触れたいと思います。</summary></entry></feed>

@@ -1,0 +1,76 @@
+@import url("https://necolas.github.io/normalize.css/8.0.1/normalize.css");
+@import url('https://fonts.googleapis.com/css?family=Muli');
+@import "variables.css";
+html {
+    height: 100%;
+}
+
+body {
+    font-family: 'Muli', sans-serif;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.container {
+    width: 900px;
+    margin: 0 auto;
+}
+
+.profile {
+    display: flex;
+    justify-content: center;
+}
+.profile-contents {
+    margin-left: 2em;
+}
+.profile-color {
+    position: relative;
+    padding-left: 1.5em;
+}
+.profile-color::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: '';
+    width: 1em;
+    height: 1em;
+    border: 1px solid black;
+    background-color: var(--primary-color);
+}
+
+.profile-list {
+    list-style: none;
+    padding: 0;
+}
+
+.profile-list li {
+    line-height: 1.5em;
+}
+
+.icon {
+    width: 200px;
+    height: 200px;
+}
+
+.icon img {
+    width: 100%;
+}
+
+.links {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+}
+.links li {
+    height: 2em;
+    margin: 0 1em;
+}
+.links a {
+    display: inline-block;
+    height: 100%;
+}
+
+.links img {
+    height: 100%;
+}

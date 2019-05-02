@@ -1,0 +1,18 @@
+---
+title: Posts
+---
+
+<ul class="post-list">
+  {% if site.posts %}
+    {% for post in site.posts %}
+      <li>
+        <a href="{{ site.url }}{{ post.url }}">
+          <span class="post-list-item-title">{{ post.title }}</span>
+          <time class="post-list-item-time">{{ post.date | date_to_string }} </time>
+        </a>
+      </li>
+    {% endfor %}
+  {% else %}
+    Sorry, there's no post now
+  {% endif %}
+</ul>

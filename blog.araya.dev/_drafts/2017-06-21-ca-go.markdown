@@ -1,0 +1,150 @@
+---
+title: "CA.go #1に参加してきた"
+date: "2017-06-21 19:38:32 +0900"
+tags:
+  - イベントレポート
+  - Golang
+
+---
+
+# sync.Poolで爆上げメモリ効率
+- パフォーマンスチューニングでメモリアロケーション減らすの大事
+- sliceのメモリ確保だけじゃなくてもっとアロケーション減らしたい
+## sync.Pool
+- メモリを使いまわせる
+### 使い方
+1. 在庫がない場合に初期化する関数をNewに定義
+2. 在庫から取得。なければNewで新しいものを作る
+3. pool.Putで再利用
+
+### ベンチマーク
+- pool使ってるとメモリを超効率良く使えるし、メモリ不可がかからない
+
+### 実用的な使い方
+- 使いまわしてくるから、値はそのまま返ってくるから初期化が必要
+- 0スライスをとってもいいが、内部的には参照している配列に値が残ってる
+
+```
+a := []int{1,2,3,4}
+b := a[:0]
+b = append(b, 5)
+```
+- Reset メソッドを生やしておくと便利かつ読みやすい
+- 型がinterface{}なのでラップして型安全に
+
+### 最後に
+- サイズが小さいときはPoolじゃないほうが速いときもある
+- なんでもかんでもPoolではない
+
+# 知っておきたい interface と reflect
+## Go interface
+- go には concrete types と abstract typesがある
+### concrete types
+int8, int16, int32....
+### abstract types
+Behaviourの定義
+interface{ } says nothing
+## Why using interface
+### ジェネリックアルゴリズム
+- メソッドさえ持っていれば型は関係ない
+### 実装の詳細を隠せる
+- APIから実装を切り離せる
+- 実装の変更追加削除が簡単
+- contextがいい例 cancelCtx とか emptyCtxとか
+### Interception point
+- interfaceを持っていれば型は関係ない
+
+## ownedではどうつかってるか
+- Blockに、imgBlock、twitterBlock、textBlockなどを生やしていて、新しいBlockの概念が必要になったらそのまま付け足せる
+### type assertions
+- 引数として渡ってきたヤツが何の型かSwitchでconcrete typeと比較し判定する -> あんまりよくない
+- abstract typeで比較する
+- fmt.Stringer json.Marshalでも使われてる
+
+- The bigger the interface, the weaker the abstraction
+
+### reflectは？
+- type assertions
+- Reflection is never clear
+
+# 今更だけどGob
+
+## Gob?
+- gob形式のバイナリ変換
+- ファイルへのデータ保存
+- データ定義不要、self-describing,効率的
+- 構造変更が可能
+- 使い方はシンプルでencode,decodeを呼び出すだけ
+- structじゃなくて、intやstring でもわたせる
+
+### 定義不要？
+- gobははじめて受取る型の場合、reflectionで型推論を行う
+
+### self-describing
+- gobのbinaryに定義情報が入ってる
+
+### 構造変更が可能
+- encode, decode側のtype,構造が違っても、お互いにfieldとtypeが一致したfieldのみ使われる
+
+### EncodingJson
+- EncodingJsonでEncode、Decodeするより圧倒的に効率的
+### protobuf
+- structのみ扱える
+- シリアライズ・デシリアライズで同構造である必要がある。
+- 1つのデータを複数の言語で扱う場合に便利
+
+### 注意点
+- interfaceを扱うときは注意が必要
+- Regsiterが必要
+- Handlerはポインタ渡し
+
+## まとめ
+- Golang専用のシリアライザ−
+- 定義不要で効率的に利用可能
+- interface使うときは注意
+
+# Golang Profiling
+- runtime/pprof
+- cpu,memory,goroutineなどの情報を収集
+## CPU Profiler
+- 関数の実行時間をプロファイリング
+- パフォーマンス影響が比較的少ない
+
+###  profilers
+- runtime
+- goroutine
+- block: 同期処理でwaitingしているgoroutineをプロファイリング
+- mutex: 同期処理をブロックするmutexのみをプロファイリング
+- Custom profilers: 簡単に作れる
+
+## Relational packages
+- runtime/pprof
+- net/http/pprof
+- github.com/pkg/profilers
+### net/http/pprof
+- http経由でプロファイリングを取得できる
+### github.com/pkg/profilers
+- runtime/pprofをシンプルなインターフェースで提供している
+- shutdown signalのハンドリング
+- 使えるProfilerは限られている
+
+### 集計
+- 収集したプロファイルは `go tool pprof`で集計できる
+#### interactive commands
+##### web: svg形式で吐き出されたプロファイルをブラウザで表示
+- function名で絞りこめる
+- graphvizのインストールが必要
+##### top: 取得したprofileの上位N件を表示
+##### list
+- go tool実行時にバイナリファイルの指定が必要
+- ソースコード上でのflat, cum値を表示
+
+### check points
+- runtime.mallocgc
+- runtime.chanrecv, sync.mutex
+- syscall Read / Write
+- GC components
+## Go Debug Options
+- memory allocator trace
+- garbage collector trace
+- scheduler trace

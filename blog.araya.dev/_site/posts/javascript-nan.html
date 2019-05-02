@@ -1,0 +1,196 @@
+
+<!doctype>
+<html lang="ja">
+
+<head>
+  <meta content='JavaScript の NaN について - Allajah&#39;s Reservoir' name='title' />
+  <meta content='JavaScript の NaN について - Allajah&#39;s Reservoir' name='og:title' />
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="//necolas.github.io/normalize.css/7.0.0/normalize.css">
+  <title>JavaScript の NaN について - Allajah&#39;s Reservoir</title>
+  <link href='http://blog.araya.dev/images/favicon.png' rel='shortcut icon'>
+<link href='http://blog.araya.dev/assets/main.css' rel='stylesheet' type='text/css' />
+
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type' />
+
+  <meta content='http://blog.araya.dev/posts/javascript-nan.html' property='og:url' />
+  <meta content="この記事は#kosen10s Advent Calendar 2017の15日目の記事です。昨日は寒い日は紅茶に砂糖を入れて飲むとおいしい - 死後裁きにあうでした。美味しい紅茶が飲みたくなりました。2つとった枠のうち1つは技術系の記..." property='og:description' />
+  <meta content="article" property="og:type" />
+
+<!-- - -->
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-104175258-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+
+</head>
+
+<body>
+  <header class="site-title">
+    <a href="http://blog.araya.dev">
+        <img src="http://blog.araya.dev/images/icon_circle.png" alt="Home" width="80" height="80">
+      </a>
+    <p>Allajah's Reservoir</p>
+  </header>
+  <div class="container">
+      <nav aria-label="Main">
+        <ul>
+          
+          <li>
+            <a class="" href="http://blog.araya.dev/">
+          Posts
+        </a> 
+          </li>
+        </ul>
+      </nav>
+      <main class="">
+        
+          
+          <div class="">15 Dec 2017</div>
+          
+          <h1 class="page-title"> JavaScript の NaN について </h1>
+          
+          <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+          <script>
+            ! function(d, s, id) {
+              var js, fjs = d.getElementsByTagName(s)[0];
+              if (!d.getElementById(id)) {
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "//platform.twitter.com/widgets.js";
+                fjs.parentNode.insertBefore(js, fjs);
+              }
+            }(document, "script", "twitter-wjs");
+          </script>
+          <a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+<script
+  type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+
+
+          
+        
+        <div class="markdown-body">
+          <p>この記事は<a href="https://adventar.org/calendars/2199">#kosen10s Advent Calendar 2017</a>の15日目の記事です。</p>
+
+<p>昨日は<a href="http://cycloneo.hatenablog.com/entry/2017/12/14/215238">寒い日は紅茶に砂糖を入れて飲むとおいしい - 死後裁きにあう</a>でした。
+美味しい紅茶が飲みたくなりました。</p>
+
+<p>2つとった枠のうち1つは技術系の記事を書こうと思ってたのですが、準備不足もあり小ネタです。</p>
+
+<p>JavaScriptでコードを書いていると、まれに<code class="highlighter-rouge">NaN(Not a Number)</code>に遭遇することがあります。
+別に知ってれば大したことないのですが、若干ややこしくて厄介なのでNaNについて解説したいと思います。</p>
+
+<h2 id="どういうときに遭遇するか">どういうときに遭遇するか</h2>
+<p>NaNは<code class="highlighter-rouge">Math</code> objectの関数に引数として不適な値を渡したり、<code class="highlighter-rouge">parseInt()</code>などで文字列を数値に変換させようとすると返ってくることがあります。</p>
+
+<p>また、<code class="highlighter-rouge">let x = NaN</code>のように代入可能です。</p>
+
+<p>例:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span> <span class="c1">// =&gt; NaN 虚数は返ってこない</span>
+<span class="nb">parseInt</span><span class="p">(</span><span class="s1">'hello'</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="c1">// =&gt; NaN</span></code></pre></figure>
+
+<p><code class="highlighter-rouge">https://example.com?page=18</code>というURLから<code class="highlighter-rouge">page</code>パラメータを取得し、その値に応じて表示する内容を書き換える
+といったコードを書いた時、<code class="highlighter-rouge">https://example.com?page=hello</code>に対しては例外処理が必要です。</p>
+
+<p>ちなみに、数値<code class="highlighter-rouge">x(!==0)</code>を<code class="highlighter-rouge">0</code>で割ったときには<code class="highlighter-rouge">Infinity</code>もしくは<code class="highlighter-rouge">-Infinity</code>となり、<code class="highlighter-rouge">0 / 0</code>は<code class="highlighter-rouge">NaN</code>となります</p>
+
+<h2 id="truthy-falsy">Truthy, Falsy</h2>
+<p><code class="highlighter-rouge">NaN</code>を単体で評価するとFalsyになります。直感的ですね。</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kc">NaN</span> <span class="p">?</span> <span class="s1">'foo'</span> <span class="p">:</span> <span class="s1">'hoge'</span><span class="p">;</span> <span class="c1">// =&gt; 'hoge'</span></code></pre></figure>
+
+<h2 id="比較">比較</h2>
+<p><code class="highlighter-rouge">NaN</code>は比較演算子で評価した場合、どんな値とも等価にはなりません。
+ここで気をつけなければいけないのが、<code class="highlighter-rouge">NaN === NaN</code>が<code class="highlighter-rouge">false</code>になることです。</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kc">NaN</span> <span class="o">===</span> <span class="kc">false</span> <span class="c1">// =&gt; false</span>
+<span class="kc">NaN</span> <span class="o">===</span> <span class="mi">0</span> <span class="c1">// =&gt; false</span>
+<span class="kc">NaN</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="c1">// =&gt; false</span>
+<span class="kc">NaN</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="c1">// =&gt; false</span>
+<span class="kc">NaN</span> <span class="o">===</span> <span class="kc">NaN</span> <span class="c1">// =&gt; false</span>
+<span class="kc">NaN</span> <span class="o">!==</span> <span class="kc">false</span> <span class="c1">// =&gt; true</span>
+<span class="kc">NaN</span> <span class="o">!==</span> <span class="kc">true</span> <span class="c1">// =&gt; true</span>
+<span class="kc">NaN</span> <span class="o">!==</span> <span class="kc">NaN</span> <span class="c1">// =&gt; true</span></code></pre></figure>
+
+<h2 id="nanの検出">NaNの検出</h2>
+<p>JavaScriptには<code class="highlighter-rouge">isNaN()</code>というトップレベル関数が用意されています。引数を一つとり、boolean(true | false)を返します。
+ただ、この<code class="highlighter-rouge">isNaN()</code>にも一癖あって、渡された引数が<code class="highlighter-rouge">NaN</code>以外にも、文字列、undefined、Object、 Functionだった場合も<code class="highlighter-rouge">true</code>を返します。<br />
+そのため、<code class="highlighter-rouge">isNaN(x)</code>により<code class="highlighter-rouge">true</code>が返却されても、<code class="highlighter-rouge">x</code>が<code class="highlighter-rouge">NaN</code>である保証はありません。</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nb">isNaN</span><span class="p">(</span><span class="kc">NaN</span><span class="p">)</span> <span class="c1">// =&gt; true</span>
+<span class="nb">isNaN</span><span class="p">(</span><span class="kc">undefined</span><span class="p">)</span> <span class="c1">// =&gt; true</span>
+<span class="nb">isNaN</span><span class="p">(</span><span class="s1">'hello'</span><span class="p">)</span> <span class="c1">// =&gt; true</span>
+<span class="nb">isNaN</span><span class="p">({})</span> <span class="c1">// =&gt; true</span>
+<span class="nb">isNaN</span><span class="p">(</span><span class="k">new</span> <span class="nb">Function</span><span class="p">)</span> <span class="c1">// =&gt; true</span>
+<span class="nb">isNaN</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1">// =&gt; false</span>
+<span class="nb">isNaN</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="c1">// =&gt; false</span>
+<span class="nb">isNaN</span><span class="p">(</span><span class="kc">null</span><span class="p">)</span> <span class="c1">// =&gt; false</span></code></pre></figure>
+
+<p>引数がArrayの場合はlengthが0か、要素1つだけで値が数値またはnullの場合のみ<code class="highlighter-rouge">false</code>が返ります</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nb">isNaN</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span> <span class="c1">// =&gt; true</span>
+<span class="nb">isNaN</span><span class="p">([</span><span class="s1">'hello'</span><span class="p">])</span> <span class="c1">// =&gt; true</span>
+<span class="nb">isNaN</span><span class="p">([</span><span class="kc">true</span><span class="p">])</span> <span class="c1">// =&gt; true</span>
+<span class="nb">isNaN</span><span class="p">([])</span> <span class="c1">// =&gt; false</span>
+<span class="nb">isNaN</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span> <span class="c1">// =&gt; false</span>
+<span class="nb">isNaN</span><span class="p">([</span><span class="kc">null</span><span class="p">])</span> <span class="c1">// =&gt; false</span></code></pre></figure>
+
+<p>非常にややこしいですね。覚えなくて大丈夫です。<br />
+というのも、ECMAScript2015で<code class="highlighter-rouge">Number.isNaN()</code>が導入され、これを用いることにより<code class="highlighter-rouge">NaN</code>かどうかを正しく評価することができるようになりました。</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span><span class="p">(</span><span class="kc">NaN</span><span class="p">)</span> <span class="c1">// =&gt; true</span>
+<span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span><span class="p">(</span><span class="kc">undefined</span><span class="p">)</span> <span class="c1">// =&gt; false</span>
+<span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span><span class="p">(</span><span class="s1">'hello'</span><span class="p">)</span> <span class="c1">// =&gt; false</span>
+<span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span><span class="p">({})</span> <span class="c1">// =&gt; false</span>
+<span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span><span class="p">(</span><span class="k">new</span> <span class="nb">Function</span><span class="p">)</span> <span class="c1">// =&gt; false</span>
+<span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1">// =&gt; false</span>
+<span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="c1">// =&gt; false</span>
+<span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span><span class="p">(</span><span class="kc">null</span><span class="p">)</span> <span class="c1">// =&gt; false</span></code></pre></figure>
+
+<p>すばらしいですね。非常にわかりやすくなりました。とはいえ、前時代のJavaScriptを書かなければいけないこともあるかもしれません。
+そのときは先に述べた、<code class="highlighter-rouge">NaNは比較演算子で評価した場合、どんな値とも等価にはならない</code>という性質を利用します。</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">val</span> <span class="o">!==</span> <span class="nx">val</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span><span class="p">(</span><span class="kc">NaN</span><span class="p">)</span> <span class="c1">// =&gt; true;</span>
+<span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1">// =&gt; false;</span></code></pre></figure>
+
+<h2 id="まとめ">まとめ</h2>
+<p>トップレベル関数の<code class="highlighter-rouge">isNaN()</code>は使ってはいけません。<code class="highlighter-rouge">Number.isNaN()</code>を使いましょう。</p>
+
+<p>明日はruryushamさんの記事です。</p>
+
+        </div>
+        <p class="mt4">
+  Allajah
+  <span class="silver">at 15:44</span>
+</p>
+
+
+      </main>
+  </div>
+  <footer class="footer">
+    <div class="footer-sns">
+      <a href="https://twitter.com/_araya_" target="_blank" rel="noopener noreferrer"><i class="fa fa-twitter"></i></a>
+      <a href="https://github.com/allajah" target="_blank" rel="noopener noreferrer"><i class="fa fa-github"></i></a>
+      <a href="/feed.xml" target="_blank" rel="noopener noreferrer"><i class="fa fa-rss"></i></a>
+    </div>
+  </footer>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+.footer {
+  display: flex;
+  justify-content: center;
+  margin: 0.7em 0;
+
+  &-sns {
+    font-size: 24px;
+    a {
+      padding: 0 0.4em;
+      color: $sub-text-color;
+
+      &:hover {
+        opacity: 0.5;
+      }
+    }
+  }
+}
+
+

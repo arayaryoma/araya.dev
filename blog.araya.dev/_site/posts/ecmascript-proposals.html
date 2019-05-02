@@ -1,0 +1,516 @@
+
+<!doctype>
+<html lang="ja">
+
+<head>
+  <meta content='ECMAScriptのproposalで個人的に気になっているものを紹介する - Allajah&#39;s Reservoir' name='title' />
+  <meta content='ECMAScriptのproposalで個人的に気になっているものを紹介する - Allajah&#39;s Reservoir' name='og:title' />
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="//necolas.github.io/normalize.css/7.0.0/normalize.css">
+  <title>ECMAScriptのproposalで個人的に気になっているものを紹介する - Allajah&#39;s Reservoir</title>
+  <link href='http://blog.araya.dev/images/favicon.png' rel='shortcut icon'>
+<link href='http://blog.araya.dev/assets/main.css' rel='stylesheet' type='text/css' />
+
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type' />
+
+  <meta content='http://blog.araya.dev/posts/ecmascript-proposals.html' property='og:url' />
+  <meta content="これは#kosen10s Advent Calendar 2018６日目の記事です。自分の担当日を1日勘違いしていたため遅刻です。今日はECMAScriptのproposalについて書きます。12/3のBabel 7.2.0のリリース..." property='og:description' />
+  <meta content="article" property="og:type" />
+
+<!-- - -->
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-104175258-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+
+</head>
+
+<body>
+  <header class="site-title">
+    <a href="http://blog.araya.dev">
+        <img src="http://blog.araya.dev/images/icon_circle.png" alt="Home" width="80" height="80">
+      </a>
+    <p>Allajah's Reservoir</p>
+  </header>
+  <div class="container">
+      <nav aria-label="Main">
+        <ul>
+          
+          <li>
+            <a class="" href="http://blog.araya.dev/">
+          Posts
+        </a> 
+          </li>
+        </ul>
+      </nav>
+      <main class="">
+        
+          
+          <div class="">06 Dec 2018</div>
+          
+          <h1 class="page-title"> ECMAScriptのproposalで個人的に気になっているものを紹介する </h1>
+          
+          <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+          <script>
+            ! function(d, s, id) {
+              var js, fjs = d.getElementsByTagName(s)[0];
+              if (!d.getElementById(id)) {
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "//platform.twitter.com/widgets.js";
+                fjs.parentNode.insertBefore(js, fjs);
+              }
+            }(document, "script", "twitter-wjs");
+          </script>
+          <a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+<script
+  type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+
+
+          
+        
+        <div class="markdown-body">
+          <p>これは<a href="https://adventar.org/calendars/3004">#kosen10s Advent Calendar 2018</a>６日目の記事です。</p>
+
+<p>自分の担当日を1日勘違いしていたため遅刻です。</p>
+
+<p>今日はECMAScriptのproposalについて書きます。</p>
+
+<p><a href="https://babeljs.io/blog/2018/12/03/7.2.0">12/3のBabel 7.2.0のリリース</a>で、Pipeline OperatorとPrivate Instance Methodsの実装が入りました。
+特にPipeline OperatorはJavaScript界隈以外でも各所で話題になっていました。</p>
+
+<p>JavaScriptの仕様標準であるECMAScriptにはこれらの他にも面白く利便性の高い提案(proposal)がたくさん出されています。
+この記事ではその中でも僕が気になっている・期待しているものをいくつか紹介します。</p>
+
+<h2 id="ecmascriptの仕様追加の進められ方">ECMAScriptの仕様追加の進められ方</h2>
+<p>proposalを紹介する前に、proposalが出されてからECMAScriptに正式に入るまでの流れについて、
+少しだけ触れておこうと思います。</p>
+
+<p>ECMAScriptは<a href="https://www.ecma-international.org/memento/tc39.htm">tc39</a>という団体で仕様の策定が進められています。
+proposalは<a href="https://github.com/tc39/proposals">GitHubのリポジトリ</a>にまとめられていて、
+<a href="https://github.com/tc39/ecma262/blob/master/CONTRIBUTING.md">Contributing guideline</a>に従えば、誰でも出すことができます。</p>
+
+<p>新たに出されたproposalはstage0からstage4まで５つのプロセスを通って行き、最終的にECMAScriptに正式に入ることになります。</p>
+
+<p>stage0からstage4までどのような条件で上がっていくかは<a href="https://tc39.github.io/process-document/">EcmaScriptのドキュメント</a>に
+まとめられていますが、ここで各ステージに進むための代表的な条件を簡単に紹介します。</p>
+
+<h3 id="stage0-strawmanたたき台">Stage0 Strawman(たたき台)</h3>
+<p>新しい提案が出されただけの状態です。
+Stage0のproposalは、<a href="https://github.com/tc39/proposals/blob/master/stage-0-proposals.md">Stage1~4とは別けてまとめられています</a>。</p>
+
+<h3 id="stage1-proposal提案">Stage1 Proposal(提案)</h3>
+<p>Stage1に進むための条件は、</p>
+<ul>
+  <li>対象の新仕様追加を誰が牽引するか(“Champion”)が定められている。</li>
+  <li>問題性または必要性についてと、解決策についての概説がある。</li>
+  <li>仕様自体の横断的な懸念と実装難易度について述べられている。</li>
+  <li>ユースケースの説明がある</li>
+</ul>
+
+<p>などです。
+Stage1では実際にPolyfillやdemoが実装され、実装難易度やもたらす可能性のある副作用について議論されます。</p>
+
+<p>前述した<a href="https://github.com/tc39/proposal-pipeline-operator">Pipeline Operator</a>は現在このStageです。</p>
+
+<h3 id="stage2-draft下書き">Stage2 Draft(下書き)</h3>
+<p>Stage2に進むための条件は</p>
+<ul>
+  <li>spec text(仕様書)の初期案</li>
+</ul>
+
+<p>です。
+Stage2では具体的にSyntaxやsemanticsを正確に定めます。
+TC39はここで、仕様が開発され、最終的に標準仕様に組み込まれることを期待します。</p>
+
+<h3 id="stage3-candidate候補">Stage3 Candidate(候補)</h3>
+<p>Stage3に進むための条件は</p>
+<ul>
+  <li>仕様書の完了</li>
+  <li>指定されたレビューアーが仕様書を承認している</li>
+  <li>全てのECMAScript編集者が仕様書を承認している</li>
+</ul>
+
+<p>です。
+Stage3では仕様の策定は完了し、ブラウザの実装や、ユーザーからのフィードバックを待ちます。
+この時点でECMAScript標準に入る可能性は非常に高いと言えます。もちろんここで落ちる可能性もあります。</p>
+
+<h3 id="stage4-finished完了">Stage4 Finished(完了)</h3>
+<p>Stage4に進むための条件は</p>
+<ul>
+  <li>2つ以上の競合する主要なJSエンジンで実装されている</li>
+  <li><a href="https://github.com/tc39/test262">tc39/test262</a>の受け入れテストが主要なユースシナリオ用に作成され、マージされている。</li>
+  <li><a href="https://github.com/tc39/ecma262">tc39/ecma262</a>に、統合された仕様書とともに全てのPRが提出されている。</li>
+  <li>全てのECMAScript編集者がPRを全て承認している。</li>
+</ul>
+
+<p>などです。Stage4に入った仕様は、次回のECMAScriptのリリースで標準仕様としてリリースされることが決定しています。</p>
+
+<p>Stage4のproposalは<a href="https://github.com/tc39/proposals/blob/master/finished-proposals.md">ここ</a>から確認できます。</p>
+
+<h2 id="個人的に気になっているproposalをいくつか">個人的に気になっているproposalをいくつか</h2>
+<p>現在Stage1~3で80個ほど、Stage0も含めると100程度のproposalが出されていて、全て紹介するのは厳しいので、
+個人的に気になっているものをかいつまんで紹介します。</p>
+
+<p>※Stageの状態は2018年12月6日現在のものです。</p>
+
+<h3 id="optional-catch-binding-stage4"><a href="https://github.com/tc39/proposal-optional-catch-binding">Optional catch binding</a> (Stage4)</h3>
+<p>JavaScriptのtry-catch構文では、catchでerrorの値を受け取らなければなりません。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span> <span class="p">{</span>
+    <span class="c1">// Do something expected error may be threw</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"error"</span><span class="p">);</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+<p>このproposalは、 <code class="highlighter-rouge">catch</code>でエラーの値を受け取らなくてもいいとするものです。</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span> <span class="p">{</span>
+    <span class="c1">// Do something expected error may be threw</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"error"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><code class="highlighter-rouge">try</code>ブロックで<code class="highlighter-rouge">throw</code> された値が不要なとき、無駄な変数を作らずに済みます。
+Babelでtranspileする際は<a href="https://www.npmjs.com/package/@babel/plugin-proposal-optional-catch-binding">@babel/plugin-proposal-optional-catch-binding</a>を利用します。
+Babelでtranspileすると以下のコードが出力されます。</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"use strict"</span><span class="p">;</span>
+
+<span class="k">try</span> <span class="p">{</span>
+  <span class="c1">// Do something expected error may be threw</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">_unused</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"error"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Optional catch bindingは2019年にリリースされるECMAScriptに搭載予定です。</p>
+
+<h3 id="import-stage3"><a href="https://github.com/tc39/proposal-dynamic-import">import()</a> (Stage3)</h3>
+<p>ESModuleをロードするための<code class="highlighter-rouge">import</code>構文はトップレベルでの静的なローディングのみサポートしています。</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// valid</span>
+<span class="k">import</span> <span class="s1">'some-module'</span><span class="p">;</span>
+
+<span class="c1">// invalid</span>
+<span class="k">if</span><span class="p">(</span><span class="nx">expression</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">import</span> <span class="s2">`</span><span class="p">${</span><span class="nx">variable</span><span class="p">.</span><span class="nx">moduleName</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>このproposalは、ESModuleを動的にロードするための<code class="highlighter-rouge">import()</code> 関数を追加するためのものです。</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">const</span> <span class="nx">moduleSpecifier</span> <span class="o">=</span> <span class="s1">'./utils.mjs'</span><span class="p">;</span>
+  <span class="k">import</span><span class="p">(</span><span class="nx">moduleSpecifier</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">module</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="c1">// Use the module after loaded</span>
+    <span class="p">});</span>
+</code></pre></div></div>
+
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#Browser_compatibility">IEを除く最新のメジャーブラウザではすでに利用可能になっています</a>。
+ESModuleの動的importについては<a href="https://developers.google.com/web/updates/2017/11/dynamic-import">この記事</a>がわかりやすいと思います。　</p>
+
+<h3 id="bigint-stage3"><a href="https://github.com/tc39/proposal-bigint">BigInt</a> (Stage3)</h3>
+<p>BigIntはJavaScriptのIntegerを拡張するためのものです。
+現状JavaScriptで扱える整数の最大値は<code class="highlighter-rouge">Number.MAX_SAFE_INTEGER + 1</code>で取得できます。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">x</span> <span class="o">=</span> <span class="nb">Number</span><span class="p">.</span><span class="nx">MAX_SAFE_INTEGER</span><span class="p">;</span>
+<span class="c1">// ↪ 9007199254740991, 2^53 - 1</span>
+
+<span class="kd">const</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<span class="c1">// ↪ 9007199254740992</span>
+
+<span class="kd">const</span> <span class="nx">z</span> <span class="o">=</span> <span class="nx">x</span> <span class="o">+</span> <span class="mi">2</span><span class="p">;</span>
+<span class="c1">// ↪ 9007199254740992</span>
+</code></pre></div></div>
+
+<p>BigIntはこれより大きい整数値を扱えます。
+BigIntは整数値の最後に<code class="highlighter-rouge">n</code>をつけることで表現します。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">number</span> <span class="o">=</span> <span class="mi">9007199254740993</span><span class="p">;</span> <span class="c1">// =&gt; 9007199254740992</span>
+<span class="kd">const</span> <span class="nx">bigIntNumber</span> <span class="o">=</span> <span class="mi">9007199254740993</span><span class="nx">n</span><span class="p">;</span> <span class="c1">// =&gt; 9007199254740993n</span>
+</code></pre></div></div>
+
+<p>若しくは、<code class="highlighter-rouge">BigInt()</code>関数にNumberまたはStringを渡すことで作成できます。</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">value1</span> <span class="o">=</span> <span class="nx">BigInt</span><span class="p">(</span><span class="mi">9007199254740993</span><span class="p">);</span>  <span class="c1">// =&gt; 9007199254740993n</span>
+<span class="kd">const</span> <span class="nx">value2</span> <span class="o">=</span> <span class="nx">BigInt</span><span class="p">(</span><span class="s1">'9007199254740993'</span><span class="p">);</span>  <span class="c1">// =&gt; 9007199254740993n</span>
+</code></pre></div></div>
+
+<p>また、BigIntはNumber型に属していなく、JavaScriptの全く新しいprimitiveです。</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typeof</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// =&gt; 'number' </span>
+<span class="k">typeof</span> <span class="mi">0</span><span class="nx">n</span><span class="p">;</span> <span class="c1">// =&gt; 'bigint'</span>
+</code></pre></div></div>
+
+<h3 id="numeric-separator-stage2"><a href="https://github.com/tc39/proposal-numeric-separator">Numeric Separator</a> (Stage2)</h3>
+<p>Number型の値を読みやすくするためのものです。数値の先頭および末尾以外の、任意の場所に <code class="highlighter-rouge">_</code> を挿入することができます。</p>
+
+<p>読みやすくするためだけなので、 <code class="highlighter-rouge">_</code> を挿入する位置で、数値が変わることはなく、単に取り除かれます。</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="mi">1</span><span class="nx">_000_000</span><span class="p">);</span> <span class="c1">// =&gt; 1000000</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="mi">1</span><span class="nx">_00</span><span class="p">);</span> <span class="c1">// =&gt; 100</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="mh">0xFF</span><span class="nx">_BA_54</span><span class="p">);</span> <span class="c1">// =&gt; 16759380</span>
+</code></pre></div></div>
+
+<h3 id="throw-expressions-stage2"><a href="https://github.com/tc39/proposal-throw-expressions">throw expressions</a> (Stage2)</h3>
+<p>JavaScriptの<code class="highlighter-rouge">throw</code>文を式としても使えるようにしようというproposalです。</p>
+
+<p>例えば、引数を1つ受取り、引数がなかった場合は <code class="highlighter-rouge">'required!'</code>、引数が文字列出なかった場合は <code class="highlighter-rouge">'argument must be string'</code>
+とErrorをthrowし、文字列であれば標準出力に出力する関数<code class="highlighter-rouge">test</code>を、現行のJavaScriptで書くと</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">test</span> <span class="o">=</span> <span class="p">(</span><span class="nx">param</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">param</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">'required!'</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">param</span> <span class="o">!==</span> <span class="s1">'string'</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">'argument must be string'</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">param</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<p>このようになります。throw expressionを用いると以下のように書けるようになります。</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">test</span> <span class="o">=</span> <span class="p">(</span><span class="nx">param</span> <span class="o">=</span> <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">'required'</span><span class="p">))</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">typeof</span> <span class="nx">param</span> <span class="o">===</span> <span class="s1">'string'</span> <span class="p">?</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">param</span><span class="p">)</span> <span class="p">:</span> <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">'argument must be string'</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="top-level-await-stage2"><a href="https://github.com/tc39/proposal-top-level-await">Top-level await</a> (Stage2)</h3>
+<p>EcmaScriptで入ったasync/awaitの拡張で、今までasync function内でしか使用できなかった<code class="highlighter-rouge">await</code>をトップレベルで
+使えるようにしようという提案です。</p>
+
+<p>前述した<code class="highlighter-rouge">import()</code>は非同期で実行されPromiseを返すため、モジュールをロードしてから処理をしたい時などに有用です。</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">strings</span> <span class="o">=</span> <span class="kr">await</span> <span class="k">import</span><span class="p">(</span><span class="s2">`/i18n/</span><span class="p">${</span><span class="nb">navigator</span><span class="p">.</span><span class="nx">language</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s1">'https://reservoir.allajah.com'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>手元で試したかったのですがbabelのPluginがまだ不完全なようで動きませんでした。</p>
+
+<h3 id="temporal-stage2"><a href="https://github.com/tc39/proposal-temporal">Temporal</a> (Stage2)</h3>
+<p>JavaScriptのDate Objectは非常に使い勝手が悪く、それを解決するために新しく追加が提案されているObjectです。</p>
+
+<p>Temporalは、dateやtimeといった時間を扱うためのAPIを持っていて、時差などの扱いが非常に簡潔になっています。
+TemporalがStage4まで進めば、<a href="https://momentjs.com/">moment</a>や<a href="https://github.com/iamkun/dayjs">dayjs</a>
+を使わなくても、標準ライブラリのみで時間が容易に扱えるようになるかもしれません。</p>
+
+<p><a href="https://github.com/tc39/proposal-temporal">Polyfill</a>があるためすぐに使うことができますが、
+仕様が変わる可能性がまだまだあるので注意です。</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 現在の時刻を取得</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Instant</span><span class="p">,</span> <span class="nx">ZonedDateTime</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">"tc39-proposal-temporal"</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">instant</span> <span class="o">=</span> <span class="nx">Instant</span><span class="p">.</span><span class="nx">fromMilliseconds</span><span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">());</span>
+
+<span class="c1">// UTC</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">instant</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span> 
+<span class="c1">// -&gt; 2018-12-06T20:14:01.876000000Z</span>
+
+<span class="c1">// Asia/Tokyo</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">new</span> <span class="nx">ZonedDateTime</span><span class="p">(</span><span class="nx">instant</span><span class="p">,</span> <span class="s1">'Asia/Tokyo'</span><span class="p">).</span><span class="nx">toString</span><span class="p">());</span>
+<span class="c1">// -&gt;  2018-12-07T05:14:01.876000000+09:00[Asia/Tokyo]</span>
+</code></pre></div></div>
+
+<h3 id="realms-api-stage2"><a href="https://github.com/tc39/proposal-realms">Realms API</a> (Stage2)</h3>
+<p>RealmsはJavaScriptを実行する環境で、global空間を仮想的に作り出すAPIです。
+<code class="highlighter-rouge">new Realm()</code>で作成したインスタンスで<code class="highlighter-rouge">evaluate</code>メソッドを呼ぶと、Realm内のコンテキストで実行されるfunctionを作成できます。</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">g</span> <span class="o">=</span> <span class="nb">window</span><span class="p">;</span> <span class="c1">// outer global</span>
+<span class="kd">let</span> <span class="nx">r1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Realm</span><span class="p">();</span> <span class="c1">// root realm</span>
+<span class="kd">let</span> <span class="nx">r2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">r1</span><span class="p">.</span><span class="nb">global</span><span class="p">.</span><span class="nx">Realm</span><span class="p">({</span> <span class="na">intrinsics</span><span class="p">:</span> <span class="s2">"inherit"</span> <span class="p">});</span> <span class="c1">// realm compartment</span>
+
+<span class="kd">let</span> <span class="nx">f</span> <span class="o">=</span> <span class="nx">r1</span><span class="p">.</span><span class="nx">evaluate</span><span class="p">(</span><span class="s2">"(function() { return 17 })"</span><span class="p">);</span>
+
+<span class="nx">f</span><span class="p">()</span> <span class="o">===</span> <span class="mi">17</span> <span class="c1">// true</span>
+
+<span class="nb">Reflect</span><span class="p">.</span><span class="nx">getPrototypeOf</span><span class="p">(</span><span class="nx">f</span><span class="p">)</span> <span class="o">===</span> <span class="nx">g</span><span class="p">.</span><span class="nb">Function</span><span class="p">.</span><span class="nx">prototype</span> <span class="c1">// false</span>
+<span class="nb">Reflect</span><span class="p">.</span><span class="nx">getPrototypeOf</span><span class="p">(</span><span class="nx">f</span><span class="p">)</span> <span class="o">===</span> <span class="nx">r1</span><span class="p">.</span><span class="nb">global</span><span class="p">.</span><span class="nb">Function</span><span class="p">.</span><span class="nx">prototype</span> <span class="c1">// true</span>
+<span class="nb">Reflect</span><span class="p">.</span><span class="nx">getPrototypeOf</span><span class="p">(</span><span class="nx">f</span><span class="p">)</span> <span class="o">===</span> <span class="nx">r2</span><span class="p">.</span><span class="nb">global</span><span class="p">.</span><span class="nb">Function</span><span class="p">.</span><span class="nx">prototype</span> <span class="c1">// true</span>
+</code></pre></div></div>
+
+<p>セキュリティ上の都合でglobalから切り離したり、ブラウザ上のエディタ開発で有用(らしい)です。</p>
+
+<h3 id="observable-stage1"><a href="https://github.com/tc39/proposal-observable">Observable</a> (Stage1)</h3>
+<p>みんな大好き(?)ObservableもECMAScript標準にしようというproposalも出ています。
+Rx.jsのような潤沢なoperatorはまだありませんが、
+<code class="highlighter-rouge">Observable.of()</code>や<code class="highlighter-rouge">Observable.from()</code>でObservableなobjectを作り、<code class="highlighter-rouge">subsucribe</code>、<code class="highlighter-rouge">unsubscribe</code>するという
+馴染み深いインターフェースになっています。</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">SubscriberFunction</span><span class="p">(</span><span class="nx">observer</span><span class="p">:</span> <span class="nx">SubscriptionObserver</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="k">void</span> <span class="o">=&gt;</span> <span class="k">void</span><span class="p">)</span> <span class="o">|</span> <span class="nx">Subscription</span><span class="p">;</span>
+<span class="kr">interface</span> <span class="nx">Observable</span> <span class="p">{</span>
+    <span class="kd">constructor</span><span class="p">(</span><span class="nx">subscriber</span> <span class="p">:</span> <span class="nx">SubscriberFunction</span><span class="p">);</span>
+    <span class="nx">subscribe</span><span class="p">(</span><span class="nx">observer</span> <span class="p">:</span> <span class="nx">Observer</span><span class="p">)</span> <span class="p">:</span> <span class="nx">Subscription</span><span class="p">;</span>
+    <span class="nx">subscribe</span><span class="p">(</span><span class="nx">onNext</span> <span class="p">:</span> <span class="nb">Function</span><span class="p">,</span>
+              <span class="nx">onError</span><span class="p">?</span> <span class="p">:</span> <span class="nb">Function</span><span class="p">,</span>
+              <span class="nx">onComplete</span><span class="p">?</span> <span class="p">:</span> <span class="nb">Function</span><span class="p">)</span> <span class="p">:</span> <span class="nx">Subscription</span><span class="p">;</span>
+    <span class="p">[</span><span class="nb">Symbol</span><span class="p">.</span><span class="nx">observable</span><span class="p">]()</span> <span class="p">:</span> <span class="nx">Observable</span><span class="p">;</span>
+
+    <span class="kr">static</span> <span class="k">of</span><span class="p">(...</span><span class="nx">items</span><span class="p">)</span> <span class="p">:</span> <span class="nx">Observable</span><span class="p">;</span>
+
+    <span class="kr">static</span> <span class="k">from</span><span class="p">(</span><span class="nx">observable</span><span class="p">)</span> <span class="p">:</span> <span class="nx">Observable</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kr">interface</span> <span class="nx">Subscription</span> <span class="p">{</span>
+    <span class="nx">unsubscribe</span><span class="p">()</span> <span class="p">:</span> <span class="k">void</span><span class="p">;</span>
+    <span class="kd">get</span> <span class="nx">closed</span><span class="p">()</span> <span class="p">:</span> <span class="nb">Boolean</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h3 id="optional-chaining-stage1"><a href="https://github.com/tc39/proposal-optional-chaining">Optional Chaining</a> (Stage1)</h3>
+<p>JavaScriptを書いてる人にとっては待望の機能だと思います。</p>
+
+<p>JavaScriptでは下記のようなコードを書くと、7行目で例外が発生します。</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">a</span><span class="p">:</span> <span class="p">{}</span>
+<span class="p">};</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">);</span> <span class="c1">// -&gt; { a: {} }</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">a</span><span class="p">);</span> <span class="c1">// -&gt; { }</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">a</span><span class="p">.</span><span class="nx">b</span><span class="p">);</span> <span class="c1">// -&gt; undefined</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">a</span><span class="p">.</span><span class="nx">b</span><span class="p">.</span><span class="nx">c</span><span class="p">);</span> <span class="c1">// -&gt; TypeError: Cannot read property 'c' of undefined</span>
+</code></pre></div></div>
+
+<p>これはアプリケーション開発では頻繁に起こりうることで、例えばWeb APIからJSONを受取り、ネストが深い位置にある
+プロパティにアクセスする時です。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">fetch</span><span class="p">(</span><span class="s1">'https://api.reservoir.allajah.com/posts'</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">res</span> <span class="o">=&gt;</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">()).</span><span class="nx">then</span><span class="p">(</span><span class="nx">posts</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">posts</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">post</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">authorName</span> <span class="o">=</span> <span class="nx">post</span><span class="p">.</span><span class="nx">author</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+        <span class="c1">//...</span>
+    <span class="p">})</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>この例だと<code class="highlighter-rouge">post.author</code>が存在しなかった(undefined)時、<code class="highlighter-rouge">TypeError: Cannot read property 'name' of undefined</code>が発生します。</p>
+
+<p>Optional Chainingでこの問題を解決できるようになります。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">a</span><span class="p">:</span> <span class="p">{}</span>
+<span class="p">};</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">);</span> <span class="c1">// -&gt; { a: {} }</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">a</span><span class="p">);</span> <span class="c1">// -&gt; { }</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">a</span><span class="p">?.</span><span class="nx">b</span><span class="p">);</span> <span class="c1">// -&gt; undefined</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">a</span><span class="p">?.</span><span class="nx">b</span><span class="p">?.</span><span class="nx">c</span><span class="p">);</span> <span class="c1">// undefined</span>
+</code></pre></div></div>
+<p><code class="highlighter-rouge">undefined</code>もしくは<code class="highlighter-rouge">null</code>な可能性があるobjectの末尾に?をつけると、実際に<code class="highlighter-rouge">undefined | null</code>だったとき、プロパティアクセスを行わずに<code class="highlighter-rouge">undefined</code>が返ります。</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ES2018</span>
+<span class="nx">fetch</span><span class="p">(</span><span class="s1">'https://api.reservoir.allajah.com/posts'</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">res</span> <span class="o">=&gt;</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">()).</span><span class="nx">then</span><span class="p">(</span><span class="nx">posts</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">posts</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">post</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">authorName</span> <span class="o">=</span> <span class="nx">post</span><span class="p">.</span><span class="nx">author</span> <span class="p">?</span> <span class="nx">post</span><span class="p">.</span><span class="nx">author</span><span class="p">.</span><span class="nx">name</span> <span class="p">:</span> <span class="s1">'defaultName'</span><span class="p">;</span>
+        <span class="c1">//...</span>
+    <span class="p">})</span>
+<span class="p">});</span>
+
+<span class="c1">// with Optional Chaining</span>
+<span class="nx">fetch</span><span class="p">(</span><span class="s1">'https://api.reservoir.allajah.com/posts'</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">res</span> <span class="o">=&gt;</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">()).</span><span class="nx">then</span><span class="p">(</span><span class="nx">posts</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">posts</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">post</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">authorName</span> <span class="o">=</span> <span class="nx">post</span><span class="p">.</span><span class="nx">author</span><span class="p">?.</span><span class="nx">name</span> <span class="o">||</span> <span class="s1">'defaultName'</span><span class="p">;</span>
+        <span class="c1">//...</span>
+    <span class="p">})</span>
+<span class="p">});</span>
+</code></pre></div></div>
+<p>簡潔に書けますね。</p>
+
+<h3 id="pipeline-operator-stage1"><a href="https://github.com/tc39/proposal-pipeline-operator">Pipeline Operator</a> (Stage1)</h3>
+
+<p>最近少し話題になったパイプライン演算子です。
+F#やOcaml、Elixirなどを書く人にとってはおなじみだと思います。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="kr">double</span> <span class="o">=</span> <span class="nx">x</span> <span class="o">=&gt;</span> <span class="nx">x</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">|&gt;</span> <span class="kr">double</span> <span class="o">|&gt;</span> <span class="p">(</span><span class="nx">x</span> <span class="o">=&gt;</span> <span class="mi">3</span> <span class="o">+</span> <span class="nx">x</span><span class="p">)</span> <span class="o">|&gt;</span> <span class="p">(</span><span class="nx">x</span> <span class="o">=&gt;</span> <span class="nx">x</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span> <span class="c1">// -&gt; 7</span>
+</code></pre></div></div>
+
+<p>個人的にパイプライン演算子は好きなのですが、proposalで上がってきた時は「絶対途中で落ちる」と思っていましたが、
+意外とparserの実装などが進んでいるようで驚いています。</p>
+
+<p>TypeScriptなどの型システムがないと、JavaScriptでは使うのが難しいかも知れません。</p>
+
+<p>Pipeline OperatorのSyntaxをどういったものにするかは<a href="https://github.com/tc39/proposal-pipeline-operator/wiki">何度も議論されているよう</a>で、
+まだまだ不安定なので、実際に手を出すのはせめてSyntaxが決まってからにするのをお薦めします。</p>
+
+<h3 id="pattern-matching-stage1"><a href="https://github.com/tc39/proposal-pattern-matching">Pattern Matching</a> (Stage1)</h3>
+<p>関数型のパラダイムを輸入してこよう、というproposalはまだまだあります。
+おなじみのPattern Matchingです。</p>
+
+<p>まだbabel-pluginも公開されてないですが、下記のようなSemanticsになるようです。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="nx">jsonService</span><span class="p">)</span>
+<span class="k">case</span> <span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">when</span> <span class="p">{</span><span class="nl">status</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="nx">headers</span><span class="p">:</span> <span class="p">{</span><span class="s1">'Content-Length'</span><span class="p">:</span> <span class="nx">s</span><span class="p">}}</span> <span class="o">-&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`size is </span><span class="p">${</span><span class="nx">s</span><span class="p">}</span><span class="s2">`</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="nx">when</span> <span class="p">{</span><span class="nl">status</span><span class="p">:</span> <span class="mi">404</span><span class="p">}</span> <span class="o">-&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'JSON not found'</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="nx">when</span> <span class="p">{</span><span class="nx">status</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nx">status</span> <span class="o">&gt;=</span> <span class="mi">400</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nx">RequestError</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><code class="highlighter-rouge">case</code>で評価された値が<code class="highlighter-rouge">when</code>ブロックとマッチした時<code class="highlighter-rouge">-&gt; {}</code> ブロックが実行されます。</p>
+
+<h3 id="standard-library-stage1"><a href="https://github.com/tc39/proposal-javascript-standard-library">Standard Library</a> (Stage1)</h3>
+<p>Date Objectなどのglobal空間に置かれているものを標準ライブラリとしてimportすることによって、名前空間を切ろうという提案です。</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nb">Date</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">"std:Date"</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nb">Date</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">"std:Date+2.1.6-alpha.1"</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">d</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p>まだSemanticsや仕様も決まっていなく、Polyfillもありません。</p>
+
+<h3 id="asset-references-stage1"><a href="https://github.com/sebmarkbage/ecmascript-asset-references">Asset References</a> (Stage1)</h3>
+<p><code class="highlighter-rouge">import</code>はES modulesをロードするための構文ですが、imageやCSSなどのassetをロードする構文を追加しようという提案です。</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">asset</span> <span class="nx">Logo</span> <span class="k">from</span> <span class="s2">"./logo.gif"</span><span class="p">;</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">loadLogo</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">img</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s2">"img"</span><span class="p">);</span>
+  <span class="nx">img</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="nx">Logo</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">img</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Stage2,3と上がっていくか微妙ではありますが、機能としては非常に大きいので、数年後に業界を揺るがしているかも知れないです。</p>
+
+<h2 id="edgeのjsエンジンがv8に">EdgeのJSエンジンがV8に</h2>
+<p>ちょうどこの記事を書いている間に、<a href="https://github.com/MicrosoftEdge/MSEdge">MicrosoftがEdgeをChromiumベースに置き換える発表</a>がでていました。
+EdgeのJavaScriptのエンジンがChakraからV8になると、
+前述したproposalがstep4に上がるための条件である
+「2つ以上の競合する主要なJSエンジンで実装されている(原文: Two compatible implementations which pass the acceptance tests)」
+を満たすことに影響が出るかも知れません。</p>
+
+<p>現在主要なJavaScriptエンジンといえば</p>
+<ul>
+  <li>Blink (Google)</li>
+  <li>SpiderMonkey (Mozilla)</li>
+  <li>JavaScriptCore (Apple)</li>
+  <li>Chakra (Microsoft)</li>
+</ul>
+
+<p>の4つで、ここからChakraを抜いた3つのうち2つのブラウザで実装される必要があります。</p>
+
+<p>10年後くらいにはV8大統一時代が来て、ECMAScriptは実質V8の仕様になるかも・・・？</p>
+
+<h2 id="まとめ">まとめ</h2>
+<p>ECMAScriptには新しい機能仕様がどんどん提案・追加されていて、JavaScriptは進化し続けています。</p>
+
+<p>JavaScriptは使われている環境の性質上、後方互換性を保つのが必須になっています。
+古いAPIが消えるようなことはなかなかないですが、
+JS開発者は新しくモダンなAPIを追いかけ、きれいでバグの少ないコードを書くことが求められています。</p>
+
+<p>明日は<a href="https://twitter.com/ysakasin">@ysakasin</a>の<a href="https://sakasin.net/blog/solving-othello">オセロの完全解析を解説する</a>
+です！もう上がってます！</p>
+
+        </div>
+        <p class="mt4">
+  Allajah
+  <span class="silver">at 00:00</span>
+</p>
+
+
+      </main>
+  </div>
+  <footer class="footer">
+    <div class="footer-sns">
+      <a href="https://twitter.com/_araya_" target="_blank" rel="noopener noreferrer"><i class="fa fa-twitter"></i></a>
+      <a href="https://github.com/allajah" target="_blank" rel="noopener noreferrer"><i class="fa fa-github"></i></a>
+      <a href="/feed.xml" target="_blank" rel="noopener noreferrer"><i class="fa fa-rss"></i></a>
+    </div>
+  </footer>
+</body>
+
+</html>

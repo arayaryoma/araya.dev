@@ -1,0 +1,235 @@
+
+<!doctype>
+<html lang="ja">
+
+<head>
+  <meta content='Firebase Hostingを使って静的Webサイトを独自ドメインかつSSL証明書付きで公開する - Allajah&#39;s Reservoir' name='title' />
+  <meta content='Firebase Hostingを使って静的Webサイトを独自ドメインかつSSL証明書付きで公開する - Allajah&#39;s Reservoir' name='og:title' />
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="//necolas.github.io/normalize.css/7.0.0/normalize.css">
+  <title>Firebase Hostingを使って静的Webサイトを独自ドメインかつSSL証明書付きで公開する - Allajah&#39;s Reservoir</title>
+  <link href='http://blog.araya.dev/images/favicon.png' rel='shortcut icon'>
+<link href='http://blog.araya.dev/assets/main.css' rel='stylesheet' type='text/css' />
+
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type' />
+
+  <meta content='http://blog.araya.dev/posts/firebase-hosting-jekyll.html' property='og:url' />
+  <meta content="ブログのホスティング先をGitHub PagesからFirebase Hostingに変えてみた。Firebase Hostingとはその名の通りFirebaseがWebサイトをホスティングしてくれるサービス。https://fire..." property='og:description' />
+  <meta content="article" property="og:type" />
+
+<!-- - -->
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-104175258-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+
+</head>
+
+<body>
+  <header class="site-title">
+    <a href="http://blog.araya.dev">
+        <img src="http://blog.araya.dev/images/icon_circle.png" alt="Home" width="80" height="80">
+      </a>
+    <p>Allajah's Reservoir</p>
+  </header>
+  <div class="container">
+      <nav aria-label="Main">
+        <ul>
+          
+          <li>
+            <a class="" href="http://blog.araya.dev/">
+          Posts
+        </a> 
+          </li>
+        </ul>
+      </nav>
+      <main class="">
+        
+          
+          <div class="">26 Oct 2017</div>
+          
+          <h1 class="page-title"> Firebase Hostingを使って静的Webサイトを独自ドメインかつSSL証明書付きで公開する </h1>
+          
+          <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+          <script>
+            ! function(d, s, id) {
+              var js, fjs = d.getElementsByTagName(s)[0];
+              if (!d.getElementById(id)) {
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "//platform.twitter.com/widgets.js";
+                fjs.parentNode.insertBefore(js, fjs);
+              }
+            }(document, "script", "twitter-wjs");
+          </script>
+          <a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+<script
+  type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+
+
+          
+        
+        <div class="markdown-body">
+          <p>ブログのホスティング先をGitHub PagesからFirebase Hostingに変えてみた。</p>
+
+<h2 id="firebase-hostingとは">Firebase Hostingとは</h2>
+<p>その名の通りFirebaseがWebサイトをホスティングしてくれるサービス。</p>
+
+<p><a href="https://firebase.google.com/docs/hosting/">https://firebase.google.com/docs/hosting/</a></p>
+
+<p>嬉しいポイントは</p>
+<blockquote>
+  <p>Zero-configuration SSL is built into Firebase Hosting so content is always delivered securely.</p>
+</blockquote>
+
+<p>ここにあって、なんと独自ドメインでもSSLをサポートしてくれる。</p>
+
+<p><a href="https://firebase.google.com/pricing/">料金</a>も、フリーでそこそこ使えて、ホスティングしてくれるファイルの最大容量は計1GB・
+月10GBまで配信できる。
+個人ブログくらいならフリーで間に合うし、足りなくなっても月$25払えば10GBストア・月50GB配信できるので安くすむ。</p>
+
+<h2 id="firebaseでのセットアップ">Firebaseでのセットアップ</h2>
+<p><a href="https://console.firebase.google.com/">FirebaseのConsole</a>にログインして新規プロジェクトを作成する。</p>
+
+<h2 id="セットアップ">セットアップ</h2>
+<p>Firebase CLIをnpmでインストールする</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install -g firebase-tools
+</code></pre></div></div>
+
+<h2 id="firebase-cliでログインする">Firebase CLIでログインする</h2>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>firebase login
+</code></pre></div></div>
+<p>ブラウザが起動して、Googleアカウントでサインインが求められるのでサインインする。</p>
+
+<h2 id="プロジェクトの設定をする">プロジェクトの設定をする</h2>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>firebase init
+</code></pre></div></div>
+<p>対話型でまずカレントディレクトリを設定する目的を聞いてくる。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Which Firebase CLI features do you want to setup for this folder?
+</code></pre></div></div>
+<p>ここでは <code class="highlighter-rouge">Hosting</code> を選択する。</p>
+
+<p>次に、設定するFirebaseのプロジェクトを聞いてくるので、さきほど作成したFirebaseプロジェクトを選択する。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Select a default Firebase project for this directory:
+</code></pre></div></div>
+<p>次に、どのディレクトリをpublic directoryに選択するか聞かれる。
+ここに設定したディレクトリがrootとしてFirebaseにデプロイされるので、
+Webサイトの場合は<code class="highlighter-rouge">index.html</code>が格納されている、ビルドしたディレクトリ(<code class="highlighter-rouge">dist</code>など)を指定する。
+jekyllの場合は<code class="highlighter-rouge">_site</code>が該当するので、それを指定する。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> What do you want to use as your public directory?
+</code></pre></div></div>
+
+<p>次に、プロジェクトをSingle Page Applicationとして設定するか聞いてくる。
+<code class="highlighter-rouge">yes</code>にするとURLを全て/index.htmlにリダイレクトさせる。
+今回の場合は<code class="highlighter-rouge">NO</code>でいい。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Configure as a single-page app (rewrite all urls to /index.html)? (y/N)
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> Firebase initialization complete!
+</code></pre></div></div>
+<p>ここまで完了すると、<code class="highlighter-rouge">.firebaserc</code>と<code class="highlighter-rouge">firebase.json</code>が作成される。
+プロジェクトIDや、<code class="highlighter-rouge">firebase init</code>で設定した項目を変えたい場合は編集する。</p>
+
+<h2 id="ビルド">ビルド</h2>
+<p>jekyllの場合は<code class="highlighter-rouge">_config.yml</code>の<code class="highlighter-rouge">url</code>フィールドを変更する必要がある
+Firebaseのコンソールにアクセスし、projectIDを確認する。
+デプロイ先のURLは<code class="highlighter-rouge">https://{project_id}.firebaseapp.com</code>になるので、これを<code class="highlighter-rouge">url</code>フィールドに設定する(<code class="highlighter-rouge">{project_id}</code>は置き換える)。</p>
+
+<h2 id="デプロイ">デプロイ</h2>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>firebase deploy
+</code></pre></div></div>
+<p>デプロイ完了。Firebase ConsoleのメニューからHostingを選ぶと、ダッシュボードにデプロイ履歴が記載されてる。</p>
+
+<p>とりあえずここまででFirebaseにWebサイトを公開するところまで完了。</p>
+
+<h2 id="カスタムドメインの設定">カスタムドメインの設定</h2>
+<p>Firebaseの管理コンソールから、 Hostingを選択して、「ドメインを接続」　ボタンを押して、ウィザードの通りに実行する。
+自分の場合はAWSのRoute 53でポチポチやった。
+流れとしては、</p>
+<ol>
+  <li>DNSにTXTレコードを設定して、ドメインの管理者であることを証明</li>
+  <li>与えられたIPv4をDNSにAレコードを貼る</li>
+  <li>SSL証明書がプロビジョニングされるまで待つ(Firebaseがやってくれる)
+すでにGitHub PagesなどにホスティングしていてCNAMEやAレコードを貼っている場合は、2の前に外しておく。</li>
+</ol>
+
+<p>ここまででWebサイトをFirebaseにホスティングしてもらい、独自ドメインを使ってさらにHTTPSに対応することができた。</p>
+
+<h2 id="自動デプロイ">自動デプロイ</h2>
+<p>GitHub Pagesの魅力の一つに、GitHub上のリポジトリにpushしたら自動でデプロイしてくれるというものがあったが、
+今のままの構成だとその恩恵をウケられないのでCIにデプロイしてもらう。今回はCirlceCI 2.0を使う。　</p>
+
+<h3 id="ci用のtokenの発行">CI用のtokenの発行</h3>
+<p>firebase CLIでCI用のtokenを発行する</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>firebase login:ci
+</code></pre></div></div>
+<p>ブラウザでGoogleサインインすると、tokenが出力されるので控えておく。</p>
+
+<h3 id="circleciの設定">CircleCIの設定</h3>
+
+<p>.circleci/config.ymlを書く</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">version</span><span class="pi">:</span> <span class="s">2</span>
+<span class="na">jobs</span><span class="pi">:</span>
+  <span class="na">build</span><span class="pi">:</span>
+    <span class="na">working_directory</span><span class="pi">:</span> <span class="s">~/repo</span>
+    <span class="na">docker</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">image</span><span class="pi">:</span> <span class="s">circleci/ruby:latest</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">checkout</span>
+      <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span>
+          <span class="na">name</span><span class="pi">:</span> <span class="s">Install firebase-tools</span>
+          <span class="na">command</span><span class="pi">:</span> <span class="pi">|</span>
+            <span class="no">curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -</span>
+            <span class="no">sudo apt-get install -y nodejs</span>
+            <span class="no">echo prefix=${HOME}/.local &gt;&gt; ~/.npmrc</span>
+            <span class="no">npm install -g firebase-tools</span>
+      <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span>
+          <span class="na">name</span><span class="pi">:</span> <span class="s">Install dependencies</span>
+          <span class="na">command</span><span class="pi">:</span> <span class="s">bundle install</span>
+      <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span>
+          <span class="na">name</span><span class="pi">:</span> <span class="s">Build</span>
+          <span class="na">command</span><span class="pi">:</span> <span class="s">make build</span>
+      <span class="pi">-</span> <span class="na">run</span><span class="pi">:</span>
+          <span class="na">name</span><span class="pi">:</span> <span class="s">Deploy</span>
+          <span class="na">command</span><span class="pi">:</span> <span class="s">~/.local/bin/firebase deploy --token $FIREBASE_TOKEN</span></code></pre></figure>
+
+<p>CircleCIのprojectに、さっき取得したCI用tokenを環境変数として指定する。ここでは<code class="highlighter-rouge">FIREBASE_TOKEN</code>。</p>
+
+<p>これでGitHubにpushするとデプロイされるようになった。</p>
+
+<h2 id="まとめ">まとめ</h2>
+<p>このブログはCircleCI, GitHub, Firebase Hostingに支えられています。</p>
+
+        </div>
+        <p class="mt4">
+  Allajah
+  <span class="silver">at 15:41</span>
+</p>
+
+
+      </main>
+  </div>
+  <footer class="footer">
+    <div class="footer-sns">
+      <a href="https://twitter.com/_araya_" target="_blank" rel="noopener noreferrer"><i class="fa fa-twitter"></i></a>
+      <a href="https://github.com/allajah" target="_blank" rel="noopener noreferrer"><i class="fa fa-github"></i></a>
+      <a href="/feed.xml" target="_blank" rel="noopener noreferrer"><i class="fa fa-rss"></i></a>
+    </div>
+  </footer>
+</body>
+
+</html>

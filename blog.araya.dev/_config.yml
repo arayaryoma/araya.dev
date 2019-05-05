@@ -1,7 +1,7 @@
 # ----------- CONFIGURABLE START -----------
 title:            "Allajah's Reservoir"
 description:      "Allajah(Rio)'s blog"
-url:              http://blog.araya.dev # Site url, without a slash at the end.
+url:              https://blog.araya.dev # Site url, without a slash at the end.
 signoff:          "Allajah" # Your name
 facebook_appid:   # APP ID for like button, remove from /_includes/share.html if unwanted.
 google_analytics: UA-104175258-1

@@ -9,7 +9,7 @@ sync-all:
 sync-www:
 	rsync --delete -r -e "ssh -i ~/.ssh/araya.dev.pem" ./www.araya.dev/ ubuntu@${SERVER_IP}:/var/www/araya.dev/www.araya.dev/
 sync-blog:
-	rsync --delete -r -e "ssh -i ~/.ssh/araya.dev.pem" ./blog.araya.dev/_site/ ubuntu@${SERVER_IP}:/var/www/araya.dev/blog.araya.dev/
+	rsync --delete -r -e "ssh -i ~/.ssh/araya.dev.pem" ./blog.araya.dev/dist/ ubuntu@${SERVER_IP}:/var/www/araya.dev/blog.araya.dev/dist
 start:
 	sudo h2o -c ./h2o.conf
 daemon:

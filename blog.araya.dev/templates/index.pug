@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+html(lang="ja")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover")
+        title Araya's reservoir
+    body
+        each post in posts
+            a(href=post.url) !{post.title}

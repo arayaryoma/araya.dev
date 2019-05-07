@@ -1,0 +1,10 @@
+{
+  "name": "blog.araya.dev",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "js-yaml": "^3.13.1",
+    "pug": "^2.0.3",
+    "showdown": "^1.9.0"
+  }
+}

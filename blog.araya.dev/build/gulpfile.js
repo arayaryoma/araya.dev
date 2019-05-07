@@ -3,15 +3,16 @@ const fs = require('fs');
 const showdown = require('showdown');
 const pug = require('pug');
 const yaml = require('js-yaml');
-const {series} = require('gulp');
-
+const {parallel, series, src, dest, watch} = require('gulp');
+const {sortBy} = require('lodash');
+const webpack = require('webpack');
+const webpackConf = require('./webpack.config');
 const fsPromises = fs.promises;
 const parser = new showdown.Converter({metadata: true});
-const postsDir = path.resolve('./posts');
-const distDir = path.resolve('./dist');
-const postTemplateFile = path.resolve('./templates/post.pug');
-const indexTemplateFile = path.resolve('./templates/index.pug');
-
+const postsDir = path.resolve('../posts');
+const distDir = path.resolve('../dist');
+const postTemplateFile = path.resolve('../templates/post.pug');
+const indexTemplateFile = path.resolve('../templates/index.pug');
 const readdirRecursively = async (dir, files = []) => {
     const dirents = await fsPromises.readdir(dir, {withFileTypes: true});
     const dirs = [];
@@ -80,10 +81,6 @@ const mkdir = (path) => {
 };
 
 const build = async () => {
-    const stylesheets = await readdirRecursively(path.resolve('./styles/'));
-    for (const stylesheet of stylesheets) {
-        fsPromises.copyFile(stylesheet, distDir);
-    }
     const files = await loadPostsList();
     await mkdir(`${distDir}/posts`);
     const posts = [];
@@ -108,10 +105,35 @@ const build = async () => {
         })
     }
     const indexHtml = pug.renderFile(indexTemplateFile, {
-        posts
+        posts: sortBy(posts, p => p.date).reverse()
     });
     writeFile(`${distDir}/index.html`, indexHtml).catch(err => console.error(err));
 };
-export default series(build);
 
+const copyStyles = () => {
+    return src('../styles/**/*.css')
+        .pipe(dest(`${distDir}/styles`));
+};
+const copyAssets = () => {
+    return src('../assets/**/*')
+        .pipe(dest(`${distDir}/assets`))
+};
+
+const runWebpack = () => {
+    return new Promise((resolve, reject) => {
+    webpack(webpackConf, ((error, stats) => {
+        if(error || stats.hasErrors()) {
+            console.error(error);
+            reject(error);
+        }
+        resolve()
+    }));
+    })
+
+};
+// watch(['../templates/**/*', '../styles/**/*'], parallel(build, copyStyles, copyAssets));
+exports.default = series(
+    parallel(build, copyStyles, copyAssets, runWebpack)
+
+);
 

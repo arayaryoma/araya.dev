@@ -4,6 +4,12 @@ html(lang="ja")
         meta(charset="UTF-8")
         meta(name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover")
         title !{title}
+        link(rel="stylesheet" href="/styles/main.css")
+        link(rel="stylesheet" href="/styles/markdown.css")
+        link(rel="stylesheet" href="/styles/lib/highlight.js/dracula.css")
+        <script src="/js/highlight.js" defer></script>
     body
-        .markdown.post
-            | !{content}
+        .container
+            h1.post-title !{title}
+            .markdown.post
+                | !{content}

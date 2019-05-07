@@ -1,0 +1,15 @@
+.markdown * {
+ line-height: 1.5em;
+}
+.markdown p {
+ margin: .5em 0;
+}
+.markdown a {
+ color: var(--blue);
+}
+.markdown a:hover {
+ color: var(--primary-color);
+}
+.markdown h2 {
+  margin-top: 2em;
+}

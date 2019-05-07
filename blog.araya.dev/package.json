@@ -2,9 +2,20 @@
   "name": "blog.araya.dev",
   "version": "1.0.0",
   "main": "index.js",
+  "scripts": {
+    "build": "rimraf ./dist && gulp -f ./build/gulpfile.js",
+    "watch": "gulp watch -f ./build/gulpfile.js"
+  },
   "dependencies": {
+    "highlight.js": "^9.15.6",
     "js-yaml": "^3.13.1",
     "pug": "^2.0.3",
     "showdown": "^1.9.0"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "lodash": "^4.17.11",
+    "rimraf": "^2.6.3",
+    "webpack": "^4.30.0"
   }
 }

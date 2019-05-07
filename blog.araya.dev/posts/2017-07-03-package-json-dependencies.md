@@ -10,7 +10,7 @@ module名をkey、バージョンをvalueとしたObjectで定義する。
 "dependencies": {
   "react": "^15.6.0"
   }
-{% endhighlight %}
+```
 
 tarballやgitのURLも使うことができる。
 
@@ -26,7 +26,7 @@ CoffeeScript, TypeScriptなどのAltJSやES最新版をCommonJS向けにコン�
 "scripts": {
   "prepare": "coffee -o lib/ -c src/index.coffee"
 }
-{% endhighlight %}
+```
 
 これによってnpm registryにpublishされる前に `scripts.prepare` で指定したコマンドが実行される。
 
@@ -49,7 +49,7 @@ package.json
     "webpack-dev-server": "^2.6.1"
   }
 }
-{% endhighlight %}
+```
 
 ```
 $ npm install
@@ -70,7 +70,7 @@ package.json
     "webpack-dev-server": "^2.6.1"
   }
 }
-{% endhighlight %}
+```
 
 ## bundledDependencies または bundleDependencies
 package名を配列で記述する。  
@@ -86,7 +86,7 @@ package名を配列で記述する。
   },
   "bundledDependencies": ["colorpack"]
 }
-{% endhighlight %}
+```
 
 ```
 $ npm pack
@@ -102,7 +102,7 @@ npm-sample-0.0.0.tgz
     "npm-sample": "file:../npm-sample/npm-sample-0.0.0.tgz"
   }
 }
-{% endhighlight %}
+```
 
 
 /tmp/bundle-sample/package-lock.json
@@ -126,7 +126,7 @@ npm-sample-0.0.0.tgz
     }
   }
 }
-{% endhighlight %}
+```
 
 `/tmp/npm-sample`のpackage.json内でbundledDependenciesとして指定した`colorpack`が、依存関係として解決されてるのがわかる。
 
@@ -147,7 +147,7 @@ if ( notGoodFooVersion(fooVersion) ) {
 if (foo) {
   foo.doFooThings()
 }
-{% endhighlight %}
+```
 
 # まとめ
 ライブラリを作る時は`dependencies`, `devDependencies`, `peerDependencies`を使い分ける必要があるけど、製品作る時は全部`dependencies`もしくは`devDependencies`にまとめて書いちゃって問題なさそう。

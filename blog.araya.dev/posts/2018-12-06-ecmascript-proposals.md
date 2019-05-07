@@ -96,6 +96,7 @@ try {
 
 ```
 このproposalは、 `catch`でエラーの値を受け取らなくてもいいとするものです。
+
 ```javascript
 try {
     // Do something expected error may be threw

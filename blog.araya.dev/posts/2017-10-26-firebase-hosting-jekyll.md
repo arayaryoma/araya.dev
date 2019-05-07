@@ -136,7 +136,7 @@ jobs:
       - run:
           name: Deploy
           command: ~/.local/bin/firebase deploy --token $FIREBASE_TOKEN
-{% endhighlight %}
+```
 
 CircleCIのprojectに、さっき取得したCI用tokenを環境変数として指定する。ここでは`FIREBASE_TOKEN`。
 

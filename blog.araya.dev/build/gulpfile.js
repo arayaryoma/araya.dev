@@ -1,8 +1,9 @@
-import path from 'path';
-import fs from 'fs';
-import showdown from 'showdown';
-import pug from 'pug';
-import yaml from 'js-yaml';
+const path = require('path');
+const fs = require('fs');
+const showdown = require('showdown');
+const pug = require('pug');
+const yaml = require('js-yaml');
+const {series} = require('gulp');
 
 const fsPromises = fs.promises;
 const parser = new showdown.Converter({metadata: true});
@@ -16,10 +17,10 @@ const readdirRecursively = async (dir, files = []) => {
     const dirs = [];
     for (let dirent of dirents) {
         if (dirent.isDirectory()) dirs.push(`${dir}/${dirent.name}`);
-        if(dirent.isFile()) files.push(`${dir}/${dirent.name}`);
+        if (dirent.isFile()) files.push(`${dir}/${dirent.name}`);
     }
     for (let d of dirs) {
-       files = readdirRecursively(d, files)
+        files = readdirRecursively(d, files)
     }
     return Promise.resolve(files);
 };
@@ -78,9 +79,9 @@ const mkdir = (path) => {
     }));
 };
 
-(async () => {
+const build = async () => {
     const stylesheets = await readdirRecursively(path.resolve('./styles/'));
-    for(const stylesheet of stylesheets) {
+    for (const stylesheet of stylesheets) {
         fsPromises.copyFile(stylesheet, distDir);
     }
     const files = await loadPostsList();
@@ -110,5 +111,7 @@ const mkdir = (path) => {
         posts
     });
     writeFile(`${distDir}/index.html`, indexHtml).catch(err => console.error(err));
-})();
+};
+export default series(build);
+
 

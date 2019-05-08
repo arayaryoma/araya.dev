@@ -1,16 +1,12 @@
-<!DOCTYPE html>
-html(lang="ja")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover")
-        link(rel="stylesheet" href="/styles/main.css")
-        title Araya's reservoir
-    body
-        .container
-            h2 Posts
-            ul.posts-list
-                each post in posts
-                    li.posts-list-item
-                        a(href=post.url).posts-list-item-inner
-                            span.posts-list-item-title !{post.title}
-                            span.posts-list-item-date !{post.date}
+extends _base
+
+append head
+    title Posts | Araya's reservoir
+block content
+    h2 Posts
+    ul.posts-list
+        each post in posts
+            li.posts-list-item
+                a(href=post.url).posts-list-item-inner
+                    span.posts-list-item-title !{post.title}
+                    span.posts-list-item-date !{post.date}

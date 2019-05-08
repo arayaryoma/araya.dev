@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-html(lang="ja")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover")
-        title !{title}
-        link(rel="stylesheet" href="/styles/main.css")
-        link(rel="stylesheet" href="/styles/markdown.css")
-        link(rel="stylesheet" href="/styles/lib/highlight.js/dracula.css")
-        <script src="/js/highlight.js" defer></script>
-    body
-        .container
-            h1.post-title !{title}
-            .markdown.post
-                | !{content}
+extends _base
+append head
+    title !{title}
+    link(rel="stylesheet" href="/styles/markdown.css")
+    link(rel="stylesheet" href="/styles/lib/highlight.js/dracula.css")
+    <script src="/js/highlight.js" defer></script>
+block content
+    h1.post-title !{title}
+    .markdown.post
+        | !{content}

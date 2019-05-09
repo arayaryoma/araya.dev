@@ -80,7 +80,7 @@ const mkdir = (path) => {
     }));
 };
 
-const build = async () => {
+const buildTemplates = async () => {
     const files = await loadPostsList();
     await mkdir(`${distDir}/posts`);
     const posts = [];
@@ -119,21 +119,22 @@ const copyAssets = () => {
         .pipe(dest(`${distDir}/assets`))
 };
 
-const runWebpack = () => {
+const bundle = () => {
     return new Promise((resolve, reject) => {
-    webpack(webpackConf, ((error, stats) => {
-        if(error || stats.hasErrors()) {
-            console.error(error);
-            reject(error);
-        }
-        resolve()
-    }));
+        webpack(webpackConf, ((error, stats) => {
+            if (error || stats.hasErrors()) {
+                console.error(error);
+                reject(error);
+            }
+            resolve()
+        }));
     })
-
 };
-// watch(['../templates/**/*', '../styles/**/*'], parallel(build, copyStyles, copyAssets));
-exports.default = series(
-    parallel(build, copyStyles, copyAssets, runWebpack)
-
-);
-
+const build = parallel(buildTemplates, copyStyles, copyAssets, bundle);
+exports.default = series(build);
+exports.watch = series(build, () => {
+    watch(['../templates/**/*', '../posts/**/*'], series(buildTemplates));
+    watch(['../styles/**/*'], series(copyStyles));
+    watch(['../assets/**/*'], series(copyAssets));
+    watch(['../js/**/*'], series(bundle));
+});

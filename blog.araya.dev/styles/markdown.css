@@ -13,3 +13,6 @@
 .markdown h2 {
   margin-top: 2em;
 }
+.markdown code {
+    font-family: 'Source Code Pro', monospace;
+}

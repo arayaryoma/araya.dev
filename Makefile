@@ -8,6 +8,8 @@ sync-all:
 	rsync --delete -r -e "ssh -i ~/.ssh/araya.dev.pem" ./ ubuntu@${SERVER_IP}:/var/www/araya.dev/
 sync-www:
 	rsync --delete -r -e "ssh -i ~/.ssh/araya.dev.pem" ./www.araya.dev/ ubuntu@${SERVER_IP}:/var/www/araya.dev/www.araya.dev/
+sync-pg:
+	rsync --delete -r -e "ssh -i ~/.ssh/araya.dev.pem" ./playground.araya.dev/ ubuntu@${SERVER_IP}:/var/www/araya.dev/playground.araya.dev/
 sync-blog:
 	rsync --delete -r -e "ssh -i ~/.ssh/araya.dev.pem" ./blog.araya.dev/dist/ ubuntu@${SERVER_IP}:/var/www/araya.dev/blog.araya.dev/dist
 start:

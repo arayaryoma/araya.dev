@@ -1,0 +1,7 @@
+#!/bin/bash
+
+COMPONENT_DIR=$1/$2
+mkdir -p $COMPONENT_DIR
+touch $COMPONENT_DIR/$2.css
+touch $COMPONENT_DIR/$2.js
+cat ./template.html | sed "s/{playground_name}/$2/g" > $COMPONENT_DIR/index.html

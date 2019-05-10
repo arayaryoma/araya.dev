@@ -144,14 +144,15 @@ console.log(readdirRecursively("./files"));
 ```javascript
 const fs = require("fs");
 const fsPromises = fs.promises;
-const options ={
-    // options
+const options = {
+  // options
 };
-fsPromises.readdir('path', options).then((err, files) => {
-    // `Do something
-})
+fsPromises.readdir('path', options).then(files => {
+  // Do something
+}).catch(err => {
+  // Handle the error
+});
 ```
-
 これを用いて、非同期なrecursive readdirを実装すると
 
 ```javascript

@@ -1,9 +1,10 @@
 window.addEventListener('load', () => {
+   console.log('window.portalHost:', window.portalHost);
    const portalEl = document.querySelector('#portal-1');
    portalEl.addEventListener('click', () => {
       // portalEl.activate();
       portalEl.classList.add('portal-reveal')
-   })
+   });
    portalEl.addEventListener('transitionend', e => {
       if (e.propertyName === 'bottom') portalEl.activate();
    });

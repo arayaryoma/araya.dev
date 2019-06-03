@@ -1,0 +1,19 @@
+:root {
+    --initial-sclae: .4;
+}
+
+.portal {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    transition: transform .4s, bottom .7s, left .7s;
+    box-shadow: 0 0 20px 10px rgba(0, 0, 0, .5);
+    transform: scale(var(--initial-sclae));
+    bottom: calc(20px + 50% * var(--initial-sclae) - 50%);
+    left: calc(20px + 50% * var(--initial-sclae) - 50%);
+}
+.portal-reveal {
+    transform: scale(1);
+    bottom: 0;
+    left: 0;
+}

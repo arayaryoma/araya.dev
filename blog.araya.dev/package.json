@@ -7,15 +7,15 @@
     "watch": "gulp watch -f ./build/gulpfile.js"
   },
   "dependencies": {
-    "highlight.js": "^9.15.6",
+    "highlight.js": "^9.15.10",
     "js-yaml": "^3.13.1",
-    "pug": "^2.0.3",
+    "pug": "^2.0.4",
     "showdown": "^1.9.0"
   },
   "devDependencies": {
     "gulp": "^4.0.2",
-    "lodash": "^4.17.11",
-    "rimraf": "^2.6.3",
-    "webpack": "^4.30.0"
+    "lodash": "^4.17.15",
+    "rimraf": "^3.0.0",
+    "webpack": "^4.40.2"
   }
 }

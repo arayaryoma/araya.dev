@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf ./dist && gulp -f ./build/gulpfile.js",
-    "watch": "gulp watch -f ./build/gulpfile.js"
+    "build": "rimraf ./dist && gulp build -f build/gulpfile.ts",
+    "watch": "ts-node -T ./build/watch.ts"
   },
   "dependencies": {
     "highlight.js": "^9.15.10",
@@ -13,10 +13,19 @@
     "showdown": "^1.9.0"
   },
   "devDependencies": {
-    "feed": "^3.0.0",
+    "@types/gulp": "^4.0.6",
+    "@types/js-yaml": "^3.12.1",
+    "@types/lodash": "^4.14.138",
+    "@types/node": "^12.7.5",
+    "@types/pug": "^2.0.4",
+    "@types/showdown": "^1.9.3",
+    "@types/webpack": "^4.39.1",
+    "feed": "^4.0.0",
     "gulp": "^4.0.2",
     "lodash": "^4.17.15",
     "rimraf": "^3.0.0",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.6.3",
     "webpack": "^4.40.2"
   }
 }

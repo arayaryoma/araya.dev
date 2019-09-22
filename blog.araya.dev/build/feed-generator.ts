@@ -3,7 +3,6 @@ import * as path from 'path';
 
 import {Feed} from "feed";
 import {Author, FeedOptions} from "feed/lib/typings";
-import {Posts} from "./types";
 const fsPromises = fs.promises;
 const author: Author = {
     name: 'Araya',

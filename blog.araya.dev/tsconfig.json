@@ -3,7 +3,7 @@
     "target": "esnext",
     "module": "commonjs",
     "strict": true,
-    "esModuleInterop": true,
-    "typeRoots": ["./node_modules/@types/"]
+    "typeRoots": ["./node_modules/@types/", "./build/types/"],
+    "outDir": "./dist"
   }
 }

@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf ./dist && gulp build -f build/gulpfile.ts",
-    "watch": "ts-node -T ./build/watch.ts"
+    "build": "rimraf ./dist && TS_NODE_FILES=true gulp build -f build/gulpfile.ts",
+    "watch": " TS_NODE_FILES=true gulp -f ./build/watch.ts"
   },
   "dependencies": {
     "highlight.js": "^9.15.10",

@@ -7,7 +7,6 @@ import {src, dest, parallel, series} from 'gulp';
 import {sortBy} from 'lodash';
 import webpackConf from './webpack.config';
 import {Stats} from "webpack";
-import {ParseFileNameResult, Post, Posts} from "./types";
 import {generateFeed} from "./feed-generator";
 
 const webpack = require('webpack')

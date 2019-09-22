@@ -1,12 +1,12 @@
-export type ParseFileNameResult = {
+type ParseFileNameResult = {
     date: string,
     fileName: string,
 }
-export type Post = {
+type Post = {
     content: string,
     title: string,
     date: string,
     tags: string,
     url: string,
 }
-export type Posts = Post[]
+type Posts = Post[]

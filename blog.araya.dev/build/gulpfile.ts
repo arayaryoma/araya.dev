@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as showdown from 'showdown';
 import * as pug from 'pug';
 import * as yaml from 'js-yaml';
-import {src, dest, parallel, series} from 'gulp';
+import {src, dest, parallel, series, watch as gulpWatch} from 'gulp';
 import {sortBy} from 'lodash';
 import webpackConf from './webpack.config';
 import {Stats} from "webpack";
@@ -106,7 +106,7 @@ const getPosts = async (): Promise<Posts> => {
     return posts;
 }
 
-export const buildTemplates = async () => {
+const buildTemplates = async () => {
     await mkdir(`${distDir}/posts`);
     const posts = await getPosts();
     for (const post of posts) {
@@ -125,16 +125,16 @@ export const buildTemplates = async () => {
     });
 };
 
-export const copyStyles = () => {
+const copyStyles = () => {
     return src('../styles/**/*.css')
         .pipe(dest(`${distDir}/styles`));
 };
-export const copyAssets = () => {
+const copyAssets = () => {
     return src('../assets/**/*')
         .pipe(dest(`${distDir}/assets`))
 };
 
-export const bundle = async (): Promise<void> => {
+const bundle = async (): Promise<void> => {
     return new Promise((resolve, reject) => {
         webpack(webpackConf, ((error: Error, stats: Stats) => {
             if (error || stats.hasErrors()) {
@@ -145,9 +145,15 @@ export const bundle = async (): Promise<void> => {
         }));
     })
 };
-const build = parallel(buildTemplates, copyStyles, copyAssets, bundle)
-export const feed = series(async () => {
+const feed = series(async () => {
     const posts = await getPosts()
     await generateFeed(posts)
 })
-export {build}
+const build = parallel(buildTemplates, copyStyles, copyAssets, bundle)
+const watch = series(build, () => {
+    gulpWatch(['../templates/**/*', '../posts/**/*'], series(buildTemplates));
+    gulpWatch(['../styles/**/*'], series(copyStyles));
+    gulpWatch(['../assets/**/*'], series(copyAssets));
+    gulpWatch(['../js/**/*'], series(bundle));
+});
+export {build, watch}

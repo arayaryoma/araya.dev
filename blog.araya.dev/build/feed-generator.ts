@@ -19,7 +19,8 @@ const feedOptions: FeedOptions = {
 };
 export const generateFeed = async (posts: Posts): Promise<void> => {
   const feed = new Feed(feedOptions);
-  posts.forEach(post => {
+  posts.sort((a, b) => a.date > b.date ? -1 : 1);
+  posts.slice(0, 10).forEach(post => {
     feed.addItem({
       author: [author],
       content: post.content,

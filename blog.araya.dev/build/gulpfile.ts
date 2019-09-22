@@ -153,7 +153,7 @@ const feed = series(async () => {
   const posts = await getPosts();
   await generateFeed(posts);
 });
-const build = parallel(buildTemplates, copyStyles, copyAssets, bundle);
+const build = parallel(buildTemplates, copyStyles, copyAssets, bundle, feed);
 const watch = series(build, () => {
   gulpWatch(["../templates/**/*", "../posts/**/*"], series(buildTemplates));
   gulpWatch(["../styles/**/*"], series(copyStyles));

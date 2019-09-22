@@ -1,159 +1,163 @@
-import * as path from 'path';
-import * as fs from 'fs';
-import * as showdown from 'showdown';
-import * as pug from 'pug';
-import * as yaml from 'js-yaml';
-import {src, dest, parallel, series, watch as gulpWatch} from 'gulp';
-import {sortBy} from 'lodash';
-import webpackConf from './webpack.config';
-import {Stats} from "webpack";
-import {generateFeed} from "./feed-generator";
+import * as path from "path";
+import * as fs from "fs";
+import * as showdown from "showdown";
+import * as pug from "pug";
+import * as yaml from "js-yaml";
+import { src, dest, parallel, series, watch as gulpWatch } from "gulp";
+import { sortBy } from "lodash";
+import webpackConf from "./webpack.config";
+import { Stats } from "webpack";
+import { generateFeed } from "./feed-generator";
 
-const webpack = require('webpack')
+const webpack = require("webpack");
 
 const fsPromises = fs.promises;
-const parser = new showdown.Converter({metadata: true});
-const postsDir = path.resolve(__dirname, '../posts');
-const distDir = path.resolve(__dirname, '../dist');
-const postTemplateFile = path.resolve(__dirname, '../templates/post.pug');
-const indexTemplateFile = path.resolve(__dirname, '../templates/index.pug');
+const parser = new showdown.Converter({ metadata: true });
+const postsDir = path.resolve(__dirname, "../posts");
+const distDir = path.resolve(__dirname, "../dist");
+const postTemplateFile = path.resolve(__dirname, "../templates/post.pug");
+const indexTemplateFile = path.resolve(__dirname, "../templates/index.pug");
 
-const readdirRecursively = async (dir: string, files: string[] = []): Promise<string[]> => {
-    const dirents = await fsPromises.readdir(dir, {withFileTypes: true});
-    const dirs = [];
-    for (let dirent of dirents) {
-        if (dirent.isDirectory()) dirs.push(`${dir}/${dirent.name}`);
-        if (dirent.isFile()) files.push(`${dir}/${dirent.name}`);
-    }
-    for (let d of dirs) {
-        files = await readdirRecursively(d, files)
-    }
-    return Promise.resolve(files);
+const readdirRecursively = async (
+  dir: string,
+  files: string[] = []
+): Promise<string[]> => {
+  const dirents = await fsPromises.readdir(dir, { withFileTypes: true });
+  const dirs = [];
+  for (let dirent of dirents) {
+    if (dirent.isDirectory()) dirs.push(`${dir}/${dirent.name}`);
+    if (dirent.isFile()) files.push(`${dir}/${dirent.name}`);
+  }
+  for (let d of dirs) {
+    files = await readdirRecursively(d, files);
+  }
+  return Promise.resolve(files);
 };
 
 const loadPostsList = (): Promise<string[]> => {
-    return new Promise(((resolve, reject) => {
-        fs.readdir(postsDir, (err, files) => {
-            if (err) {
-                reject(err);
-                return;
-            }
-            resolve(files);
-        });
-    }))
+  return new Promise((resolve, reject) => {
+    fs.readdir(postsDir, (err, files) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(files);
+    });
+  });
 };
 
 const loadFile = (path: string): Promise<string> => {
-    return new Promise(((resolve, reject) => {
-        fs.readFile(path, (err, file) => {
-            if (err) {
-                reject(err);
-                return;
-            }
-            resolve(file.toString());
-        })
-    }))
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, (err, file) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(file.toString());
+    });
+  });
 };
 
 const writeFile = async (filename: string, content: string): Promise<void> => {
-    return new Promise(((resolve, reject) => {
-        fs.writeFile(filename, content, err => {
-            if (err) {
-                reject(err);
-                return;
-            }
-            resolve();
-        })
-    }))
+  return new Promise((resolve, reject) => {
+    fs.writeFile(filename, content, err => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve();
+    });
+  });
 };
 const parseMetadata = (raw: string) => {
-    return yaml.safeLoad(raw)
+  return yaml.safeLoad(raw);
 };
 
 const parseFileName = (fileName: string): ParseFileNameResult => {
-    const regexp = /^(\d{4}-\d{2}-\d{2})-(.*)\.md$/;
-    const matched = fileName.match(regexp);
-    if (!matched) throw `${fileName} is invalid filename format`
-    const [_, date, name] = matched
-    return {
-        date, fileName: name
-    }
+  const regexp = /^(\d{4}-\d{2}-\d{2})-(.*)\.md$/;
+  const matched = fileName.match(regexp);
+  if (!matched) throw `${fileName} is invalid filename format`;
+  const [_, date, name] = matched;
+  return {
+    date,
+    fileName: name
+  };
 };
 
 const mkdir = async (path: string): Promise<void> => {
-    return new Promise((resolve => {
-        fs.mkdir(path, {recursive: true}, () => {
-            resolve();
-        });
-    }));
+  return new Promise(resolve => {
+    fs.mkdir(path, { recursive: true }, () => {
+      resolve();
+    });
+  });
 };
 
 const getPosts = async (): Promise<Posts> => {
-    const files = await loadPostsList();
-    const posts: Posts = []
-    for (let file of files) {
-        const {date, fileName} = parseFileName(file);
-        const content = await loadFile(`${postsDir}/${file}`);
-        const parsed = parser.makeHtml(content);
-        const metadata = parser.getMetadata(true);
-        const {title, tags} = parseMetadata(metadata as string);
-        const post: Post = {
-            content: parsed, date, tags, title, url: `/posts/${date}/${fileName}.html`
-
-        }
-        posts.push(post)
-    }
-    return posts;
-}
+  const files = await loadPostsList();
+  const posts: Posts = [];
+  for (let file of files) {
+    const { date, fileName } = parseFileName(file);
+    const content = await loadFile(`${postsDir}/${file}`);
+    const parsed = parser.makeHtml(content);
+    const metadata = parser.getMetadata(true);
+    const { title, tags } = parseMetadata(metadata as string);
+    const post: Post = {
+      content: parsed,
+      date,
+      tags,
+      title,
+      url: `/posts/${date}/${fileName}.html`
+    };
+    posts.push(post);
+  }
+  return posts;
+};
 
 const buildTemplates = async () => {
-    await mkdir(`${distDir}/posts`);
-    const posts = await getPosts();
-    for (const post of posts) {
-        const html = pug.renderFile(postTemplateFile, post);
-        await mkdir(`${distDir}/posts/${post.date}`);
-        writeFile(`${distDir}${post.url}`, html)
-            .catch(err => {
-                throw(err)
-            });
-    }
-    const indexHtml = pug.renderFile(indexTemplateFile, {
-        posts: sortBy(posts, p => p.date).reverse()
+  await mkdir(`${distDir}/posts`);
+  const posts = await getPosts();
+  for (const post of posts) {
+    const html = pug.renderFile(postTemplateFile, post);
+    await mkdir(`${distDir}/posts/${post.date}`);
+    writeFile(`${distDir}${post.url}`, html).catch(err => {
+      throw err;
     });
-    await writeFile(`${distDir}/index.html`, indexHtml).catch(err => {
-        throw err
-    });
+  }
+  const indexHtml = pug.renderFile(indexTemplateFile, {
+    posts: sortBy(posts, p => p.date).reverse()
+  });
+  await writeFile(`${distDir}/index.html`, indexHtml).catch(err => {
+    throw err;
+  });
 };
 
 const copyStyles = () => {
-    return src('../styles/**/*.css')
-        .pipe(dest(`${distDir}/styles`));
+  return src("../styles/**/*.css").pipe(dest(`${distDir}/styles`));
 };
 const copyAssets = () => {
-    return src('../assets/**/*')
-        .pipe(dest(`${distDir}/assets`))
+  return src("../assets/**/*").pipe(dest(`${distDir}/assets`));
 };
 
 const bundle = async (): Promise<void> => {
-    return new Promise((resolve, reject) => {
-        webpack(webpackConf, ((error: Error, stats: Stats) => {
-            if (error || stats.hasErrors()) {
-                console.error(error, stats);
-                reject(error);
-            }
-            resolve()
-        }));
-    })
+  return new Promise((resolve, reject) => {
+    webpack(webpackConf, (error: Error, stats: Stats) => {
+      if (error || stats.hasErrors()) {
+        console.error(error, stats);
+        reject(error);
+      }
+      resolve();
+    });
+  });
 };
 const feed = series(async () => {
-    const posts = await getPosts()
-    await generateFeed(posts)
-})
-const build = parallel(buildTemplates, copyStyles, copyAssets, bundle)
-const watch = series(build, () => {
-    gulpWatch(['../templates/**/*', '../posts/**/*'], series(buildTemplates));
-    gulpWatch(['../styles/**/*'], series(copyStyles));
-    gulpWatch(['../assets/**/*'], series(copyAssets));
-    gulpWatch(['../js/**/*'], series(bundle));
+  const posts = await getPosts();
+  await generateFeed(posts);
 });
-export {build, watch}
+const build = parallel(buildTemplates, copyStyles, copyAssets, bundle);
+const watch = series(build, () => {
+  gulpWatch(["../templates/**/*", "../posts/**/*"], series(buildTemplates));
+  gulpWatch(["../styles/**/*"], series(copyStyles));
+  gulpWatch(["../assets/**/*"], series(copyAssets));
+  gulpWatch(["../js/**/*"], series(bundle));
+});
+export { build, watch };

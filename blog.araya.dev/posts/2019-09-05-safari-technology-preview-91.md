@@ -18,7 +18,6 @@ TLS1.0と1.1が無効化
 - unhandled promise rejectionsのためのpublicなAPIをJavaScript Coreに追加
 - [hashbang](https://github.com/tc39/proposal-hashbang)をサポート
 - [optional chaining](https://github.com/tc39/proposal-optional-chaining)を実装
-[nullish-coalescing](https://github.com/tc39/proposal-nullish-coalescing)も入った
 - `StaticRange` constructorを実装
 - `toISOString`がobjectを返したとき、`Date.prototype.toJSON`が例外を吐かないように修正
 - `Promise.prototype.finally`がPromise型ではないobjectを受け入れるように変更

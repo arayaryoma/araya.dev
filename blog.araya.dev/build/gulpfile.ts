@@ -106,7 +106,7 @@ const getPosts = async (): Promise<Posts> => {
       date,
       tags,
       title,
-      url: `/posts/${date}/${fileName}.html`
+      url: `posts/${date}/${fileName}.html`
     };
     posts.push(post);
   }
@@ -119,7 +119,7 @@ const buildTemplates = async () => {
   for (const post of posts) {
     const html = pug.renderFile(postTemplateFile, post);
     await mkdir(`${distDir}/posts/${post.date}`);
-    writeFile(`${distDir}${post.url}`, html).catch(err => {
+    writeFile(`${distDir}/${post.url}`, html).catch(err => {
       throw err;
     });
   }

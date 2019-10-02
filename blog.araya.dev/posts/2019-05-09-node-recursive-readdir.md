@@ -105,14 +105,15 @@ console.log(readdirRecursively("./files"));
 これを利用し`fs.readdir('filepath', {withFileTypes: true}, (err, files))`とすると、`files`引数には`fs.Dirent`オブジェクトの配列(`fs.Dirent[]`)が渡される。
 
 `fs.Dirent`オブジェクト`dirent`は以下のようなプロパティを持つ([公式ドキュメントより](https://nodejs.org/dist/latest-v10.x/docs/api/fs.html#fs_class_fs_dirent))
-・`dirent.isBlockDevice()`
-・`dirent.isCharacterDevice()`
-・`dirent.isDirectory()`
-・`dirent.isFIFO()`
-・`dirent.isFile()`
-・`dirent.isSocket()`
-・`dirent.isSymbolicLink()`
-・`dirent.name`
+- `dirent.isBlockDevice()`
+- `dirent.isCharacterDevice()`
+- `dirent.isDirectory()`
+- `dirent.isFIFO()`
+- `dirent.isFile()`
+- `dirent.isSocket()`
+- `dirent.isSymbolicLink()`
+- `dirent.name`
+
 `dirent.isDirectory()`は、`fs.Stats.isDirectory`と同じくディレクトリだった場合に`true`を返してくれるので、先述の実装をこれを用いて置き換えることができる。
 
 ```javascript

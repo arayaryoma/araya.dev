@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Please set arguments as below on Intelij IDEA
+# $ProjectFileDir$/playground.araya.dev $Prompt$
+
 COMPONENT_DIR=$1/$2
 mkdir -p $COMPONENT_DIR
 touch $COMPONENT_DIR/$2.css

@@ -44,8 +44,7 @@ syntaxに使える文字列は
 - `<percentage>`
 - `<color>`
 - `<image>`
-
-など
+- ...など
 
 ---
 

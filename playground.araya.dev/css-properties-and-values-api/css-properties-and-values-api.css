@@ -1,0 +1,30 @@
+.row {
+    display: flex;
+    margin: 40px 0;
+}
+.code-block {
+    margin-left: 40px;
+    font-size: 24px;
+}
+.box {
+    --box-bg-color: black;
+    --box-color: white;
+    background-color: var(--box-bg-color);
+    color: var(--box-color);
+    width: 480px;
+    height: 320px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 1s ease-in-out;
+    transition-property: --box-color, --box-bg-color;
+}
+.box-1:hover {
+    --box-bg-color: hello;
+    --box-color: red;
+}
+.box-2:hover {
+    --box-bg-color: #F5F5F5;
+    --box-color: red;
+}
+

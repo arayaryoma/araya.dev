@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>css-properties-and-values-api | Araya's playground</title>
+    <link rel="stylesheet" href="/main.css">
+    <link rel="stylesheet" href="css-properties-and-values-api.css">
+</head>
+<body>
+<div class="row">
+    <div class="box box-1">
+    <span>
+    Hover to change the color
+    </span>
+    </div>
+    <pre class="code-block">
+    <code>
+.box {
+    --box-bg-color: black;
+    --box-color: white;
+    background-color: var(--box-bg-color);
+    color: var(--box-color);
+    transition: all 1s ease-in-out;
+    transition-property: --box-color, --box-bg-color;
+}
+.box-1:hover {
+    --box-bg-color: hello;
+    --box-color: red;
+}
+    </code>
+    </pre>
+</div>
+<div class="row">
+    <div class="box box-2">
+    <span>
+    Hover to change the color
+    </span>
+    </div>
+    <pre class="code-block">
+    <code>
+.box-2:hover {
+    --box-bg-color: #F5F5F5;
+    --box-color: red;
+}
+    </code>
+    </pre>
+</div>
+<script src="css-properties-and-values-api.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "slides.araya.dev",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "fusuma": "^1.15.0"
+  }
+}

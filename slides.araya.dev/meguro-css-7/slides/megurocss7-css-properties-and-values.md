@@ -7,7 +7,7 @@
 ---
 
 ## 自己紹介
-![avatar](/images/profile-icon.png)
+![avatar](./images/profile-icon.png)
 - :man-raising-hand: あらや
 - :bird: Twitter: [@arayaryoma](https://twitter.com/arayaryoma)
 - :computer: Web engineer at Hematite Inc.
@@ -101,11 +101,11 @@ The initial value provided does not parse for the given syntax.
 
 ## 各ブラウザの対応状況
 ### [http://ishoudinireadyyet.com/](http://ishoudinireadyyet.com/)
-![各ブラウザの対応状況](/images/css-houdini-browsers2019-10.png)
+![各ブラウザの対応状況](./images/css-houdini-browsers2019-10.png)
 
 ---
 
 ## 参考リンク集
 - [https://web.dev/css-props-and-vals/](https://web.dev/css-props-and-vals/)
-- [https://drafts.css-houdini.org/css-properties-values-api/#supported-names](https://drafts.css-houdini.org/css-properties-values-api/#supported-names)
+- [https://drafts.css-houdini.org/css-properties-values-api/#supported-names](https://drafts.css-houdini.org/css-properties-values-api/)
 - [http://ishoudinireadyyet.com/](http://ishoudinireadyyet.com/)

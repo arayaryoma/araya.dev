@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "build": "fusuma build && cp -r images dist/",
+    "deploy": "./deploy"
+  },
   "devDependencies": {
     "fusuma": "^1.15.0"
   }

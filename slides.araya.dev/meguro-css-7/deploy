@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+rsync --delete -r -e "ssh -i ~/.ssh/araya.dev.pem" ./dist/ ubuntu@52.69.164.172:/var/www/araya.dev/slides.araya.dev/meguro-css-7/

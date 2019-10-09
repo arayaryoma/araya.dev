@@ -12,7 +12,7 @@ import { generateFeed } from "./feed-generator";
 const webpack = require("webpack");
 
 const fsPromises = fs.promises;
-const parser = new showdown.Converter({ metadata: true });
+const parser = new showdown.Converter({ metadata: true, tables: true });
 const postsDir = path.resolve(__dirname, "../posts");
 const distDir = path.resolve(__dirname, "../dist");
 const postTemplateFile = path.resolve(__dirname, "../templates/post.pug");

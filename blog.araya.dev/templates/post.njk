@@ -1,0 +1,11 @@
+{% extends "base.njk" %}
+{% block header %}
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="/styles/markdown.css">
+    <link rel="stylesheet" href="/styles/lib/highlight.js/dracula.css">
+    <script src="/js/highlight.js" defer></script>
+{% endblock %}
+{% block content %}
+    <h1 class="post-title">{{ post.title }}</h1>
+    <div class="markdown post">{{ content }}</div>
+{% endblock %}

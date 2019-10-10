@@ -1,0 +1,17 @@
+{%  extends "base.njk" %}
+{% block header %}
+    <title>Posts | Araya's reservoir</title>
+{% endblock %}
+{% block content %}
+    <h2>Posts</h2>
+    <ul class="posts-list">
+        {% for post in posts %}
+            <li class="posts-list-item">
+                <a href="{{ post.url }}" class="posts-list-item-inner">
+                    <span class="posts-list-item-title">{{ post.title }}</span>
+                    <span class="posts-list-item-date">{{ post.date }}</span>
+                </a>
+            </li>
+        {%  endfor %}
+    </ul>
+{%  endblock %}

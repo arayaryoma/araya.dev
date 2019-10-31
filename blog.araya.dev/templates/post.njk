@@ -7,5 +7,5 @@
 {% endblock %}
 {% block content %}
     <h1 class="post-title">{{ post.title }}</h1>
-    <div class="markdown post">{{ content }}</div>
+    <div class="markdown post">{{ content | safe}}</div>
 {% endblock %}

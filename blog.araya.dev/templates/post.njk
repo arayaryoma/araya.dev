@@ -2,10 +2,17 @@
 {% block header %}
     <title>{{ title }}</title>
     <link rel="stylesheet" href="/styles/markdown.css">
+    <link rel="stylesheet" href="/styles/post.css">
     <link rel="stylesheet" href="/styles/lib/highlight.js/dracula.css">
     <script src="/js/highlight.js" defer></script>
 {% endblock %}
 {% block content %}
-    <h1 class="post-title">{{ post.title }}</h1>
-    <div class="markdown post">{{ content | safe}}</div>
+    <div class="page-title-container">
+        <div class="container">
+            <h1 class="page-title">{{ title }}</h1>
+        </div>
+    </div>
+    <div class="container">
+        <div class="markdown post">{{ content | safe }}</div>
+    </div>
 {% endblock %}

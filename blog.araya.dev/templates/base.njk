@@ -4,9 +4,11 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-104175258-3"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
+
         function gtag() {
             dataLayer.push(arguments);
         }
+
         gtag('js', new Date());
         gtag('config', 'UA-104175258-3');
     </script>
@@ -17,7 +19,13 @@
     {% endblock %}
 </head>
 <body>
-<div class="container">
+<nav class="global-nav">
+    <a href="/" class="top-header-link">
+        <img src="https://araya.dev/assets/icon.svg" alt="blog top page" class="header-icon">
+        <span class="header-title">Araya's Reservoir</span>
+    </a>
+</nav>
+<div>
     {% block content %}
     {% endblock %}
 </div>

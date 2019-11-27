@@ -1,11 +1,14 @@
 @import url("lib/normalize.css");
 @import url('https://fonts.googleapis.com/css?family=Muli|Source+Code+Pro');
-@import "index.css";
 
 :root {
     --text-face-color: #3E3E3E;
     --primary-color: #6450A1;
     --blue: #6c92ff;
+    --gray-1: #CECECE;
+    --gray-2: #FCFCFC;
+    --box-shadow-gray: rgba(0, 0, 0, 0.2);
+    --lavendar-purple: #9d8ec7;
     --xs-max: 575px;
     --sm-min: 576px;
     --sm-max: 767px;
@@ -14,10 +17,16 @@
     --lg-min: 992px;
     --lg-max: 1199px;
     --xl-min: 1200px;
+    font-size: 0.625rem;
+}
+* {
+    box-sizing: border-box;
 }
 body {
     font-family: 'Muli', sans-serif;
+    background-color: var(--gray-2);
 }
+
 a {
     color: inherit;
     text-decoration: none;
@@ -34,40 +43,40 @@ a {
     padding: 1em;
 }
 
-.posts-list {
-    list-style: none;
-}
-
-.posts-list-item {
-    color: var(--text-face-color);
-    margin: .75em 0;
-    width: 100%;
-}
-
-.posts-list-item a:hover {
-    color: var(--primary-color);
-}
-
-.posts-list-item-inner {
-    display: inline-flex;
-    width: 100%;
-    flex-direction: column;
-}
-
-.posts-list-item-title {
-    font-size: 20px;
-}
-
-.posts-list-item-date {
-    margin-top: .5em;
-    font-size: 12px;
-}
-
-.post-title {
-    line-height: 1.4em;
-}
-
-
 .footer {
     height: 10em;
+}
+
+.global-nav {
+    height: 6rem;
+}
+
+.top-header-link {
+    display: flex;
+    align-items: center;
+    padding: 1em;
+    height: 100%;
+}
+
+.header-icon {
+    height: 100%;
+}
+
+.header-title {
+    font-size: 2em;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    margin: 0;
+}
+
+.page-title-container {
+    height: 14rem;
+    background-color: var(--lavendar-purple);
+    display: flex;
+    align-items: center;
+}
+
+.page-title {
+    font-size: 4rem;
 }

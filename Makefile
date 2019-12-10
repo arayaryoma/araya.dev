@@ -17,6 +17,9 @@ sync-pg:
 .PHONY: sync-blog
 sync-blog:
 	rsync --delete -r -e "ssh -i ~/.ssh/araya.dev.pem" ./blog.araya.dev/dist/ ubuntu@${SERVER_IP}:/var/www/araya.dev/blog.araya.dev/dist
+.PHONY: sync-nevertls
+sync-nevertls:
+	rsync --delete -r -e "ssh -i ~/.ssh/araya.dev.pem" ./nevertls.araya.dev/ ubuntu@${SERVER_IP}:/var/www/araya.dev/nevertls.araya.dev/
 .PHONY: start
 start:
 	sudo h2o -c ./h2o.conf

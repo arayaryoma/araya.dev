@@ -5,6 +5,7 @@
 .markdown p {
     margin: .5em 0;
     overflow-wrap: break-word;
+    line-height: 2em;
 }
 
 .markdown a {
@@ -32,16 +33,24 @@
 }
 
 .markdown table {
-border-collapse: collapse;
+    border-collapse: collapse;
 }
 
 .markdown th, td {
     border: 1px solid var(--gray-1);
 
 }
+
 .markdown td {
     padding: .4em 1em;
 }
+
 .markdown tbody tr:nth-child(2n) {
     background-color: var(--gray-3);
+}
+
+@media (prefers-color-scheme: dark) {
+    .markdown tbody tr:nth-child(2n) {
+        background-color: var(--dark-gray-1);
+    }
 }

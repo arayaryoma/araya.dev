@@ -2,14 +2,17 @@
 @import url('https://fonts.googleapis.com/css?family=Muli|Source+Code+Pro');
 
 :root {
-    --text-face-color: #3E3E3E;
+    --black: #3E3E3E;
     --primary-color: #6450A1;
     --blue: #6c92ff;
+    --dark-gray-1: #5E5E5E;
     --gray-1: #CECECE;
     --gray-2: #FCFCFC;
     --gray-3: #EFEFEF;
     --box-shadow-gray: rgba(0, 0, 0, 0.2);
     --lavendar-purple: #9d8ec7;
+    --background-color: var(--gray-2);
+    --text-face-color: var(--black);
     --xs-max: 575px;
     --sm-min: 576px;
     --sm-max: 767px;
@@ -20,12 +23,19 @@
     --xl-min: 1200px;
     font-size: 0.625rem;
 }
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: var(--black);
+        --text-face-color: var(--gray-2);
+    }
+}
 * {
     box-sizing: border-box;
 }
 body {
     font-family: 'Muli', sans-serif;
-    background-color: var(--gray-2);
+    background-color: var(--background-color);
+    color: var(--text-face-color);
 }
 
 a {

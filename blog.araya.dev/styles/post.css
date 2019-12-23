@@ -1,6 +1,7 @@
 .breadcrumb {
     font-size: 1.6em;
     background: var(--gray-3);
+    color: var(--black);
 }
 .breadcrumb a {
     color: var(--blue);

@@ -1,3 +1,10 @@
+.breadcrumb {
+    font-size: 1.6em;
+    background: var(--gray-3);
+}
+.breadcrumb a {
+    color: var(--blue);
+}
 .post {
     font-size: 1.8rem;
 }

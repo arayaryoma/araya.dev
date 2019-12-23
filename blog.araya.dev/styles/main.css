@@ -71,7 +71,8 @@ a {
 }
 
 .page-title-container {
-    height: 14rem;
+    min-height: 14rem;
+    width: 100%;
     background-color: var(--lavendar-purple);
     display: flex;
     align-items: center;

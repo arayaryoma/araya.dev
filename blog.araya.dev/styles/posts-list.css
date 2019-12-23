@@ -8,8 +8,10 @@
     margin: 3em 0;
     width: 100%;
     height: 8em;
-    box-shadow: 0 6px 16px 2px var(--box-shadow-gray);
     border-radius: 4px;
+}
+.posts-list-item + .posts-list-item {
+    border-top: 1px solid var(--gray-1)
 }
 .posts-list-item > a {
     display: flex;
@@ -28,7 +30,8 @@
 }
 
 .posts-list-item-title {
-    font-size: 20px;
+    margin-top: .5em;
+    font-size: 2rem;
 }
 
 .posts-list-item-date {

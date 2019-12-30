@@ -4,6 +4,7 @@
 :root {
     --black: #3E3E3E;
     --primary-color: #6450A1;
+    --vivid-purple: #542EBD;
     --blue: #6c92ff;
     --dark-gray-1: #5E5E5E;
     --gray-1: #CECECE;
@@ -23,15 +24,18 @@
     --xl-min: 1200px;
     font-size: 0.625rem;
 }
+
 @media (prefers-color-scheme: dark) {
     :root {
         --background-color: var(--black);
         --text-face-color: var(--gray-2);
     }
 }
+
 * {
     box-sizing: border-box;
 }
+
 body {
     font-family: 'Muli', sans-serif;
     background-color: var(--background-color);
@@ -87,6 +91,12 @@ a {
     background-color: var(--lavendar-purple);
     display: flex;
     align-items: center;
+}
+
+@media (prefers-color-scheme: dark) {
+    .page-title-container {
+        background-color: var(--vivid-purple);
+    }
 }
 
 .page-title {

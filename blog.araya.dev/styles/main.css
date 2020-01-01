@@ -5,6 +5,8 @@
     --black: #3E3E3E;
     --primary-color: #6450A1;
     --vivid-purple: #542EBD;
+    --violet: #3F2A79;
+    --deep-dark-violet: #1D0F44;
     --blue: #6c92ff;
     --dark-gray-1: #5E5E5E;
     --gray-1: #CECECE;
@@ -95,7 +97,7 @@ a {
 
 @media (prefers-color-scheme: dark) {
     .page-title-container {
-        background-color: var(--vivid-purple);
+        background-color: var(--deep-dark-violet);
     }
 }
 

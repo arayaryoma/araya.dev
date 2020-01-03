@@ -104,3 +104,25 @@ a {
 .page-title {
     font-size: 4rem;
 }
+
+.footer {
+    height: 10rem;
+    font-size: 1.6em;
+    background-color: var(--lavendar-purple);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+@media (prefers-color-scheme: dark) {
+ .footer {
+     background-color: var(--deep-dark-violet);
+     color: var(--gray-3);
+ }
+}
+.footer__license {
+    width: 5em;
+}
+.footer__copy-right {
+    padding: 1em 0;
+}

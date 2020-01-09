@@ -15,7 +15,7 @@
 ### 現職
 - 株式会社ヘマタイト
 - https://ctfkit.com
-![CTFKit](/images/ctfkit.png)
+![CTFKit](./images/ctfkit.png)
 
 ---
 ## JSのmutabilityおさらい

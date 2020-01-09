@@ -5,6 +5,8 @@ ssh:
 .PHONY: upload-h2oconf
 upload-h2oconf:
 	scp -r -i ~/.ssh/araya.dev.pem ./h2o.conf ./conf ubuntu@${SERVER_IP}:/var/www/araya.dev/
+upload-makefile:
+	scp -r -i ~/.ssh/araya.dev.pem ./Makefile ubuntu@${SERVER_IP}:/var/www/araya.dev/
 .PHONY: sync-all
 sync-all:
 	rsync --exclude "**/node_modules" --delete -r -e "ssh -i ~/.ssh/araya.dev.pem" ./ ubuntu@${SERVER_IP}:/var/www/araya.dev/
@@ -37,6 +39,7 @@ certificate:
 	-d araya.dev \
 	-d playground.araya.dev \
 	-d blog.araya.dev \
+	-d slides.araya.dev \
 	--agree-tos \
 	--non-interactive \
 	--cert-name araya.dev

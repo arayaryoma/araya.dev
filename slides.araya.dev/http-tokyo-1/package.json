@@ -1,0 +1,9 @@
+{
+  "name": "@arayaryoma-slides/http-tokyo-1",
+  "version": "0.0.0",
+  "main": "index.js",
+  "license": "CC-BY",
+  "dependencies": {
+    "fusuma": "^1.15.1"
+  }
+}

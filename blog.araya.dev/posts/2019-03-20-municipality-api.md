@@ -1,3 +1,12 @@
+---
+title: "国土交通省の公開APIを用いて都道府県と市区町村のリストを取得する"
+date: "2019-03-20"
+tags:
+  - JavaScript
+  - tips
+  - 公開API
+---
+
 日本の各都道府県および市区町村には[全国地方公共団体コード](https://ja.wikipedia.org/wiki/全国地方公共団体コード)というものが割り振られています。
 また、[国土交通省が公開しているAPI](http://www.land.mlit.go.jp/webland/api.html#todofukenlist)を用いて、これらの一覧を取得することができます。
 JavaScriptで軽いスクリプトを書いて、このAPIを呼び出しデータを整形してJSONにします。

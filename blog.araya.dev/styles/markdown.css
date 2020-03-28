@@ -52,7 +52,6 @@
 
 .markdown code {
     font-family: 'Source Code Pro', monospace;
-    display: inline-flex;
     max-width: 100%;
     overflow-x: scroll;
 }

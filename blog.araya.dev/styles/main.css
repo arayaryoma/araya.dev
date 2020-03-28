@@ -1,5 +1,6 @@
 @import url("lib/normalize.css");
 @import url('https://fonts.googleapis.com/css?family=Muli|Source+Code+Pro');
+@import url('https://fonts.googleapis.com/css?family=Poppins:500&display=swap');
 
 :root {
     --black: #3E3E3E;
@@ -84,7 +85,9 @@ a {
     display: flex;
     height: 100%;
     align-items: center;
-    margin: 0;
+    margin-left: 16px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
 }
 
 .page-title-container {
@@ -114,15 +117,18 @@ a {
     align-items: center;
     flex-direction: column;
 }
+
 @media (prefers-color-scheme: dark) {
- .footer {
-     background-color: var(--deep-dark-violet);
-     color: var(--gray-3);
- }
+    .footer {
+        background-color: var(--deep-dark-violet);
+        color: var(--gray-3);
+    }
 }
+
 .footer__license {
     width: 5em;
 }
+
 .footer__copy-right {
     padding: 1em 0;
 }

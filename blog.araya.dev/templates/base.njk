@@ -24,18 +24,23 @@
 </head>
 <body>
 <nav class="global-nav">
-    <a href="/" class="top-header-link">
-        <img src="https://araya.dev/assets/icon.svg" alt="blog top page" class="header-icon">
-        <span class="header-title">Araya's Reservoir</span>
-    </a>
+    <div class="container global-nav-content">
+        <a href="/" class="top-header-link">
+            <img src="https://araya.dev/assets/icon.svg" alt="icon image" class="header-icon">
+            <span class="header-title">Araya's Reservoir</span>
+        </a>
+    </div>
 </nav>
-<div>
+<div class="content">
     {% block content %}
     {% endblock %}
 </div>
 <footer class="footer">
-    <span class="footer__copy-right">&copy; Araya</span>
-    <img src="/assets/images/cc-by.svg" alt="License is CC-BY" class="footer__license">
+    <div class="container">
+        <p>当サイト内の意見・感想等は全てaraya個人によるものであり特定の組織との一切の関わりを持ちません</p>
+        <span class="footer--copy-right">&copy; Araya</span>
+        <img src="/assets/images/cc-by.svg" alt="License is CC-BY" class="footer--license">
+    </div>
 </footer>
 </body>
 </html>

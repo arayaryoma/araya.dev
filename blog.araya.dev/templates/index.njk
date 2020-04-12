@@ -2,21 +2,22 @@
 {% block header %}
     <title>Posts | Araya's reservoir</title>
     <link rel="stylesheet" href="./styles/posts-list.css">
+    <link rel="stylesheet" href="./styles/index.css">
 {% endblock %}
 {% block content %}
-    <div class="page-title-container">
-        <div class="container">
-            <h1 class="page-title">Posts</h1>
-        </div>
-    </div>
     <main>
         <div class="container">
-            <ul class="posts-list">
+            <h1 class="index-page-title heading__lined">Posts</h1>
+            <ul class="posts-list--list">
                 {% for post in posts %}
-                    <li class="posts-list-item">
-                        <a href="{{ post.url }}" class="posts-list-item-inner">
-                            <span class="posts-list-item-date">{{ post.date }}</span>
-                            <span class="posts-list-item-title">{{ post.title }}</span>
+                    <li class="posts-list--item">
+                        <a href="{{ post.url }}">
+                            <article class="posts-list--item-content">
+                                <img src="/assets/images/default-thumbnail.svg" alt="thumbnail"
+                                     class="posts-list--item-thumbnail" loading="lazy">
+                                <time class="posts-list--item-date" datetime="{{ post.date }}">{{ post.date }}</time>
+                                <h2 class="posts-list--item-title">{{ post.title }}</h2>
+                            </article>
                         </a>
                     </li>
                 {% endfor %}

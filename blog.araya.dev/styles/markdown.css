@@ -11,11 +11,11 @@
 
 .markdown a {
     overflow-wrap: break-word;
-    color: var(--blue);
+    color: var(--butterfly-blue);
 }
 
 .markdown a:hover {
-    color: var(--primary-color);
+    color: var(--violet);
 }
 
 .markdown h2 {
@@ -65,7 +65,7 @@
 }
 
 .markdown th, td {
-    border: 1px solid var(--gray-1);
+    border: 1px solid var(--gray-light-1);
 
 }
 
@@ -74,12 +74,12 @@
 }
 
 .markdown tbody tr:nth-child(2n) {
-    background-color: var(--gray-3);
+    background-color: var(--gray-light-3);
 }
 
 @media (prefers-color-scheme: dark) {
     .markdown tbody tr:nth-child(2n) {
-        background-color: var(--dark-gray-1);
+        background-color: var(--gray-dark-2);
     }
 }
 

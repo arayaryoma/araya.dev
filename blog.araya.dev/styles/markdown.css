@@ -72,9 +72,9 @@
     background-color: var(--gray-light-3);
 }
 
-@media (prefers-color-scheme: dark) {
-    .markdown tbody tr:nth-child(2n) {
-        background-color: var(--gray-dark-2);
-    }
+@media only screen and (prefers-color-scheme: dark) {
+ .markdown tbody tr:nth-child(2n) {
+    background-color: var(--black);
+}
 }
 

@@ -52,8 +52,16 @@
     margin-top: 24px;
     padding: 84px 0;
 }
+
 .post--content {
     grid-column: 2 / 12;
     font-size: 1.6rem;
     line-height: 1.5em;
+}
+
+@media only screen and (prefers-color-scheme: dark) {
+    .post--main, .post-header {
+        background: var(--gray-dark-3);
+        color: var(--gray-light-3)
+    }
 }

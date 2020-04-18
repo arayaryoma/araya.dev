@@ -33,7 +33,9 @@ restart:
 	sudo kill -TERM `cat /logs/pid-file` && make daemon
 .PHONY: certificate
 certificate:
+	sudo rm -rf /etc/letsencrypt/live/araya.dev && \
 	sudo certbot certonly \
+	--expand \
 	--webroot \
 	--webroot-path /var/www/araya.dev/www.araya.dev/ \
 	-d araya.dev \

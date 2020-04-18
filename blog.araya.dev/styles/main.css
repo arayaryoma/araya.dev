@@ -28,21 +28,51 @@
     --lavendar-purple: #9d8ec7;
     --background-color: var(--gray-light-2);
     --text-face-color: var(--black);
-    --xs-max: 575px;
-    --sm-min: 576px;
+    --xs-max: 425px;
+    --sm-min: 426px;
     --sm-max: 767px;
     --md-min: 768px;
-    --md-max: 991px;
-    --lg-min: 992px;
-    --lg-max: 1199px;
-    --xl-min: 1200px;
-    font-size: 0.625rem;
+    --md-max: 1024px;
+    --lg-min: 1025px;
+    --lg-max: 1440px;
+    --xl-min: 1441px;
     --grid-column-gap: 20px;
     --grid-template-columns: repeat(12, calc((100% - var(--grid-column-gap) * 11) / 12));
     --footer-height: 142px;
+    --font-size-huge: 4.8rem;
+    --font-size-large: 2rem;
+    font-size: 0.625rem;
 }
 
-@media (prefers-color-scheme: dark) {
+@media screen and (min-width: 1441px){
+    :root {
+        --container-width: 1400px;
+    }
+}
+
+@media screen and (min-width: 1025px)  and (max-width: 1440px) {
+    :root {
+        --container-width: 980px;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    :root {
+        --container-width: 700px;
+    }
+}
+@media screen and (min-width: 426px) and (max-width: 767px)  {
+    :root {
+        --container-width: 380px;
+    }
+}
+@media screen and (max-width: 425px)  {
+    :root {
+        --container-width: 90%;
+    }
+}
+
+@media screen and (prefers-color-scheme: dark) {
     :root {
         --background-color: var(--navy);
         --text-face-color: var(--gray-light-3);
@@ -77,29 +107,24 @@ a {
     width: 5px;
     position: absolute;
     top: 0;
-    left: -1em;
+    left: -24px;
     background-color: var(--violet);
 }
 
-@media only screen and (min-width: 992px) {
-    .container {
-        width: var(--lg-min);
-        margin: 0 auto;
-    }
-}
-
 .container {
-    max-width: 1440px;
+    width: var(--container-width);
     margin: 0 auto;
 }
+
 
 .global-nav {
     height: 8.2rem;
     background: var(--gray-light-3);
 }
+
 @media only screen and (prefers-color-scheme: dark) {
     .global-nav {
-     background: var(--black);
+        background: var(--black);
     }
 }
 
@@ -124,7 +149,7 @@ a {
 }
 
 .header-title {
-    font-size: 4.8rem;
+    font-size: var(--font-size-huge);
     display: flex;
     height: 100%;
     align-items: center;
@@ -133,6 +158,11 @@ a {
     font-weight: 500;
 }
 
+@media screen and (max-width: 767px) {
+    .header-title {
+        font-size: var(--font-size-large);
+    }
+}
 .page-title {
     font-size: 4rem;
 }

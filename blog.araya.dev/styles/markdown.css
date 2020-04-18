@@ -33,6 +33,7 @@
     position: relative;
     display: inline-flex;
 }
+
 .markdown h3::before {
     content: '';
     display: flex;
@@ -71,10 +72,13 @@
 .markdown tbody tr:nth-child(2n) {
     background-color: var(--gray-light-3);
 }
+.markdown ul li {
+    line-height: 1.75em;
+}
 
 @media only screen and (prefers-color-scheme: dark) {
- .markdown tbody tr:nth-child(2n) {
-    background-color: var(--black);
-}
+    .markdown tbody tr:nth-child(2n) {
+        background-color: var(--black);
+    }
 }
 

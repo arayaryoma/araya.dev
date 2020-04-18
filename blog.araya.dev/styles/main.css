@@ -184,8 +184,14 @@ a {
     }
 }
 
+.footer--contents {
+    display: flex;
+    flex-direction: column;
+}
+
 .footer--license {
     width: 5em;
+
 }
 
 .footer--copy-right {

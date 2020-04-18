@@ -27,7 +27,7 @@
     display: grid;
     grid-column-gap: var(--grid-column-gap);
     grid-template-rows: 2em auto 4em;
-    grid-template-columns: var(--grid-column-gap);
+    grid-template-columns: var(--grid-template-columns);
     padding: 32px 0;
 }
 

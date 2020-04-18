@@ -7,17 +7,27 @@
     <script src="/js/highlight.js" defer></script>
 {% endblock %}
 {% block content %}
-    <div class="page-title-container">
-        <div class="container">
-            <h1 class="page-title">{{ title }}</h1>
+
+   <nav class="container">
+   <ul class="post--breadcrumb">
+       <li class="post--breadcrumb-item">
+           <a href="/">投稿一覧</a>
+       </li>
+       <li class="post--breadcrumb-item">
+           {{ title }}
+       </li>
+   </ul>
+   </nav>
+    <article class="container">
+    <header class="post-header">
+        <time class="post-header--datetime">{{ date }}</time>
+        <h1 class="post-header--title">{{ title }}</h1>
+    </header>
+    <main class="post--main">
+        <div class="post--content markdown">
+            {{ content | safe }}
         </div>
-    </div>
-    <div class="breadcrumb">
-        <div class="container">
-            <a href="/">Posts</a> > {{ title }}
-        </div>
-    </div>
-    <div class="container">
-        <div class="markdown post">{{ content | safe }}</div>
-    </div>
+    </main>
+    </article>
+
 {% endblock %}

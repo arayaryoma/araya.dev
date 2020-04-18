@@ -38,6 +38,7 @@
     --xl-min: 1200px;
     font-size: 0.625rem;
     --grid-column-gap: 20px;
+    --grid-template-columns: repeat(12, calc((100% - var(--grid-column-gap) * 11) / 12));
     --footer-height: 142px;
 }
 

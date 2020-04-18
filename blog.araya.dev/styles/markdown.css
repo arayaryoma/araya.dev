@@ -1,8 +1,3 @@
-
-.markdown * {
-    line-height: 1.5em;
-}
-
 .markdown p {
     margin: .5em 0;
     overflow-wrap: break-word;
@@ -31,7 +26,7 @@
     position: absolute;
     top: 0;
     left: -1em;
-    background-color: var(--text-face-color);
+    background-color: var(--violet);
 }
 
 .markdown h3 {

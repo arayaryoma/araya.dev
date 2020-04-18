@@ -96,6 +96,11 @@ a {
     height: 8.2rem;
     background: var(--gray-light-3);
 }
+@media only screen and (prefers-color-scheme: dark) {
+    .global-nav {
+     background: var(--black);
+    }
+}
 
 .global-nav-content {
     height: 100%;

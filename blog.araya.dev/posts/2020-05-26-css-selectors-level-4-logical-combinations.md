@@ -55,7 +55,7 @@ ul > li, ol > li, .list-1 > li {
 ```
 
 `:is()`が実装されたブラウザでの描画結果はこのようになる。
-!["Hello, world!"が青、"See you!"が赤で表示されているスクリーンショット](/assets/images/2020-04-19-css-selectors-level4/is-ex-1.png)
+!["Hello, world!"が青、"See you!"が赤で表示されているスクリーンショット](/assets/images/2020-05-26-css-selectors-level4/is-ex-1.png)
 
 ここで注目すべきは`<li>See you!</li>` に `color: red;` が適用されていることである。`:is(ul, ol, .list-1) > li` が `ul > li, ol > li, .list-1 > li` の単なるショートハンドであれば `color: blue` が適用されるはずだが、そうなってはいない。
 
@@ -90,7 +90,7 @@ ul > li, ol > li, .list-1 > li {
 }
 </style>
 ```
-!["Hello, world!"が青、"See you!"が青で表示されているスクリーンショット](/assets/images/2020-04-19-css-selectors-level4/where-ex-1.png)
+!["Hello, world!"が青、"See you!"が青で表示されているスクリーンショット](/assets/images/2020-05-26-css-selectors-level4/where-ex-1.png)
 `<li>Hello, world!</li>`も`<li>See you!</li>`も`color: blue;` が適用されている。
 
 `:where(ul, ol, .list-1) >li` の詳細度が`(0, 0, 1)`であり、`ol > li`の詳細度は`(0, 0, 2)`、 `.list-1 > li`の詳細度は`(0, 1, 1)`であるためこのような結果になる。

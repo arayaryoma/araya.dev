@@ -9,12 +9,12 @@ tags:
 本記事で述べる内容は2020年4月19日現在に公開されている情報をもとに書かれている。
 
 ## Logical Combinationsとして追加される3つの擬似クラス関数
-[CSS working groupのSelectors Level 4](https://drafts.csswg.org/selectors) では[Logical Combinations](https://drafts.csswg.org/selectors/#logical-combination) というセクションにいくつかの擬似クラス関数が定義されている。
-この中には[Selectors Level 3](https://www.w3.org/TR/selectors-3/#negation) で定義されていた否定擬似クラス関数(`:not()`)も含まれているが、新しく以下の3つの擬似クラス関数が追加されている。
+[CSS working groupのSelectors Level 4](https://drafts.csswg.org/selectors) では[Logical Combinations](https://drafts.csswg.org/selectors/#logical-combination) というセクションにいくつかの擬似クラスが定義されている。
+この中には[Selectors Level 3](https://www.w3.org/TR/selectors-3/#negation) で定義されていた否定擬似クラス(`:not()`)も含まれているが、新しく以下の3つの擬似クラスが追加されている。
 
-- Matches-Any擬似クラス関数 `:is()`
-- Specificity-adjustment擬似クラス関数 `:where()`
-- Relational擬似クラス関数 `:has()`
+- Matches-Any擬似クラス `:is()`
+- Specificity-adjustment擬似クラス `:where()`
+- Relational擬似クラス `:has()`
 
 ### `:is()`
 `:is()`は、引数に複数のセレクタを受け取ることができ、受け取ったセレクタの内どれか1つにでもマッチすれば要素にスタイルが適用される擬似クラス関数である。
@@ -96,8 +96,52 @@ ul > li, ol > li, .list-1 > li {
 `:where(ul, ol, .list-1) >li` の詳細度が`(0, 0, 1)`であり、`ol > li`の詳細度は`(0, 0, 2)`、 `.list-1 > li`の詳細度は`(0, 1, 1)`であるためこのような結果になる。
 
 
+`:is()`は`:matches()`として仕様策定が進められていたが、[renameされている](https://github.com/w3c/csswg-drafts/issues/3258)。
+
+また、ベンダープレフィックス付きで、`:is()`とほぼ同等の機能をもつ`:any()`が実装されているブラウザもあるが、Can I useによると[非推奨となっているようだ](https://caniuse.com/#feat=css-matches-pseudo)。
+
 ### `:has()`
+`:has()`は引数に相対的なセレクタを受け取り、**そのセレクタを1つ以上含んでいる要素**を表現できる擬似クラス関数である。
 
+例えば、このようなHTMLがあったとする。
+```html
+<section class="subsection section-1">
+    <h3>Subsection 1</h3>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac sodales arcu, a facilisis enim. </p>
+</section>
+<section class="subsection section-2">
+    <h3>Subsection 2</h3>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac sodales arcu, a facilisis enim. </p>
+</section>
+<section class="subsection section-3">
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac sodales arcu, a facilisis enim. </p>
+</section>
+```
+上述した通り、`:has()`を使うと、引数に渡したセレクタのリストが1つ以上マッチしたらスタイルを適用するという要件が達成できる。
+`<section>`の直接の子に`<h3>`がある場合だけ、背景色を変更する事を考えてみる。それを達成するスタイルシートはこのように書ける。
+```css
+section:has(> h3) {
+  background-color: #FFCCDD;
+}
+```
 
-## 関連資料
+また、`:not`と組み合わせることにより、`<h3>`を直接の子に持たない`<section>`に適用するスタイルシートを書くこともできる。
+```css
+section:not(:has(> h3)) {
+  background-color: #CCDDFF;
+}
+```
+`:not(:has())`と`:has(:not())`では意味が違うことに注意が必要である。
+上記のスタイルシートを
+```css
+section:has(:not(> h3)) {
+  background-color: #CCDDFF;
+}
+```
+と書いてしまうと、**「<h3>ではない何らかの子要素を持つ<section>要素にマッチする」**という表現となってしまう。
+
+つまり`<section></section>`に対し、`section:not(:has(> h3))`はマッチするが、`section:has(:not(> h3))`はマッチしない。
+
+## 関連文書
 - https://drafts.csswg.org/selectors/#logical-combination
+- https://developer.mozilla.org/en-US/docs/Web/CSS/:is

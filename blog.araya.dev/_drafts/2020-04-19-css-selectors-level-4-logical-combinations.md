@@ -17,7 +17,7 @@ tags:
 - Relational擬似クラス関数 `:has()`
 
 ### `:is()`
-`:is()`関数は、引数に複数のセレクタを受け取ることができ、受け取ったセレクタの内どれか1つにでもマッチすれば要素に適用される擬似クラスだ。
+`:is()`は、引数に複数のセレクタを受け取ることができ、受け取ったセレクタの内どれか1つにでもマッチすれば要素にスタイルが適用される擬似クラス関数である。
 
 たとえば、下記の例では `.foo`, `.bar`, `.baz`全てに `color: red;` が適用される。
 ```html
@@ -30,14 +30,74 @@ tags:
 }
 </style>
 ```
-つまり、このセレクタは
-```css
-.foo, .bar, .baz {
+
+`:is()`の詳細度は、引数に渡されたセレクタリストのうち最も詳細度が高いもので計算される。
+
+以下の例を考えてみる。
+```html
+<ul class="list-1">
+  <li>Hello, world!</li>
+</ul>
+
+<ul>
+  <li>See you!</li>
+</ul>
+
+<style>
+:is(ul, ol, .list-1) > li {
     color: red;
 }
+
+ul > li, ol > li, .list-1 > li {
+    color: blue;
+}
+</style>
 ```
-と等価になる。
+
+`:is()`が実装されたブラウザでの描画結果はこのようになる。
+!["Hello, world!"が青、"See you!"が赤で表示されているスクリーンショット](/assets/images/2020-04-19-css-selectors-level4/is-ex-1.png)
+
+ここで注目すべきは`<li>See you!</li>` に `color: red;` が適用されていることである。`:is(ul, ol, .list-1) > li` が `ul > li, ol > li, .list-1 > li` の単なるショートハンドであれば `color: blue` が適用されるはずだが、そうなってはいない。
+
+`:is()`の計算結果の詳細度(specificity)は、引数として渡したセレクタのうち、最も詳細度が高いもので解決される。
+`ul, ol, .list-1` で最も詳細度が高いセレクタは `.list-1` であり、その詳細度は `(0, 1, 0)` である。`ul` および `li` の詳細度は`(0, 0, 1)`であるため、`:is(ul, ol, .list-1)`の詳細度の計算結果は`(0, 1, 0)`となる。
+
+よって、`:is(ul, ol, .list-1) > li` の詳細度の計算結果は `(0, 1, 1)` となり、これは `ol > li` の詳細度 `(0, 0, 2)`よりも高くなり、そのため最終的に`<li>See you!</li>`に適用されるスタイルは `color: red;` となる。
 
 ### `:where()`
+`:where()`擬似クラス関数は、前述の`:is()`と同じように扱えるが、詳細度の計算方法だけが異なる。
+
+`:where()`自体も、`:where()`に引数として渡したセレクタのリストも、最終的に解決される詳細度には影響は与えず、例えば`:where(.foobar)`の詳細度は`(0, 0, 0)`となる。
+
+`:is()`で例に上げたコードを少し書き換え、ブラウザで描画結果を確認してみる。
+
+```html
+<ul class="list-1">
+  <li>Hello, world!</li>
+</ul>
+
+<ul>
+  <li>See you!</li>
+</ul>
+
+<style>
+ul > li, ol > li, .list-1 > li {
+    color: blue;
+}
+
+:where(ul, ol, .list-1) > li {
+    color: red;
+}
+</style>
+```
+!["Hello, world!"が青、"See you!"が青で表示されているスクリーンショット](/assets/images/2020-04-19-css-selectors-level4/where-ex-1.png)
+`<li>Hello, world!</li>`も`<li>See you!</li>`も`color: blue;` が適用されている。
+
+`:where(ul, ol, .list-1) >li` の詳細度が`(0, 0, 1)`であり、`ol > li`の詳細度は`(0, 0, 2)`、 `.list-1 > li`の詳細度は`(0, 1, 1)`であるためこのような結果になる。
+
 
 ### `:has()`
+
+
+## 関連資料
+- https://drafts.csswg.org/selectors/#logical-combination

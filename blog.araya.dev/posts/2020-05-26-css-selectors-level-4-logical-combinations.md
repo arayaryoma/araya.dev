@@ -55,6 +55,7 @@ ul > li, ol > li, .list-1 > li {
 ```
 
 `:is()`が実装されたブラウザでの描画結果はこのようになる。
+
 !["Hello, world!"が青、"See you!"が赤で表示されているスクリーンショット](/assets/images/2020-05-26-css-selectors-level4/is-ex-1.png)
 
 ここで注目すべきは`<li>See you!</li>` に `color: red;` が適用されていることである。`:is(ul, ol, .list-1) > li` が `ul > li, ol > li, .list-1 > li` の単なるショートハンドであれば `color: blue` が適用されるはずだが、そうなってはいない。
@@ -63,6 +64,11 @@ ul > li, ol > li, .list-1 > li {
 `ul, ol, .list-1` で最も詳細度が高いセレクタは `.list-1` であり、その詳細度は `(0, 1, 0)` である。`ul` および `li` の詳細度は`(0, 0, 1)`であるため、`:is(ul, ol, .list-1)`の詳細度の計算結果は`(0, 1, 0)`となる。
 
 よって、`:is(ul, ol, .list-1) > li` の詳細度の計算結果は `(0, 1, 1)` となり、これは `ol > li` の詳細度 `(0, 0, 2)`よりも高くなり、そのため最終的に`<li>See you!</li>`に適用されるスタイルは `color: red;` となる。
+
+`:is()`は`:matches()`として仕様策定が進められていたが、[renameされている](https://github.com/w3c/csswg-drafts/issues/3258)。
+
+また、ベンダープレフィックス付きで、`:is()`とほぼ同等の機能をもつ`:any()`が実装されているブラウザもあるが、Can I useによると[非推奨となっているようだ](https://caniuse.com/#feat=css-matches-pseudo)。
+
 
 ### `:where()`
 `:where()`擬似クラス関数は、前述の`:is()`と同じように扱えるが、詳細度の計算方法だけが異なる。
@@ -90,15 +96,12 @@ ul > li, ol > li, .list-1 > li {
 }
 </style>
 ```
+
 !["Hello, world!"が青、"See you!"が青で表示されているスクリーンショット](/assets/images/2020-05-26-css-selectors-level4/where-ex-1.png)
+
 `<li>Hello, world!</li>`も`<li>See you!</li>`も`color: blue;` が適用されている。
 
 `:where(ul, ol, .list-1) >li` の詳細度が`(0, 0, 1)`であり、`ol > li`の詳細度は`(0, 0, 2)`、 `.list-1 > li`の詳細度は`(0, 1, 1)`であるためこのような結果になる。
-
-
-`:is()`は`:matches()`として仕様策定が進められていたが、[renameされている](https://github.com/w3c/csswg-drafts/issues/3258)。
-
-また、ベンダープレフィックス付きで、`:is()`とほぼ同等の機能をもつ`:any()`が実装されているブラウザもあるが、Can I useによると[非推奨となっているようだ](https://caniuse.com/#feat=css-matches-pseudo)。
 
 ### `:has()`
 `:has()`は引数に相対的なセレクタを受け取り、**そのセレクタを1つ以上含んでいる要素**を表現できる擬似クラス関数である。

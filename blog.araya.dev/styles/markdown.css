@@ -50,10 +50,15 @@
     font-family: 'Source Code Pro', monospace;
     max-width: 100%;
     overflow-x: scroll;
+    padding: 0 .2em;
+    margin: 0 .2em;
+    background-color: var(--black);
 }
 
 .markdown pre code {
     width: 100%;
+    margin: 0;
+    background-color: var(--dracula-bg);
 }
 
 .markdown table {

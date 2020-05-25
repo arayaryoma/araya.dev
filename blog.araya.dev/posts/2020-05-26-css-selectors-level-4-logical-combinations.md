@@ -138,7 +138,7 @@ section:has(:not(> h3)) {
   background-color: #CCDDFF;
 }
 ```
-と書いてしまうと、**「<h3>ではない何らかの子要素を持つ<section>要素にマッチする」**という表現となってしまう。
+と書いてしまうと、**「`<h3>`ではない何らかの子要素を持つ`<section>`要素にマッチする」**という表現となってしまう。
 
 つまり`<section></section>`に対し、`section:not(:has(> h3))`はマッチするが、`section:has(:not(> h3))`はマッチしない。
 

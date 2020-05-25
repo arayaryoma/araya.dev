@@ -6,7 +6,7 @@ tags:
     - w3c
 ---
 ## 注意
-本記事で述べる内容は2020年4月19日現在に公開されている情報をもとに書かれている。
+本記事で述べる内容は2020年5月26日現在に公開されている情報をもとに書かれている。
 
 ## Logical Combinationsとして追加される3つの擬似クラス関数
 [CSS working groupのSelectors Level 4](https://drafts.csswg.org/selectors) では[Logical Combinations](https://drafts.csswg.org/selectors/#logical-combination) というセクションにいくつかの擬似クラスが定義されている。

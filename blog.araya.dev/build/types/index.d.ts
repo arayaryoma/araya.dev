@@ -8,5 +8,7 @@ type Post = {
   date: string;
   tags: string;
   url: string;
+  ampUrl: string;
+  canonicalUrl: string;
 };
 type Posts = Post[];

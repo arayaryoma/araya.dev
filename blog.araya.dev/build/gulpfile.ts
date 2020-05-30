@@ -104,7 +104,9 @@ const getPosts = async (): Promise<Posts> => {
             date,
             tags,
             title,
-            url: `posts/${date}/${fileName}.html`
+            url: `posts/${date}/${fileName}.html`,
+            ampUrl: `posts/${date}/${fileName}.amp.html`,
+            canonicalUrl: `https://blog.araya.dev/posts/${date}/${fileName}.html`
         };
         posts.push(post);
     }
@@ -117,10 +119,15 @@ const buildTemplates = async () => {
     const posts = await getPosts();
     for (const post of posts) {
         const html = render('post.njk', post);
+        const amp = render('post.amp.njk', post);
         await mkdir(`${distDir}/posts/${post.date}`);
-        writeFile(`${distDir}/${post.url}`, html).catch(err => {
+        await writeFile(`${distDir}/${post.url}`, html).catch(err => {
             throw err;
         });
+        await writeFile(`${distDir}/${post.ampUrl}`, amp).catch(err => {
+            throw err;
+        });
+
     }
     const indexHtml = render('index.njk', {
         posts: sortBy(posts, p => p.date).reverse()

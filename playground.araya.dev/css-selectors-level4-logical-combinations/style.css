@@ -1,0 +1,3 @@
+.subsection:has(h3) {
+    background-color: #FFCCDD;
+}

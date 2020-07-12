@@ -44,10 +44,23 @@
   left: 0;
   background-color: var(--text-face-color);
 }
-
-:not(pre) > code {
+.markdown :not(pre) > code {
   padding: 0 0.5em;
   margin: 0 0.3em;
+  background: var(--black);
+  color: var(--gray-light-3);
+}
+
+@media only screen and (prefers-color-scheme: dark) {
+  .markdown tbody tr:nth-child(2n) {
+    background-color: var(--black);
+  }
+  .markdown :not(pre) > code {
+    padding: 0 0.5em;
+    margin: 0 0.3em;
+    background: var(--gray-light-3);
+    color: var(--gray-dark-3);
+  }
 }
 
 .markdown code {
@@ -55,7 +68,6 @@
   max-width: 100%;
   overflow-x: scroll;
   margin: 0 0.2em;
-  background-color: var(--black);
 }
 
 .markdown pre code {

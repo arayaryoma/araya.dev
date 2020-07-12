@@ -47,8 +47,6 @@
 .markdown :not(pre) > code {
   padding: 0 0.5em;
   margin: 0 0.3em;
-  background: var(--black);
-  color: var(--gray-light-3);
 }
 
 @media only screen and (prefers-color-scheme: dark) {
@@ -56,10 +54,8 @@
     background-color: var(--black);
   }
   .markdown :not(pre) > code {
-    padding: 0 0.5em;
+    padding: 0 0.2em;
     margin: 0 0.3em;
-    background: var(--gray-light-3);
-    color: var(--gray-dark-3);
   }
 }
 

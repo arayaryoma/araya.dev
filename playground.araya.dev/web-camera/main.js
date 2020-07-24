@@ -26,6 +26,10 @@ class VideoSelector extends HTMLElement {
       select.addEventListener("change", (event) => {
         this.onDeviceChanged(event);
       });
+      const startButton = document.createElement("button");
+      startButton.innerText = "Start Recording";
+      startButton.addEventListener("click", startRecord);
+      this.appendChild(startButton);
       this.appendChild(select);
     });
   }
@@ -48,4 +52,40 @@ class VideoSelector extends HTMLElement {
       });
   }
 }
+
+const recordedChunks = [];
+const download = () => {
+  const blob = new Blob(recordedChunks, {
+    type: "video/webm",
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  document.body.appendChild(a);
+  a.style = "display: none";
+  a.href = url;
+  a.download = "test.webm";
+  a.click();
+  window.URL.revokeObjectURL(url);
+};
+const handleDataAvailable = (event) => {
+  console.log("data available");
+  if (event.data.size > 0) {
+    recordedChunks.push(event.data);
+    console.log(recordedChunks);
+    download();
+  }
+};
+const startRecord = () => {
+  const options = {
+    mimeType: "video/webm; codec=vp9",
+  };
+  const recorder = new MediaRecorder(window.stream, options);
+
+  recorder.ondataavailable = handleDataAvailable;
+  recorder.start();
+  setTimeout((event) => {
+    console.log("stopping");
+    recorder.stop();
+  }, 5000);
+};
 customElements.define("video-selector", VideoSelector);

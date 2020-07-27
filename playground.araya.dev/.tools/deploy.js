@@ -13,7 +13,6 @@ const run = async () => {
   const ignoredPaths = await readIgnoredPaths();
   const excludes = ignoredPaths
     .map(
-      // (ignored) => `--filter "- ${path.relative(path.resolve(__dirname), path.resolve(process.cwd(), target, ignored))}"`
       (ignored) => `--filter "- ${ignored}"`
     )
     .join(" ");

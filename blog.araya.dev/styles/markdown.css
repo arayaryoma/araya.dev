@@ -93,6 +93,10 @@ td {
   line-height: 1.75em;
 }
 
+.markdown img {
+  max-width: 100%;
+}
+
 @media only screen and (prefers-color-scheme: dark) {
   .markdown tbody tr:nth-child(2n) {
     background-color: var(--black);

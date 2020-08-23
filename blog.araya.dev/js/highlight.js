@@ -1,2 +1,2 @@
-import hljs from 'highlight.js';
-hljs.initHighlightingOnLoad();
+import {initHighlightingOnLoad} from 'highlight.js';
+initHighlightingOnLoad();

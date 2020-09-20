@@ -64,6 +64,7 @@
   max-width: 100%;
   overflow-x: scroll;
   margin: 0 0.2em;
+  color: var(--gray-light-3);
 }
 
 .markdown pre code {

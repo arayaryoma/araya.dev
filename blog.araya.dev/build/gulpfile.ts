@@ -143,7 +143,6 @@ const buildTemplates = async () => {
 };
 
 const copyStyles = async () => {
-  await compressAsBrotli(`${distDir}/index.html`, `${distDir}/index.html.br`);
   return src("../styles/**/*.css").pipe(dest(`${distDir}/styles`));
 };
 const copyAssets = () => {

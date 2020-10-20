@@ -10,8 +10,9 @@
     --gray-dark-2: #4F4F4F;
     --gray-dark-1: #828282;
     --gray-light-1: #BDBDBD;
-    --gray-light-2: #E0E0E0;
-    --gray-light-3: #F2F2F2;
+    --gray-light-9: #DEDEDE;
+    --gray-light-3: #E0E0E0;
+    --gray-light-4: #F2F2F2;
     --mat-red: #EB5757;
     --orange: #F2994A;
     --canary-yellow: #F2C94C;
@@ -76,7 +77,7 @@
 @media screen and (prefers-color-scheme: dark) {
     :root {
         --background-color: var(--navy);
-        --text-face-color: var(--gray-light-3);
+        --text-face-color: var(--gray-light-4);
     }
 }
 
@@ -120,7 +121,7 @@ a {
 
 .global-nav {
     height: 8.2rem;
-    background: var(--gray-light-3);
+    background: var(--gray-light-4);
 }
 
 @media only screen and (prefers-color-scheme: dark) {
@@ -171,7 +172,7 @@ a {
 .footer {
     height: var(--footer-height);
     font-size: 1.6em;
-    background-color: var(--gray-light-3);
+    background-color: var(--gray-light-4);
     position: absolute;
     bottom: 0;
     left: 0;
@@ -181,7 +182,7 @@ a {
 @media (prefers-color-scheme: dark) {
     .footer {
         background-color: var(--black);
-        color: var(--gray-light-3);
+        color: var(--gray-light-4);
     }
 }
 

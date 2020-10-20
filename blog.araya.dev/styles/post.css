@@ -23,7 +23,7 @@
   line-height: 1.5em;
   padding: 30px 0;
   width: 100%;
-  background: var(--gray-light-3);
+  background: var(--gray-light-4);
   display: grid;
   grid-column-gap: var(--grid-column-gap);
   grid-template-columns: var(--grid-template-columns);
@@ -48,7 +48,7 @@
   display: grid;
   grid-column-gap: var(--grid-column-gap);
   grid-template-columns: var(--grid-template-columns);
-  background: var(--gray-light-3);
+  background: var(--gray-light-4);
   margin-top: 24px;
   padding: 30px 0;
 }
@@ -78,6 +78,6 @@
   .post--main,
   .post-header {
     background: var(--gray-dark-3);
-    color: var(--gray-light-3);
+    color: var(--gray-light-4);
   }
 }

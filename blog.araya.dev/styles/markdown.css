@@ -54,8 +54,8 @@
     background-color: var(--black);
   }
   .markdown :not(pre) > code {
-    padding: 0 0.2em;
     margin: 0 0.3em;
+    color: var(--gray-light-4);
   }
 }
 
@@ -64,7 +64,7 @@
   max-width: 100%;
   overflow-x: scroll;
   margin: 0 0.2em;
-  color: var(--gray-light-3);
+  background: var(--gray-light-2);
 }
 
 .markdown pre code {
@@ -88,7 +88,7 @@ td {
 }
 
 .markdown tbody tr:nth-child(2n) {
-  background-color: var(--gray-light-3);
+  background-color: var(--gray-light-4);
 }
 .markdown ul li {
   line-height: 1.75em;

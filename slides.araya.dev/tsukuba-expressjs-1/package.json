@@ -1,9 +1,0 @@
-{
-  "name": "@arayaryoma-slides/tsukuba-expressjs-1",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "dependencies": {
-    "fusuma": "^1.15.0"
-  }
-}

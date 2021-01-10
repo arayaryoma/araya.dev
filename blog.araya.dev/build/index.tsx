@@ -1,7 +1,13 @@
-import { copy, ensureDir, ensureFile } from "https://deno.land/std@0.83.0/fs/mod.ts";
+import {
+  copy,
+  ensureDir,
+  ensureFile,
+} from "https://deno.land/std@0.83.0/fs/mod.ts";
 import { Marked } from "https://deno.land/x/markdown@v2.0.0/mod.ts";
-
 import { Post } from "./types/index.d.ts";
+import React from "https://dev.jspm.io/react";
+import ReactDOMServer from "https://dev.jspm.io/react-dom/server";
+
 
 const CWD = Deno.cwd();
 
@@ -71,10 +77,13 @@ const copyAssets = async () => {
 
 const posts = await getPosts();
 const encorder = new TextEncoder();
-for(const post of posts) {
+for (const post of posts) {
   const outputFilePath = `${distDir}/${post.url}`;
   await ensureFile(outputFilePath);
-  await Deno.writeFile(outputFilePath, encorder.encode(post.content))
+  await Deno.writeFile(outputFilePath, encorder.encode(post.content));
 }
+
+const str = ReactDOMServer.renderToString(<div className="deno">land</div>);
+console.log(str);
 
 await Promise.all([copyStylesheets(), copyAssets()]);

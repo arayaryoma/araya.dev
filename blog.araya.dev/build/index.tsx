@@ -8,6 +8,16 @@ import { Post } from "./types/index.d.ts";
 import React from "https://dev.jspm.io/react";
 import ReactDOMServer from "https://dev.jspm.io/react-dom/server";
 
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      button: any;
+      div: any;
+      h1: any;
+      p: any;
+    }
+  }
+}
 
 const CWD = Deno.cwd();
 
@@ -83,7 +93,9 @@ for (const post of posts) {
   await Deno.writeFile(outputFilePath, encorder.encode(post.content));
 }
 
-const str = ReactDOMServer.renderToString(<div className="deno">land</div>);
+const str = (ReactDOMServer as any).renderToString(
+  <div className="deno">land</div>
+);
 console.log(str);
 
 await Promise.all([copyStylesheets(), copyAssets()]);

@@ -7,14 +7,12 @@ import { Marked } from "https://deno.land/x/markdown@v2.0.0/mod.ts";
 import { Post } from "./types/index.d.ts";
 import React from "https://dev.jspm.io/react";
 import ReactDOMServer from "https://dev.jspm.io/react-dom/server";
+import { Base } from "../templates/base.tsx";
 
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      button: any;
-      div: any;
-      h1: any;
-      p: any;
+      [key: string]: any;
     }
   }
 }
@@ -95,7 +93,10 @@ for (const post of posts) {
 }
 
 const str = (ReactDOMServer as any).renderToString(
-  <div className="deno">land</div>
+  <Base>
+    {" "}
+    <p>Hello World!!!</p>{" "}
+  </Base>
 );
 console.log(str);
 

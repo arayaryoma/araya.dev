@@ -41,22 +41,23 @@ const getPosts = async (): Promise<Posts> => {
   const decoder = new TextDecoder("utf-8");
   const posts: Posts = [];
   for await (const dirEntry of Deno.readDir(postsDir)) {
-    const { date, fileName } = parseFileName(dirEntry.name);
+    const { fileName } = parseFileName(dirEntry.name);
     const file = await Deno.open(`${postsDir}/${dirEntry.name}`, {
       read: true,
     });
     const content = await Deno.readAll(file);
     Deno.close(file.rid);
 
-    const parsed = Marked.parse(decoder.decode(content)).content;
+    const parsed = Marked.parse(decoder.decode(content));
 
     // const metadata = parser.getMetadata(true);
     // const { title, tags } = parseMetadata(metadata as string);
+    const { title, date } = parsed.meta;
     const post: Post = {
-      content: parsed,
+      content: parsed.content,
       date,
       tags: "",
-      title: "",
+      title,
       url: `posts/${date}/${fileName}.html`,
       ampUrl: `posts/${date}/${fileName}.amp.html`,
       canonicalUrl: `https://blog.araya.dev/posts/${date}/${fileName}.html`,

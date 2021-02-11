@@ -1,2 +1,3 @@
-import {initHighlightingOnLoad} from 'highlight.js';
-initHighlightingOnLoad();
+import highlightJs from "https://cdn.skypack.dev/highlight.js";
+
+highlightJs.highlightAll();

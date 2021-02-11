@@ -2,7 +2,7 @@ import { React } from "../deps.ts";
 
 export const meta = {
   title: "Posts | Araya's reservoir",
-  styles: ["index", "posts-list"],
+  styles: ["index.css", "posts-list.css"],
 };
 
 type Props = {

@@ -38,7 +38,8 @@ type ImagePathMap = Map<string, string>;
 type ScriptPathMap = Map<string, string>;
 
 type Subresources = {
-  styles: Record<string, string>;
+  _styles: Record<string, string>;
+  styles: Map<string, string>;
   scripts: ScriptPathMap;
   images: ImagePathMap;
 };
@@ -127,11 +128,17 @@ const _buildStyleSheets = async (): Promise<Record<string, string>> => {
   return stylesheets;
 };
 
-const defaultStyleSheets = ["main"];
+const defaultStyleSheets = ["main.css", "lib/normalize.css"];
 
-const buildPostPages = async ({ styles, images }: Subresources) => {
+const buildPostPages = async ({
+  _styles,
+  scripts,
+  styles,
+  images,
+}: Subresources) => {
   const posts = await getPosts();
   const encorder = new TextEncoder();
+
   const replace = (content: string): string => {
     let replaced = content;
     for (const key of images.keys()) {
@@ -140,21 +147,31 @@ const buildPostPages = async ({ styles, images }: Subresources) => {
     for (const key of scripts.keys()) {
       replaced = replaced.replaceAll(key, scripts.get(key) ?? key);
     }
+    for (const key of styles.keys()) {
+      replaced = replaced.replaceAll(key, styles.get(key) ?? key);
+    }
     return replaced;
   };
+
+  const stylesheets: Array<StyleSheet> = [
+    ...defaultStyleSheets,
+    "markdown.css",
+    "post.css",
+    "lib/highlight.js/dracula.css",
+  ].map((name) => ({
+    href: `/styles/${name}`,
+    rel: "prefetch",
+  }));
+
   for (const post of posts) {
     const outputFilePath = `${distDir}/${post.url}`;
     await ensureFile(outputFilePath);
-    const stylesheets: Array<StyleSheet> = [
-      ...defaultStyleSheets.map<StyleSheet>((name) => ({
-        href: `/${styles[name]}`,
-        rel: "prefetch",
-      })),
-      { href: `/${styles.post}`, rel: "prefetch" },
-      { href: `/${styles.markdown}`, rel: "prefetch" },
-    ];
     const html = ReactDOMServer.renderToString(
-      <Base styles={stylesheets} title={post.title}>
+      <Base
+        styles={stylesheets}
+        title={post.title}
+        scripts={[{ src: "/js/highlight.js", module: true }]}
+      >
         <PostComponent title={post.title} date={post.date}>
           <div dangerouslySetInnerHTML={{ __html: post.content }} />
         </PostComponent>
@@ -164,7 +181,7 @@ const buildPostPages = async ({ styles, images }: Subresources) => {
   }
 };
 
-const buildPages = async ({ styles, images }: Subresources) => {
+const buildPages = async ({ _styles, styles, images }: Subresources) => {
   const posts = await getPosts();
   const encorder = new TextEncoder();
   const outputFilePath = `${distDir}/index.html`;
@@ -177,12 +194,15 @@ const buildPages = async ({ styles, images }: Subresources) => {
     for (const key of scripts.keys()) {
       replaced = replaced.replaceAll(key, scripts.get(key) ?? key);
     }
+    for (const key of styles.keys()) {
+      replaced = replaced.replaceAll(key, styles.get(key) ?? key);
+    }
     return replaced;
   };
   const html = ReactDOMServer.renderToString(
     <Base
       styles={[...defaultStyleSheets, ...homeMeta.styles].map((styleName) => ({
-        href: `/${styles[styleName]}`,
+        href: `/styles/${styleName}`,
         rel: "prefetch",
       }))}
       title={homeMeta.title}
@@ -193,11 +213,12 @@ const buildPages = async ({ styles, images }: Subresources) => {
   await writeFile(outputFilePath, encorder.encode(replace(html)));
 };
 
-const styles = await _buildStyleSheets();
+const _styles = await _buildStyleSheets();
+const styles = await buildAssets(`${CWD}/styles`);
 const scripts = await buildAssets(`${CWD}/js`);
 const images = await buildAssets(`${CWD}/assets`);
 
 await Promise.all([
-  buildPages({ styles, scripts, images }),
-  buildPostPages({ styles, scripts, images }),
+  buildPages({ _styles, scripts, images, styles }),
+  buildPostPages({ _styles, scripts, images, styles }),
 ]);

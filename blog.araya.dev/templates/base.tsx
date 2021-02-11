@@ -13,8 +13,14 @@ export type StyleSheet = {
   rel?: "preconnect" | "prefetch";
 };
 
+export type Script = {
+  src: string;
+  module?: boolean;
+};
+
 type Props = {
   styles?: Array<StyleSheet>;
+  scripts?: Array<Script>;
   children?: unknown;
   title: string;
 };
@@ -43,9 +49,18 @@ export const Base = (props: Props) => {
               <link rel="stylesheet" href={style.href} />
             </>
           ))}
+          {props.scripts?.map((script) => (
+            <>
+              <link rel="prefetch" href={script.src} />
+              <script
+                async
+                src={script.src}
+                type={script.module ? "module" : undefined}
+              />
+            </>
+          ))}
+
           <link rel="preconnect" href="https://fonts.gstatic.com" />
-          <link rel="prefetch" href="/js/highlight.js" as="script" />
-          <link rel="prefetch" href="/styles/lib/highlight.js/dracula.css" />
         </head>
         <body>
           <nav className="global-nav">

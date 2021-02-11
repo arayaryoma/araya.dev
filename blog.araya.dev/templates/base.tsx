@@ -37,12 +37,12 @@ export const Base = (props: Props) => {
           />
           {props.styles?.map((style) => (
             <>
-              <link rel={style.rel} href={style.href} />
+              {style.rel && <link rel={style.rel} href={style.href} />}
+              <link rel="stylesheet" href={style.href} />
             </>
           ))}
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link rel="prefetch" href="/js/highlight.js" as="script" />
-          <link rel="prefetch" href="/styles/markdown.css" />
           <link rel="prefetch" href="/styles/lib/highlight.js/dracula.css" />
         </head>
         <body>

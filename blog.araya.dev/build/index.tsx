@@ -16,6 +16,7 @@ import {
   writeFile,
 } from "./io.ts";
 import { contentHash } from "./hash.ts";
+import { path } from "./path.ts";
 
 declare global {
   namespace JSX {
@@ -34,6 +35,7 @@ await ensureDir(`${distDir}/${ouputAsetsDir}`);
 type Subresources = {
   styles: Record<string, string>;
   scripts: Record<string, string>;
+  images: ImagePathMap;
 };
 
 const parseFileName = (fileName: string): ParseFileNameResult => {
@@ -84,17 +86,28 @@ const copyStylesheets = async () => {
   }
 };
 
-const copyAssets = async () => {
+type ImagePathMap = Map<string, string>;
+
+const buildImages = async (): Promise<ImagePathMap> => {
   const assetsDir = `${CWD}/assets`;
+  const map = new Map();
+
   for (const file of await recursiveReaddir(assetsDir)) {
-    const out = distDir + file.replace(CWD, "");
+    const ext = path.extname(file);
+    const out =
+      distDir +
+      `${file.replace(CWD, "").replace(ext, "")}-${contentHash(
+        (await readFileContent(file)).toString()
+      )}${ext}`;
     await ensureFile(out);
+    map.set(file.replace(CWD, ""), out.replace(distDir, ""));
     try {
       await copyFile(file, out);
     } catch (e) {
       console.error(e);
     }
   }
+  return map;
 };
 
 type StyleSheets = {
@@ -131,9 +144,16 @@ const buildStyleSheets = async (): Promise<Record<string, string>> => {
   return stylesheets;
 };
 
-const buildPostPages = async ({ styles }: Subresources) => {
+const buildPostPages = async ({ styles, images }: Subresources) => {
   const posts = await getPosts();
   const encorder = new TextEncoder();
+  const replace = (content: string): string => {
+    let replaced = content;
+    for (const key of images.keys()) {
+      replaced = replaced.replaceAll(key, images.get(key) ?? key);
+    }
+    return replaced;
+  };
   for (const post of posts) {
     const outputFilePath = `${distDir}/${post.url}`;
     await ensureFile(outputFilePath);
@@ -145,7 +165,7 @@ const buildPostPages = async ({ styles }: Subresources) => {
     const html = ReactDOMServer.renderToString(
       <Base styles={stylesheets}>
         <PostComponent title={post.title} date={post.date}>
-          <div dangerouslySetInnerHTML={{ __html: post.content }} />
+          <div dangerouslySetInnerHTML={{ __html: replace(post.content) }} />
         </PostComponent>
       </Base>
     );
@@ -155,6 +175,6 @@ const buildPostPages = async ({ styles }: Subresources) => {
 
 const styles = await buildStyleSheets();
 
-await copyAssets();
+const images = await buildImages();
 
-await buildPostPages({ styles, scripts: {} });
+await buildPostPages({ styles, scripts: {}, images });

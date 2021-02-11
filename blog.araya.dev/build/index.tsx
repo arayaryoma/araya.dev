@@ -170,7 +170,7 @@ const buildPostPages = async ({
       <Base
         styles={stylesheets}
         title={post.title}
-        scripts={[{ src: "/js/highlight.js", module: true }]}
+        scripts={[{ src: "/js/post.js", module: true }]}
       >
         <PostComponent title={post.title} date={post.date}>
           <div dangerouslySetInnerHTML={{ __html: post.content }} />

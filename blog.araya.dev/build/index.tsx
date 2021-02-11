@@ -83,11 +83,11 @@ const buildImages = async (): Promise<ImagePathMap> => {
 
   for (const file of await recursiveReaddir(assetsDir)) {
     const ext = path.extname(file);
-    const out =
-      distDir +
-      `${file.replace(CWD, "").replace(ext, "")}-${contentHash(
-        (await readFileContent(file)).toString()
-      )}${ext}`;
+    const out = `${distDir}${file
+      .replace(CWD, "")
+      .replace(ext, "")}-${contentHash(
+      (await readFileContent(file)).toString()
+    )}${ext}`;
     await ensureFile(out);
     map.set(file.replace(CWD, ""), out.replace(distDir, ""));
     try {
@@ -142,7 +142,7 @@ const buildPostPages = async ({ styles, images }: Subresources) => {
     await ensureFile(outputFilePath);
     const stylesheets: Array<StyleSheet> = [
       ...defaultStyleSheets.map<StyleSheet>((name) => ({
-        href: `${styles[name]}`,
+        href: `/${styles[name]}`,
         rel: "prefetch",
       })),
       { href: `/${styles.post}`, rel: "prefetch" },
@@ -151,11 +151,11 @@ const buildPostPages = async ({ styles, images }: Subresources) => {
     const html = ReactDOMServer.renderToString(
       <Base styles={stylesheets} title={post.title}>
         <PostComponent title={post.title} date={post.date}>
-          <div dangerouslySetInnerHTML={{ __html: replace(post.content) }} />
+          <div dangerouslySetInnerHTML={{ __html: post.content }} />
         </PostComponent>
       </Base>
     );
-    await writeFile(outputFilePath, encorder.encode(html));
+    await writeFile(outputFilePath, encorder.encode(replace(html)));
   }
 };
 

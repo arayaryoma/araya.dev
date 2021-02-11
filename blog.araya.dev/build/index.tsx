@@ -181,9 +181,11 @@ const buildPages = async ({ styles, images }: Subresources) => {
   await writeFile(outputFilePath, encorder.encode(replace(html)));
 };
 
-const styles = await buildAssets(`${CWD}/styles`);
-const scripts = await buildAssets(`${CWD}/js`);
-const images = await buildAssets(`${CWD}/assets`);
+const [styles, scripts, images] = await Promise.all([
+  buildAssets(`${CWD}/styles`),
+  buildAssets(`${CWD}/js`),
+  buildAssets(`${CWD}/assets`),
+]);
 
 await Promise.all([
   buildPages({ scripts, images, styles }),

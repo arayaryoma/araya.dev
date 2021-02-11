@@ -33,6 +33,10 @@ const ouputAsetsDir = `assets`;
 await ensureDir(distDir);
 await ensureDir(`${distDir}/${ouputAsetsDir}`);
 
+type ImagePathMap = Map<string, string>;
+
+type ScriptPathMap = Map<string, string>;
+
 type Subresources = {
   styles: Record<string, string>;
   scripts: ScriptPathMap;
@@ -75,13 +79,11 @@ const getPosts = async (): Promise<Posts> => {
   return posts;
 };
 
-type ImagePathMap = Map<string, string>;
-
-const buildImages = async (): Promise<ImagePathMap> => {
-  const assetsDir = `${CWD}/assets`;
+const buildAssets = async (srcDir: string): Promise<Map<string, string>> => {
+  // const srcDir = `${CWD}/js`;
   const map = new Map();
 
-  for (const file of await recursiveReaddir(assetsDir)) {
+  for (const file of await recursiveReaddir(srcDir)) {
     const ext = path.extname(file);
     const out = `${distDir}${file
       .replace(CWD, "")
@@ -99,31 +101,7 @@ const buildImages = async (): Promise<ImagePathMap> => {
   return map;
 };
 
-type ScriptPathMap = Map<string, string>;
-
-const buildScripts = async (): Promise<ScriptPathMap> => {
-  const assetsDir = `${CWD}/js`;
-  const map = new Map();
-
-  for (const file of await recursiveReaddir(assetsDir)) {
-    const ext = path.extname(file);
-    const out = `${distDir}${file
-      .replace(CWD, "")
-      .replace(ext, "")}-${contentHash(
-      (await readFileContent(file)).toString()
-    )}${ext}`;
-    await ensureFile(out);
-    map.set(file.replace(CWD, ""), out.replace(distDir, ""));
-    try {
-      await copyFile(file, out);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-  return map;
-};
-
-const buildStyleSheets = async (): Promise<Record<string, string>> => {
+const _buildStyleSheets = async (): Promise<Record<string, string>> => {
   const stylesDir = `${CWD}/styles`;
   const stylesheets = {};
   for await (const dirEntry of readDir(stylesDir)) {
@@ -215,10 +193,9 @@ const buildPages = async ({ styles, images }: Subresources) => {
   await writeFile(outputFilePath, encorder.encode(replace(html)));
 };
 
-const styles = await buildStyleSheets();
-const scripts = await buildScripts();
-
-const images = await buildImages();
+const styles = await _buildStyleSheets();
+const scripts = await buildAssets(`${CWD}/js`);
+const images = await buildAssets(`${CWD}/assets`);
 
 await Promise.all([
   buildPages({ styles, scripts, images }),

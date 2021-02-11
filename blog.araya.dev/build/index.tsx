@@ -18,6 +18,7 @@ import {
 import { contentHash } from "./hash.ts";
 import { path } from "./path.ts";
 import { Home, meta as homeMeta } from "../pages/home.tsx";
+import { generateFeed } from "./feed-generator.ts";
 
 declare global {
   namespace JSX {
@@ -191,3 +192,5 @@ await Promise.all([
   buildPages({ scripts, images, styles }),
   buildPostPages({ scripts, images, styles }),
 ]);
+
+await generateFeed(await getPosts(), distDir);

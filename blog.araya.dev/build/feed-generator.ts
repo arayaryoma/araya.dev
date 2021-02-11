@@ -1,13 +1,26 @@
-import * as fs from "fs";
-import * as path from "path";
+import { Feed } from "https://cdn.skypack.dev/feed";
+import { writeFile } from "./io.ts";
 
-import { Feed } from "feed";
-import { Author, FeedOptions } from "feed/lib/typings";
-const fsPromises = fs.promises;
+type Author = {
+  name: string;
+  email: string;
+};
+
+type FeedOptions = {
+  author: Author;
+  copyright: string;
+  generator: string;
+  id: string;
+  language: string;
+  link: string;
+  title: string;
+};
+
 const author: Author = {
   name: "Araya",
-  email: "r1o.ryoma.abe@gmail.com"
+  email: "r1o.ryoma.abe@gmail.com",
 };
+
 const feedOptions: FeedOptions = {
   author,
   copyright: "Araya",
@@ -15,12 +28,17 @@ const feedOptions: FeedOptions = {
   id: "blog.araya.dev",
   language: "ja",
   link: "https://blog.araya.dev",
-  title: "blog.araya.dev"
+  title: "blog.araya.dev",
 };
-export const generateFeed = async (posts: Posts): Promise<void> => {
+
+export const generateFeed = async (
+  posts: Posts,
+  distDir: string
+): Promise<void> => {
+  const encorder = new TextEncoder();
   const feed = new Feed(feedOptions);
-  posts.sort((a, b) => a.date > b.date ? -1 : 1);
-  posts.slice(0, 10).forEach(post => {
+  posts.sort((a, b) => (a.date > b.date ? -1 : 1));
+  posts.slice(0, 10).forEach((post) => {
     feed.addItem({
       author: [author],
       content: post.content,
@@ -29,11 +47,8 @@ export const generateFeed = async (posts: Posts): Promise<void> => {
       description: "",
       image: "",
       link: `https://blog.araya.dev/${post.url}`,
-      title: post.title
+      title: post.title,
     });
   });
-  await fsPromises.writeFile(
-    path.resolve(__dirname, "../dist/feed.xml"),
-    feed.atom1()
-  );
+  return await writeFile(`${distDir}/feed.xml`, encorder.encode(feed.atom1()));
 };

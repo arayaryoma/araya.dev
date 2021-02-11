@@ -8,7 +8,17 @@ gtag('js', new Date());
 gtag('config', 'UA-104175258-3');
 `;
 
-export const Base = (props: any) => {
+export type StyleSheet = {
+  href: string;
+  rel?: "preconnect" | "prefetch";
+};
+
+type Props = {
+  styles?: Array<StyleSheet>;
+  children?: unknown;
+};
+
+export const Base = (props: Props) => {
   return (
     <>
       <html lang="ja">
@@ -25,7 +35,11 @@ export const Base = (props: any) => {
             name="viewport"
             content="width=device-width, initial-scale=1, viewport-fit=cover"
           />
-          <link rel="stylesheet" href="/styles/main.css" />
+          {props.styles?.map((style) => (
+            <>
+              <link rel={style.rel} href={style.href} />
+            </>
+          ))}
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link rel="prefetch" href="/js/highlight.js" as="script" />
           <link rel="prefetch" href="/styles/markdown.css" />

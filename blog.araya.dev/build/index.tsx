@@ -182,7 +182,7 @@ const buildPostPages = async ({
 };
 
 const buildPages = async ({ _styles, styles, images }: Subresources) => {
-  const posts = await getPosts();
+  const posts = (await getPosts()).sort((a, b) => (a.date < b.date ? 1 : -1));
   const encorder = new TextEncoder();
   const outputFilePath = `${distDir}/index.html`;
   await ensureFile(outputFilePath);

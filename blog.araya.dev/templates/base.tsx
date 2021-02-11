@@ -16,6 +16,7 @@ export type StyleSheet = {
 type Props = {
   styles?: Array<StyleSheet>;
   children?: unknown;
+  title: string;
 };
 
 export const Base = (props: Props) => {
@@ -23,6 +24,7 @@ export const Base = (props: Props) => {
     <>
       <html lang="ja">
         <head>
+          <title>{props.title}</title>
           <script
             async
             src="https://www.googletagmanager.com/gtag/js?id=UA-104175258-3"

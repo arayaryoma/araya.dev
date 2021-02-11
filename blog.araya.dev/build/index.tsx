@@ -17,6 +17,7 @@ import {
 } from "./io.ts";
 import { contentHash } from "./hash.ts";
 import { path } from "./path.ts";
+import { Home, meta as homeMeta } from "../pages/home.tsx";
 
 declare global {
   namespace JSX {
@@ -74,18 +75,6 @@ const getPosts = async (): Promise<Posts> => {
   return posts;
 };
 
-const copyStylesheets = async () => {
-  const stylesDir = `${CWD}/styles`;
-  for await (const dirEntry of readDir(stylesDir)) {
-    if (dirEntry.isFile && dirEntry.name.endsWith(".css")) {
-      await copyFile(
-        `${stylesDir}/${dirEntry.name}`,
-        `${distDir}/${dirEntry.name}`
-      );
-    }
-  }
-};
-
 type ImagePathMap = Map<string, string>;
 
 const buildImages = async (): Promise<ImagePathMap> => {
@@ -108,14 +97,6 @@ const buildImages = async (): Promise<ImagePathMap> => {
     }
   }
   return map;
-};
-
-type StyleSheets = {
-  main: string;
-  index: string;
-  markdown: string;
-  post: string;
-  "posts-list": string;
 };
 
 const buildStyleSheets = async (): Promise<Record<string, string>> => {
@@ -144,6 +125,8 @@ const buildStyleSheets = async (): Promise<Record<string, string>> => {
   return stylesheets;
 };
 
+const defaultStyleSheets = ["main"];
+
 const buildPostPages = async ({ styles, images }: Subresources) => {
   const posts = await getPosts();
   const encorder = new TextEncoder();
@@ -158,12 +141,15 @@ const buildPostPages = async ({ styles, images }: Subresources) => {
     const outputFilePath = `${distDir}/${post.url}`;
     await ensureFile(outputFilePath);
     const stylesheets: Array<StyleSheet> = [
-      { href: `/${styles.main}`, rel: "prefetch" },
+      ...defaultStyleSheets.map<StyleSheet>((name) => ({
+        href: `${styles[name]}`,
+        rel: "prefetch",
+      })),
       { href: `/${styles.post}`, rel: "prefetch" },
       { href: `/${styles.markdown}`, rel: "prefetch" },
     ];
     const html = ReactDOMServer.renderToString(
-      <Base styles={stylesheets}>
+      <Base styles={stylesheets} title={post.title}>
         <PostComponent title={post.title} date={post.date}>
           <div dangerouslySetInnerHTML={{ __html: replace(post.content) }} />
         </PostComponent>
@@ -173,8 +159,37 @@ const buildPostPages = async ({ styles, images }: Subresources) => {
   }
 };
 
+const buildPages = async ({ styles, images }: Subresources) => {
+  const posts = await getPosts();
+  const encorder = new TextEncoder();
+  const outputFilePath = `${distDir}/index.html`;
+  await ensureFile(outputFilePath);
+  const replace = (content: string): string => {
+    let replaced = content;
+    for (const key of images.keys()) {
+      replaced = replaced.replaceAll(key, images.get(key) ?? key);
+    }
+    return replaced;
+  };
+  const html = ReactDOMServer.renderToString(
+    <Base
+      styles={[...defaultStyleSheets, ...homeMeta.styles].map((styleName) => ({
+        href: `/${styles[styleName]}`,
+        rel: "prefetch",
+      }))}
+      title={homeMeta.title}
+    >
+      <Home posts={posts} />
+    </Base>
+  );
+  await writeFile(outputFilePath, encorder.encode(replace(html)));
+};
+
 const styles = await buildStyleSheets();
 
 const images = await buildImages();
 
-await buildPostPages({ styles, scripts: {}, images });
+await Promise.all([
+  buildPages({ styles, scripts: {}, images }),
+  buildPostPages({ styles, scripts: {}, images }),
+]);

@@ -6,7 +6,8 @@ import {
 import { Marked } from "https://deno.land/x/markdown@v2.0.0/mod.ts";
 import { Post } from "./types/index.d.ts";
 import React from "https://dev.jspm.io/react";
-import ReactDOMServer from "https://dev.jspm.io/react-dom/server";
+import { ReactDOMServer } from "../deps.ts";
+
 import { Base } from "../templates/base.tsx";
 
 declare global {
@@ -39,7 +40,7 @@ const getPosts = async (): Promise<Posts> => {
   const decoder = new TextDecoder("utf-8");
   const posts: Posts = [];
   for await (const dirEntry of Deno.readDir(postsDir)) {
-    const { fileName } = parseFileName(dirEntry.name);
+    const { fileName, date } = parseFileName(dirEntry.name);
     const file = await Deno.open(`${postsDir}/${dirEntry.name}`, {
       read: true,
     });
@@ -48,9 +49,7 @@ const getPosts = async (): Promise<Posts> => {
 
     const parsed = Marked.parse(decoder.decode(content));
 
-    // const metadata = parser.getMetadata(true);
-    // const { title, tags } = parseMetadata(metadata as string);
-    const { title, date } = parsed.meta;
+    const { title } = parsed.meta;
     const post: Post = {
       content: parsed.content,
       date,
@@ -89,15 +88,12 @@ const encorder = new TextEncoder();
 for (const post of posts) {
   const outputFilePath = `${distDir}/${post.url}`;
   await ensureFile(outputFilePath);
-  await Deno.writeFile(outputFilePath, encorder.encode(post.content));
+  const html = ReactDOMServer.renderToString(
+    <Base>
+      <div dangerouslySetInnerHTML={{ __html: post.content }} />
+    </Base>
+  );
+  await Deno.writeFile(outputFilePath, encorder.encode(html));
 }
-
-const str = (ReactDOMServer as any).renderToString(
-  <Base>
-    {" "}
-    <p>Hello World!!!</p>{" "}
-  </Base>
-);
-console.log(str);
 
 await Promise.all([copyStylesheets(), copyAssets()]);

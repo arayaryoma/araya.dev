@@ -12,6 +12,7 @@ import {
   ensureFile,
   readDir,
   readFileContent,
+  recursiveReaddir,
   writeFile,
 } from "./io.ts";
 import { contentHash } from "./hash.ts";
@@ -27,8 +28,8 @@ declare global {
 const distDir = `${CWD}/dist`;
 const ouputAsetsDir = `assets`;
 
-ensureDir(distDir);
-ensureDir(`${distDir}/${ouputAsetsDir}`);
+await ensureDir(distDir);
+await ensureDir(`${distDir}/${ouputAsetsDir}`);
 
 type Subresources = {
   styles: Record<string, string>;
@@ -85,11 +86,14 @@ const copyStylesheets = async () => {
 
 const copyAssets = async () => {
   const assetsDir = `${CWD}/assets`;
-  for await (const dirEntry of readDir(assetsDir)) {
-    await copyFile(
-      `${assetsDir}/${dirEntry.name}`,
-      `${distDir}/${dirEntry.name}`
-    );
+  for (const file of await recursiveReaddir(assetsDir)) {
+    const out = distDir + file.replace(CWD, "");
+    await ensureFile(out);
+    try {
+      await copyFile(file, out);
+    } catch (e) {
+      console.error(e);
+    }
   }
 };
 
@@ -151,6 +155,6 @@ const buildPostPages = async ({ styles }: Subresources) => {
 
 const styles = await buildStyleSheets();
 
-await buildPostPages({ styles, scripts: {} });
+await copyAssets();
 
-// await Promise.all([buildStyleSheets()]);
+await buildPostPages({ styles, scripts: {} });

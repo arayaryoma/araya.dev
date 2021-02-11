@@ -1,9 +1,3 @@
-// <title>{{ title }}</title>
-// <link rel="stylesheet" href="/styles/markdown.css">
-// <link rel="stylesheet" href="/styles/post.css">
-// <link rel="stylesheet" href="/styles/lib/highlight.js/dracula.css">
-// <script src="/js/highlight.js" defer></script>
-
 import { React } from "../deps.ts";
 
 export const Post = (props: any) => {

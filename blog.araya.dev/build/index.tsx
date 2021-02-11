@@ -35,7 +35,7 @@ await ensureDir(`${distDir}/${ouputAsetsDir}`);
 
 type Subresources = {
   styles: Record<string, string>;
-  scripts: Record<string, string>;
+  scripts: ScriptPathMap;
   images: ImagePathMap;
 };
 
@@ -99,6 +99,30 @@ const buildImages = async (): Promise<ImagePathMap> => {
   return map;
 };
 
+type ScriptPathMap = Map<string, string>;
+
+const buildScripts = async (): Promise<ScriptPathMap> => {
+  const assetsDir = `${CWD}/js`;
+  const map = new Map();
+
+  for (const file of await recursiveReaddir(assetsDir)) {
+    const ext = path.extname(file);
+    const out = `${distDir}${file
+      .replace(CWD, "")
+      .replace(ext, "")}-${contentHash(
+      (await readFileContent(file)).toString()
+    )}${ext}`;
+    await ensureFile(out);
+    map.set(file.replace(CWD, ""), out.replace(distDir, ""));
+    try {
+      await copyFile(file, out);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  return map;
+};
+
 const buildStyleSheets = async (): Promise<Record<string, string>> => {
   const stylesDir = `${CWD}/styles`;
   const stylesheets = {};
@@ -135,6 +159,9 @@ const buildPostPages = async ({ styles, images }: Subresources) => {
     for (const key of images.keys()) {
       replaced = replaced.replaceAll(key, images.get(key) ?? key);
     }
+    for (const key of scripts.keys()) {
+      replaced = replaced.replaceAll(key, scripts.get(key) ?? key);
+    }
     return replaced;
   };
   for (const post of posts) {
@@ -169,6 +196,9 @@ const buildPages = async ({ styles, images }: Subresources) => {
     for (const key of images.keys()) {
       replaced = replaced.replaceAll(key, images.get(key) ?? key);
     }
+    for (const key of scripts.keys()) {
+      replaced = replaced.replaceAll(key, scripts.get(key) ?? key);
+    }
     return replaced;
   };
   const html = ReactDOMServer.renderToString(
@@ -186,10 +216,11 @@ const buildPages = async ({ styles, images }: Subresources) => {
 };
 
 const styles = await buildStyleSheets();
+const scripts = await buildScripts();
 
 const images = await buildImages();
 
 await Promise.all([
-  buildPages({ styles, scripts: {}, images }),
-  buildPostPages({ styles, scripts: {}, images }),
+  buildPages({ styles, scripts, images }),
+  buildPostPages({ styles, scripts, images }),
 ]);

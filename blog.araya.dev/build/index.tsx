@@ -38,7 +38,6 @@ type ImagePathMap = Map<string, string>;
 type ScriptPathMap = Map<string, string>;
 
 type Subresources = {
-  _styles: Record<string, string>;
   styles: Map<string, string>;
   scripts: ScriptPathMap;
   images: ImagePathMap;
@@ -102,40 +101,9 @@ const buildAssets = async (srcDir: string): Promise<Map<string, string>> => {
   return map;
 };
 
-const _buildStyleSheets = async (): Promise<Record<string, string>> => {
-  const stylesDir = `${CWD}/styles`;
-  const stylesheets = {};
-  for await (const dirEntry of readDir(stylesDir)) {
-    if (dirEntry.isFile && dirEntry.name.endsWith(".css")) {
-      const name = dirEntry.name.replace(".css", "");
-      try {
-        const hash = contentHash(
-          (await readFileContent(`${stylesDir}/${dirEntry.name}`)).toString()
-        );
-        const outputFileName = `${ouputAsetsDir}/${name}-${hash}.css`;
-        await copyFile(
-          `${stylesDir}/${dirEntry.name}`,
-          `${distDir}/${outputFileName}`
-        );
-        Object.assign(stylesheets, { [name]: outputFileName });
-      } catch (e) {
-        console.error(e);
-        console.error(stylesDir + dirEntry.name);
-        throw new Error("Failed to load stylesheets");
-      }
-    }
-  }
-  return stylesheets;
-};
-
 const defaultStyleSheets = ["main.css", "lib/normalize.css"];
 
-const buildPostPages = async ({
-  _styles,
-  scripts,
-  styles,
-  images,
-}: Subresources) => {
+const buildPostPages = async ({ scripts, styles, images }: Subresources) => {
   const posts = await getPosts();
   const encorder = new TextEncoder();
 
@@ -181,7 +149,7 @@ const buildPostPages = async ({
   }
 };
 
-const buildPages = async ({ _styles, styles, images }: Subresources) => {
+const buildPages = async ({ styles, images }: Subresources) => {
   const posts = (await getPosts()).sort((a, b) => (a.date < b.date ? 1 : -1));
   const encorder = new TextEncoder();
   const outputFilePath = `${distDir}/index.html`;
@@ -213,12 +181,11 @@ const buildPages = async ({ _styles, styles, images }: Subresources) => {
   await writeFile(outputFilePath, encorder.encode(replace(html)));
 };
 
-const _styles = await _buildStyleSheets();
 const styles = await buildAssets(`${CWD}/styles`);
 const scripts = await buildAssets(`${CWD}/js`);
 const images = await buildAssets(`${CWD}/assets`);
 
 await Promise.all([
-  buildPages({ _styles, scripts, images, styles }),
-  buildPostPages({ _styles, scripts, images, styles }),
+  buildPages({ scripts, images, styles }),
+  buildPostPages({ scripts, images, styles }),
 ]);

@@ -352,3 +352,118 @@ Layer の宣言を少し複雑にして、次の例を考えてみる。
 5. `display: none;`
 
 となる。
+
+## @layer を使った外部 stylesheet の import
+
+CSS では、 `@import`を使って、外部の stylesheet を import することができる。
+
+- [https://drafts.csswg.org/css-cascade/#at-import](https://drafts.csswg.org/css-cascade/#at-import)
+
+```css
+@import url("my-theme.css");
+```
+
+現在の draft では、`@layer` を使って外部から import した sytlesheet 全体を layer の内部に含めるようにできる提案がされている。
+
+下記の例では`theme` Layer を宣言し、`my-theme.css`のすべての宣言を`theme`layer に内包させている。
+
+```css
+@layer theme url("my-theme.css");
+```
+
+`@import` を使った場合は、`@import`宣言が import してくる中身に置き換えられたものとして扱われ、Specificity や Order of Appearance により優先付がされるが、
+Layer を用いることで Specificity より先に Layer による優先付をさせることができる。
+
+```css
+// my-theme.css
+.button {
+  background-color: blue;
+}
+
+// main.css
+@layer default, theme;
+
+@layer theme url("my-theme.css");
+
+@layer default {
+  button {
+    background-color: black;
+  }
+}
+
+// <button class="button"> の background-color は black;
+```
+
+上記の例で my-theme.css に Layer が作られていた場合、ネストされた Layer として、main.css から my-theme.css 内の Layer を参照することができる。
+
+```css
+// my-theme.css
+@layer dark {
+  .button {
+    background-color: blue;
+  }
+}
+
+// main.css
+@layer theme url("my-theme.css");
+
+@layer theme.dark {
+  .button {
+    background-color: white;
+  }
+}
+
+// <button class="button"> の background-color は white;
+```
+
+HTML の`<link>`を用いた sytlesheet の読み込み時に、対象の stylesheet 全体を layer に含められるか否かについては現在議論されている。
+
+- Issue: [https://github.com/w3c/csswg-drafts/issues/5853](https://github.com/w3c/csswg-drafts/issues/5853)
+
+## 無名 Layer
+
+現在の draft によると、明示的に無名 Layer を作ることもできる。
+
+```css
+@layer {
+  .container {
+    display: inline-block;
+  }
+}
+```
+
+無名 Layer は Layer における優先付では Layer が設定されていないものと同等に扱われるため、意味がないように思えるが、
+「CSS を書くときには明示的に Layer を必ず指定する」というルールをチーム内で決める といったユースケースは考えられる。
+
+ネストされている Layer のネスト構造の途中に無名 Layer があった場合、その内部の Layer には外から参照することができなくなる。
+
+```css
+// button.css
+@layer default {
+  button.button {
+    background-color: balck;
+    color: white;
+  }
+}
+
+// dark.css
+@layer url("button.css");
+@layer url("nav.css");
+
+// theme.css
+@layer dark url("dark.css");
+
+// main.css
+@layer theme url("theme.css");
+// button.cssのなかで宣言されている "default" Layer は参照できない
+
+// button.button の background-color に優先度付けで勝つためには新たなLayerを作る必要がある。
+@layer override-button {
+  button.button {
+    background-color: white;
+    color: black;
+  }
+}
+```
+
+これにより、テーマ内の特定の宣言 A については、テーマを使う側から書き換えることができるが、別の宣言 B は新たに Layer を定義しないと書き換えることができない、ということが可能になる。

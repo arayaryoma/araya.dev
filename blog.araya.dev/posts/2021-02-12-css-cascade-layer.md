@@ -126,7 +126,7 @@ Layer は開発者が`@layer` rule で明示的に作成することができる
 // <div class="container"> の display は inline-block
 ```
 
-### Layer の優先付け
+### Layer の優先度け
 
 複数の異なる Layer が作られていて、それぞれの Layer の中に同一の宣言があった場合は、後に記述されているものが優先される。
 
@@ -197,7 +197,7 @@ Layer を指定してない宣言は、Layer が指定されている宣言よ�
 
 ### Layer と Specificity
 
-下記の、Layer がない単純な指定では、`.container.content`のほうが Specificity が高いため、`display: flex;`が優先される。
+下記の例で Layer がない単純な指定では、`.container.content`のほうが Specificity が高いため、`display: inline-block;`が優先される。
 
 ```css
 // Specificity: (0,2,0)
@@ -214,7 +214,7 @@ Layer を指定してない宣言は、Layer が指定されている宣言よ�
 ```
 
 ここで、Layer は Specificity よりも優先するものとして扱われるため、下記のように Layer を宣言すると、
-Specificity が低い`display: inline-block`を優先させることができる。
+Specificity が低い`display: flex;`を優先させることができる。
 
 ```css
 @layer bottom;
@@ -371,8 +371,8 @@ CSS では、 `@import`を使って、外部の stylesheet を import するこ�
 @layer theme url("my-theme.css");
 ```
 
-`@import` を使った場合は、`@import`宣言が import してくる中身に置き換えられたものとして扱われ、Specificity や Order of Appearance により優先付がされるが、
-Layer を用いることで Specificity より先に Layer による優先付をさせることができる。
+`@import` を使った場合は、`@import`宣言が import してくる中身に置き換えられたものとして扱われ、Specificity や Order of Appearance により優先度つけがされるが、
+Layer を用いることで Specificity より先に Layer による優先度をさせることができる。
 
 ```css
 // my-theme.css
@@ -432,7 +432,7 @@ HTML の`<link>`を用いた sytlesheet の読み込み時に、対象の styles
 }
 ```
 
-無名 Layer は Layer における優先付では Layer が設定されていないものと同等に扱われるため、意味がないように思えるが、
+無名 Layer は Layer における優先度付けるでは Layer が設定されていないものと同等に扱われるため、意味がないように思えるが、
 「CSS を書くときには明示的に Layer を必ず指定する」というルールをチーム内で決める といったユースケースは考えられる。
 
 ネストされている Layer のネスト構造の途中に無名 Layer があった場合、その内部の Layer には外から参照することができなくなる。

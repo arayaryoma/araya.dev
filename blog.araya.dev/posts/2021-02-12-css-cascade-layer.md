@@ -468,13 +468,29 @@ HTML の`<link>`を用いた sytlesheet の読み込み時に、対象の styles
 
 これにより、テーマ内の特定の宣言 A については、テーマを使う側から書き換えることができるが、別の宣言 B は新たに Layer を定義しないと書き換えることができない、ということが可能になる。
 
-## 各ブラウザエンジンの実装状況
+## 各ブラウザエンジンの対応状況
 
 ### Blink
 
+- Issue: [https://bugs.chromium.org/p/chromium/issues/detail?id=1095765](https://bugs.chromium.org/p/chromium/issues/detail?id=1095765)
+
 ### Gecko
 
+- Request for Position: [https://github.com/mozilla/standards-positions/issues/471](https://github.com/mozilla/standards-positions/issues/471)
+  - 未確定
+  - アイディア自体は支持するが、まだ仕様が未発達だという反応。
+
 ### Webkit
+
+- Request for Position: [https://lists.webkit.org/pipermail/webkit-dev/2021-January/031664.html](https://lists.webkit.org/pipermail/webkit-dev/2021-January/031664.html)
+  - 現在返答なし
+
+## 関連資料
+
+- Explainer: [https://github.com/oddbird/css-sandbox/blob/main/src/layers/explainer.md](https://github.com/oddbird/css-sandbox/blob/main/src/layers/explainer.md)
+- Issues: [https://github.com/w3c/csswg-drafts/labels/css-cascade-5]([https://github.com/w3c/csswg-drafts/labels/css-cascade-5])
+- Request for TAG review: [https://github.com/w3ctag/design-reviews/issues/597](https://github.com/w3ctag/design-reviews/issues/597)
+- First Public Working Draft 以前の議論: [https://github.com/w3c/csswg-drafts/issues/4470](https://github.com/w3c/csswg-drafts/issues/4470)
 
 ## まとめ
 
@@ -483,4 +499,4 @@ HTML の`<link>`を用いた sytlesheet の読み込み時に、対象の styles
 - Layer の記法
 - ブラウザエンジンの対応状況および進められている議論
 
-についてまとめた。Cascading の優先度付けに新たな基準が加わるというのは CSS にとって大きな変更であるため、今後も動向を注視したい。
+についてまとめた。Cascading の優先度付けに新たな基準が加わるというのは CSS にとって大きな変更であるため、今後も動向を追っていきたい。

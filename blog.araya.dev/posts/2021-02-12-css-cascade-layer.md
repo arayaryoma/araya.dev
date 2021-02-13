@@ -221,14 +221,14 @@ Specificity が低い`display: flex;`を優先させることができる。
 @layer middle;
 
 @layer bottom {
-  // Specificity: (0,2,0)
+  /* Specificity: (0,2,0) */
   .container.content {
     display: inline-block;
   }
 }
 
 @layer middle {
-  // Specificity: (0,1,0)
+  /* Specificity: (0,1,0) */
   .container {
     display: flex;
   }

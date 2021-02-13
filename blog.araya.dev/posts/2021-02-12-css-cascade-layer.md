@@ -76,7 +76,7 @@ CSS での宣言よりも style 属性のほうが優先されるのはこの取
 
 ## 新たな基準: Layers
 
-前述した Cascading における優先度付の新たな基準として Layers という基準が登場している。
+前述した Cascading における優先度付の新たな基準として Layers という基準が提案されている。
 
 - https://www.w3.org/TR/css-cascade-5/#layering
 
@@ -92,3 +92,149 @@ Layer の登場と合わせ、Cascading のおける優先順位も以下のよ�
 style 属性についての記述が Order of Appearance から切り出され、importance が同等であっても style attribute の値としての宣言のほうが優先されることがわかりやすくなっている。
 
 ## Layer とはなにか
+
+開発者(コンテンツ制作者)が CSS を書くとき、実際に意識する Origin は Author と User-Agent だろう。リアルワールドでブラウザが`!important`つきの宣言をしていることはあまり考えないとすると、
+開発者が意識するのは `!important` の有無、style attribute、Specificity、宣言の出現順 ということになる。
+
+CSS を一度でも書いたことがあれば、なぜか適用されてほしい style が適用されず、調べてみると詳細度や出現順によるものだったという経験がある人も多いだろう。
+
+ここで、Layer という、Specificity よりも優先的に扱われる基準を追加する。
+Layer は開発者が`@layer` rule で明示的に作成することができる。
+
+下記の例では、`bottom`という名前の Layer を作り、style の宣言を`bottom`Layer にあるものとして、宣言している。
+この単独の指定では、Author Origin で最優先される`.container`の`display`プロパティの値は、`inline-block`となる。
+
+```css
+@layer bottom {
+  .container {
+    display: inline-block;
+  }
+}
+// <div class="container"> の display は inline-block
+```
+
+また、selector がなくても、Layer だけを先に作っておいて、あとからその Layer に selector と property, value を宣言することもできる。
+
+```css
+@layer bottom;
+
+@layer bottom {
+  .container {
+    display: inline-block;
+  }
+}
+// <div class="container"> の display は inline-block
+```
+
+### Layer の優先付け
+
+複数の異なる Layer が作られていて、それぞれの Layer の中に同一の宣言があった場合は、後に記述されているものが優先される。
+
+下記の例では、`middle` Layer に宣言されている、`display: flex`が優先される。
+
+```css
+@layer bottom {
+  .container {
+    display: inline-block;
+  }
+}
+
+@layer middle {
+  .container {
+    display: flex;
+  }
+}
+
+// <div class="container"> の display は flex
+```
+
+Layer は、`@layer` によって Layer が宣言された順序で優先度付がされるため、下記の例では`bototm`よりも`middle`のほうが後ろに宣言されていることになり、
+` .container { display: inline-block; }`よりも`.container { display: flex; }`が優先される。
+
+```css
+@layer bottom;
+@layer middle;
+
+@layer middle {
+  .container {
+    display: flex;
+  }
+}
+
+@layer bottom {
+  .container {
+    display: inline-block;
+  }
+}
+
+// <div class="container"> の display は flex
+```
+
+Layer を指定してない宣言は、Layer が指定されている宣言よりも優先される。
+
+```css
+@layer bottom;
+@layer middle;
+
+.container {
+  display: none;
+}
+
+@layer middle {
+  .container {
+    display: flex;
+  }
+}
+
+@layer bottom {
+  .container {
+    display: inline-block;
+  }
+}
+
+// <div class="container"> の display は flex
+```
+
+### Layer と Specificity
+
+下記の、Layer がない単純な指定では、`.container.content`のほうが Specificity が高いため、`display: flex;`が優先される。
+
+```css
+// Specificity: (0,2,0)
+.container.content {
+  display: flex;
+}
+
+// Specificity: (0,1,0)
+.container {
+  display: inline-block;
+}
+
+// <div class="container content"> の displayはflex
+```
+
+ここで、Layer は Specificity よりも優先するものとして扱われるため、下記のように Layer を宣言すると、
+Specificity が低い`display: inline-block`を優先させることができる。
+
+```css
+@layer bottom;
+@layer middle;
+
+@layer bottom {
+  // Specificity: (0,2,0)
+  .container.content {
+    display: flex;
+  }
+}
+
+@layer middle {
+  // Specificity: (0,1,0)
+  .container {
+    display: inline-block;
+  }
+}
+
+// <div class="container content"> の display は inline-block
+```
+
+### Layer のネスト

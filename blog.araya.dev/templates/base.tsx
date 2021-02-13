@@ -71,7 +71,7 @@ export const Base = (props: Props) => {
                   alt="icon image"
                   className="header-icon"
                 />
-                <span className="header-title">Araya's Reservoir</span>
+                <span className="header-title">araya's Reservoir</span>
               </a>
             </div>
           </nav>
@@ -87,7 +87,7 @@ export const Base = (props: Props) => {
                   alt="License is CC-BY"
                   className="footer--license"
                 />
-                <span className="footer--copy-right">&copy; Araya</span>
+                <span className="footer--copy-right">&copy; araya</span>
               </div>
             </div>
           </footer>

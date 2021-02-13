@@ -17,13 +17,13 @@ type FeedOptions = {
 };
 
 const author: Author = {
-  name: "Araya",
-  email: "r1o.ryoma.abe@gmail.com",
+  name: "araya",
+  email: "araya@araya.dev",
 };
 
 const feedOptions: FeedOptions = {
   author,
-  copyright: "Araya",
+  copyright: "araya",
   generator: "null",
   id: "blog.araya.dev",
   language: "ja",

@@ -1,5 +1,5 @@
 ---
-title: CSSのCascadeに追加されようとしているLayerという概念
+title: CSSのCascadingに追加されようとしているLayerという概念
 tags:
   - browser
   - css
@@ -12,14 +12,14 @@ CSS Cascading and Inheritance はその名の通り、CSS の Cascade や継承�
 
 - [https://www.w3.org/blog/news/archives/8921](CSS Cascading and Inheritance Level 3 is a W3C Recommendation)
 
-そして、新たに First Public Working Draft が公開された Level5 では、今までの Cascade に、新たに**Layer**という概念の導入が検討されている。
+そして、新たに First Public Working Draft が公開された Level5 では、今までの Cascading に、新たに**Layer**という概念の導入が検討されている。
 
 本記事では今までの Cascading 処理についておさらいし、Layer とはどういったものかをまとめる。
 なお、この記事で触れている内容については 2021 年 2 月現在策定が始まったばかりのものも多く含むため、将来的に大きく変更される可能性がある。
 
 ## Cascade に影響する要素
 
-CSS の Cascade 処理では、下記の 4 つの基準で優先度が決められる。
+CSS の Cascading では、下記の 4 つの基準で優先度が決められる。
 
 1. Origin and Importance
 2. Context

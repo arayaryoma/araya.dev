@@ -10,7 +10,7 @@ date: "2021-02-13 00:00:00 +0900"
 2021 年 1 月に [CSS Cascading and Inheritance Level 5 の First Public Working Draft](https://www.w3.org/TR/css-cascade-5/) が公開された。
 CSS Cascading and Inheritance はその名の通り、CSS の Cascade や継承などについての仕様を定義しているもので、つい先日 Level3 が晴れて W3C Recoomendation となった。
 
-- [https://www.w3.org/blog/news/archives/8921](CSS Cascading and Inheritance Level 3 is a W3C Recommendation)
+- [CSS Cascading and Inheritance Level 3 is a W3C Recommendation](https://www.w3.org/blog/news/archives/8921)
 
 そして、新たに First Public Working Draft が公開された Level5 では、今までの Cascading に、新たに**Layer**という概念の導入が検討されている。
 
@@ -488,7 +488,7 @@ HTML の`<link>`を用いた sytlesheet の読み込み時に、対象の styles
 ## 関連資料
 
 - Explainer: [https://github.com/oddbird/css-sandbox/blob/main/src/layers/explainer.md](https://github.com/oddbird/css-sandbox/blob/main/src/layers/explainer.md)
-- Issues: [https://github.com/w3c/csswg-drafts/labels/css-cascade-5]([https://github.com/w3c/csswg-drafts/labels/css-cascade-5])
+- Issues: [https://github.com/w3c/csswg-drafts/labels/css-cascade-5](https://github.com/w3c/csswg-drafts/labels/css-cascade-5)
 - Request for TAG review: [https://github.com/w3ctag/design-reviews/issues/597](https://github.com/w3ctag/design-reviews/issues/597)
 - First Public Working Draft 以前の議論: [https://github.com/w3c/csswg-drafts/issues/4470](https://github.com/w3c/csswg-drafts/issues/4470)
 

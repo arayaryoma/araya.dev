@@ -202,15 +202,15 @@ Layer を指定してない宣言は、Layer が指定されている宣言よ�
 ```css
 // Specificity: (0,2,0)
 .container.content {
-  display: flex;
+  display: inline-block;
 }
 
 // Specificity: (0,1,0)
 .container {
-  display: inline-block;
+  display: flex;
 }
 
-// <div class="container content"> の displayはflex
+// <div class="container content"> の display は inline-block
 ```
 
 ここで、Layer は Specificity よりも優先するものとして扱われるため、下記のように Layer を宣言すると、
@@ -223,18 +223,132 @@ Specificity が低い`display: inline-block`を優先させることができる
 @layer bottom {
   // Specificity: (0,2,0)
   .container.content {
-    display: flex;
+    display: inline-block;
   }
 }
 
 @layer middle {
   // Specificity: (0,1,0)
   .container {
+    display: flex;
+  }
+}
+
+// <div class="container content"> の display は flex
+```
+
+### Layer のネスト
+
+Layer はネストして作ることができる。
+ネストされた Layer の名前空間は親の Layer の名前空間のスコープとなるため、ネストされた Layer 内の宣言は、外の Layer には影響を与えない。
+下記の宣言では、layer の出現順は
+
+1. bottom
+2. bottom first
+3. middle
+
+となるため、`.container`の`display`プロパティで優先される宣言は、`display: flex;`となる。
+
+```css
+@layer bottom {
+  @layer first {
+    .container {
+      display: inline-block;
+    }
+  }
+}
+
+@layer middle {
+  .container {
+    display: flex;
+  }
+}
+
+// <div class="container content"> の display は flex
+```
+
+ネストされた Layer を、親 Layer の外から参照することもできる。
+
+その場合は、Layer の階層間に`.`をつけ、JavaScript の property access のように書く。
+
+下記の例では、`bottom`Layer 内の`first`Layer で、 `.container { display: block; background-color: red; }` を宣言していることになる。
+
+```css
+@layer bottom {
+  @layer first {
+    .container {
+      display: inline-block;
+    }
+  }
+}
+
+@layer bottom.first {
+  .continaer {
+    background-color: red;
+  }
+}
+```
+
+また、この例は省略して 1 つにまとめることができる。下記の例では、`bottom` Layer, `bottom`内の`first` Layer を一度に宣言している。
+
+```css
+@layer bottom.first {
+  .container {
+    display: inline-block;
+    background-color: red;
+  }
+}
+```
+
+Layer の宣言を少し複雑にして、次の例を考えてみる。
+
+```css
+@layer bottom {
+  .container {
+    display: none;
+  }
+}
+
+@layer middle.first {
+  .container.content {
     display: inline-block;
   }
 }
 
-// <div class="container content"> の display は inline-block
+@layer middle {
+  @layer first {
+    .container {
+      display: block;
+    }
+  }
+  @layer second {
+    .container {
+      display: flex;
+    }
+  }
+}
+
+@layer bottom.first {
+  .container.content {
+    display: inline;
+  }
+}
 ```
 
-### Layer のネスト
+一見しただけでは分かりづらいが、Layer の宣言順は下記の順番であるとみなされる。
+
+1. bottom
+2. bottom first
+3. middle
+4. middle first
+5. middle second
+
+結果として、Specificity も踏まえた優先順は降順に、
+
+1. `display: flex;`
+2. `display: inline-block;`
+3. `display: block;`
+4. `display: inline;`
+5. `display: none;`
+
+となる。

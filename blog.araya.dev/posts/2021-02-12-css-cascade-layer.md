@@ -110,7 +110,7 @@ Layer は開発者が`@layer` rule で明示的に作成することができる
     display: inline-block;
   }
 }
-// <div class="container"> の display は inline-block
+/* <div class="container"> の display は inline-block */
 ```
 
 また、selector がなくても、Layer だけを先に作っておいて、あとからその Layer に selector と property, value を宣言することもできる。
@@ -123,7 +123,7 @@ Layer は開発者が`@layer` rule で明示的に作成することができる
     display: inline-block;
   }
 }
-// <div class="container"> の display は inline-block
+/* <div class="container"> の display は inline-block */
 ```
 
 ### Layer の優先度け
@@ -145,7 +145,7 @@ Layer は開発者が`@layer` rule で明示的に作成することができる
   }
 }
 
-// <div class="container"> の display は flex
+/* <div class="container"> の display は flex */
 ```
 
 Layer は、`@layer` によって Layer が宣言された順序で優先度付がされるため、下記の例では`bototm`よりも`middle`のほうが後ろに宣言されていることになり、
@@ -167,7 +167,7 @@ Layer は、`@layer` によって Layer が宣言された順序で優先度付�
   }
 }
 
-// <div class="container"> の display は flex
+/* <div class="container"> の display は flex */
 ```
 
 Layer を指定してない宣言は、Layer が指定されている宣言よりも優先される。
@@ -192,7 +192,7 @@ Layer を指定してない宣言は、Layer が指定されている宣言よ�
   }
 }
 
-// <div class="container"> の display は flex
+/* <div class="container"> の display は flex */
 ```
 
 ### Layer と Specificity
@@ -200,17 +200,17 @@ Layer を指定してない宣言は、Layer が指定されている宣言よ�
 下記の例で Layer がない単純な指定では、`.container.content`のほうが Specificity が高いため、`display: inline-block;`が優先される。
 
 ```css
-// Specificity: (0,2,0)
+/* Specificity: (0,2,0) */
 .container.content {
   display: inline-block;
 }
 
-// Specificity: (0,1,0)
+/* Specificity: (0,1,0) */
 .container {
   display: flex;
 }
 
-// <div class="container content"> の display は inline-block
+/* <div class="container content"> の display は inline-block */
 ```
 
 ここで、Layer は Specificity よりも優先するものとして扱われるため、下記のように Layer を宣言すると、
@@ -234,7 +234,7 @@ Specificity が低い`display: flex;`を優先させることができる。
   }
 }
 
-// <div class="container content"> の display は flex
+/* <div class="container content"> の display は flex */
 ```
 
 ### Layer のネスト
@@ -264,7 +264,7 @@ Layer はネストして作ることができる。
   }
 }
 
-// <div class="container content"> の display は flex
+/* <div class="container content"> の display は flex */
 ```
 
 ネストされた Layer を、親 Layer の外から参照することもできる。
@@ -375,12 +375,12 @@ CSS では、 `@import`を使って、外部の stylesheet を import するこ�
 Layer を用いることで Specificity より先に Layer による優先度をさせることができる。
 
 ```css
-// my-theme.css
+/* my-theme.css */
 .button {
   background-color: blue;
 }
 
-// main.css
+/* main.css */
 @layer default, theme;
 
 @layer theme url("my-theme.css");
@@ -391,20 +391,20 @@ Layer を用いることで Specificity より先に Layer による優先度を
   }
 }
 
-// <button class="button"> の background-color は black;
+/* <button class="button"> の background-color は black; */
 ```
 
 上記の例で my-theme.css に Layer が作られていた場合、ネストされた Layer として、main.css から my-theme.css 内の Layer を参照することができる。
 
 ```css
-// my-theme.css
+/* my-theme.css */
 @layer dark {
   .button {
     background-color: blue;
   }
 }
 
-// main.css
+/* main.css */
 @layer theme url("my-theme.css");
 
 @layer theme.dark {
@@ -413,7 +413,7 @@ Layer を用いることで Specificity より先に Layer による優先度を
   }
 }
 
-// <button class="button"> の background-color は white;
+/* <button class="button"> の background-color は white; */
 ```
 
 HTML の`<link>`を用いた sytlesheet の読み込み時に、対象の stylesheet 全体を layer に含められるか否かについては現在議論されている。
@@ -438,7 +438,7 @@ HTML の`<link>`を用いた sytlesheet の読み込み時に、対象の styles
 ネストされている Layer のネスト構造の途中に無名 Layer があった場合、その内部の Layer には外から参照することができなくなる。
 
 ```css
-// button.css
+/* button.css */
 @layer default {
   button.button {
     background-color: balck;
@@ -446,18 +446,18 @@ HTML の`<link>`を用いた sytlesheet の読み込み時に、対象の styles
   }
 }
 
-// dark.css
+/* dark.css */
 @layer url("button.css");
 @layer url("nav.css");
 
-// theme.css
+/* theme.css */
 @layer dark url("dark.css");
 
-// main.css
+/* main.css */
 @layer theme url("theme.css");
-// button.cssのなかで宣言されている "default" Layer は参照できない
+/* button.cssのなかで宣言されている "default" Layer は参照できない */
 
-// button.button の background-color に優先度付けで勝つためには新たなLayerを作る必要がある。
+/* button.button の background-color に優先度付けで勝つためには新たなLayerを作る必要がある。 */
 @layer override-button {
   button.button {
     background-color: white;

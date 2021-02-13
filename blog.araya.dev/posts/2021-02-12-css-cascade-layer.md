@@ -17,7 +17,7 @@ CSS Cascading and Inheritance はその名の通り、CSS の Cascade や継承�
 本記事では今までの Cascading 処理についておさらいし、Layer とはどういったものかをまとめる。
 なお、この記事で触れている内容については 2021 年 2 月現在策定が始まったばかりのものも多く含むため、将来的に大きく変更される可能性がある。
 
-## Cascade に影響する要素
+## Cascading における優先度付けの基準
 
 CSS の Cascading では、下記の 4 つの基準で優先度が決められる。
 
@@ -26,7 +26,7 @@ CSS の Cascading では、下記の 4 つの基準で優先度が決められ�
 3. Specificity
 4. Order of Appearance
 
-本記事ではおさらいとしてこれら 4 つについて簡単に述べるが、詳細について知りたい場合は [Level4 の Editor's Draft](https://drafts.csswg.org/css-cascade/#cascading)を読んだほうがいい。
+本記事ではおさらいとしてこれら 4 つについて簡単に述べるが、詳細について知りたい場合は [Level4 の Editor's Draft](https://drafts.csswg.org/css-cascade/#cascading)を参照してほしい。
 
 ### 1. Origin and Importance
 
@@ -39,7 +39,7 @@ Cascading において、Origin とは style の宣言(declaration)がどこで�
 Importance は property と value の宣言に `!important` が指定されているか否かを表す。
 `!important` が指定されている宣言は `important`、指定されていないものは`normal`として扱われる。
 
-この Origin と Importance を組み合わせて、下記の順序で Origin / Importance の中での優先付がされる。
+この Origin と Importance を組み合わせて、下記の順序で Origin / Importance の中での優先度付けがされる。
 
 1. transition
 2. `!important` が指定されている UA による宣言
@@ -58,7 +58,7 @@ DOM における Shadow DOM のようなカプセル化された環境につい�
 - important: 内側の context の宣言が勝つ
 - normal:外側の context の宣言が勝つ
 
-という優先度付がされる。
+という優先度付けがされる。
 
 ### 3. Specificity
 
@@ -467,3 +467,20 @@ HTML の`<link>`を用いた sytlesheet の読み込み時に、対象の styles
 ```
 
 これにより、テーマ内の特定の宣言 A については、テーマを使う側から書き換えることができるが、別の宣言 B は新たに Layer を定義しないと書き換えることができない、ということが可能になる。
+
+## 各ブラウザエンジンの実装状況
+
+### Blink
+
+### Gecko
+
+### Webkit
+
+## まとめ
+
+- Cascading における新たな基準: Layers
+- Layer の概説
+- Layer の記法
+- ブラウザエンジンの対応状況および進められている議論
+
+についてまとめた。Cascading の優先度付けに新たな基準が加わるというのは CSS にとって大きな変更であるため、今後も動向を注視したい。

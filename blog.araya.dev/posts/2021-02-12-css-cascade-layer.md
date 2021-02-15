@@ -113,7 +113,7 @@ Layer は開発者が`@layer` rule で明示的に作成することができる
 /* <div class="container"> の display は inline-block */
 ```
 
-また、selector がなくても、Layer だけを先に作っておいて、あとからその Layer に selector と property, value を宣言することもできる。
+また、selector がなくても、Layer だけを先に作っておいてあとからその Layer に selector と property, value を宣言することもできる。
 
 ```css
 @layer bottom;
@@ -128,9 +128,9 @@ Layer は開発者が`@layer` rule で明示的に作成することができる
 
 ### Layer の優先度け
 
-複数の異なる Layer が作られていて、それぞれの Layer の中に同一の宣言があった場合は、後に記述されているものが優先される。
+複数の異なる Layer が作られていてそれぞれの Layer の中に同一の宣言があった場合は、後に記述されているものが優先される。
 
-下記の例では、`middle` Layer に宣言されている、`display: flex`が優先される。
+下記の例では、`middle` Layer に宣言されている`display: flex`が優先される。
 
 ```css
 @layer bottom {

@@ -192,7 +192,7 @@ Layer を指定してない宣言は、Layer が指定されている宣言よ�
   }
 }
 
-/* <div class="container"> の display は flex */
+/* <div class="container"> の display は none */
 ```
 
 ### Layer と Specificity

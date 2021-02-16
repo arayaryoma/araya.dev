@@ -107,3 +107,7 @@ td {
     background-color: var(--black);
   }
 }
+
+.markdown .small {
+  font-size: 0.65em;
+}

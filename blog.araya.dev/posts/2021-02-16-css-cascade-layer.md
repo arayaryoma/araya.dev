@@ -195,6 +195,8 @@ Layer を指定してない宣言は、Layer が指定されている宣言よ�
 /* <div class="container"> の display は none */
 ```
 
+<span class="small"> \* 結果を示すコメントに間違いがあり[修正](https://github.com/arayaryoma/araya.dev/commit/e88cc89752e04f89e42d03eb9e22e1f931086998)しました。 [@laco2net](https://twitter.com/laco2net) さんありがとうございます！</span class="small">
+
 ### Layer と Specificity
 
 下記の例で Layer がない単純な指定では、`.container.content`のほうが Specificity が高いため、`display: inline-block;`が優先される。

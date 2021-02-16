@@ -8,7 +8,7 @@ date: "2021-02-16 00:53:00 +0900"
 ---
 
 2021 年 1 月に [CSS Cascading and Inheritance Level 5 の First Public Working Draft](https://www.w3.org/TR/css-cascade-5/) が公開された。
-CSS Cascading and Inheritance はその名の通り、CSS の Cascade や継承などについての仕様を定義しているもので、つい先日 Level3 が晴れて W3C Recoomendation となった。
+CSS Cascading and Inheritance はその名の通り、CSS の Cascade や継承などについての仕様を定義しているもので、つい先日 Level3 が晴れて W3C Recommendation となった。
 
 - [CSS Cascading and Inheritance Level 3 is a W3C Recommendation](https://www.w3.org/blog/news/archives/8921)
 
@@ -43,7 +43,7 @@ Importance は property と value の宣言に `!important` が指定されて�
 
 1. transition
 2. `!important` が指定されている UA による宣言
-3. `!important` が指定されている Uer による宣言
+3. `!important` が指定されている User による宣言
 4. `!important` が指定されている Author による宣言
 5. animation
 6. Author による宣言
@@ -192,7 +192,7 @@ Layer を指定してない宣言は、Layer が指定されている宣言よ�
   }
 }
 
-/* <div class="container"> の display は flex */
+/* <div class="container"> の display は none */
 ```
 
 ### Layer と Specificity
@@ -283,7 +283,7 @@ Layer はネストして作ることができる。
 }
 
 @layer bottom.first {
-  .continaer {
+  .container {
     background-color: red;
   }
 }
@@ -386,7 +386,7 @@ Layer を用いることで Specificity より先に Layer による優先度を
 @layer theme url("my-theme.css");
 
 @layer default {
-  button {
+  .button {
     background-color: black;
   }
 }
@@ -441,7 +441,7 @@ HTML の`<link>`を用いた sytlesheet の読み込み時に、対象の styles
 /* button.css */
 @layer default {
   button.button {
-    background-color: balck;
+    background-color: black;
     color: white;
   }
 }

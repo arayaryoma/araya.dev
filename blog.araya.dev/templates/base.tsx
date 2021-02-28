@@ -1,4 +1,5 @@
 import { React } from "../deps.ts";
+import { ColorSchemeToggleButton } from "./color-scheme-toggle/index.tsx";
 
 const gaScriptContent = `window.dataLayer = window.dataLayer || [];
 function gtag() {
@@ -75,6 +76,7 @@ export const Base = (props: Props) => {
               </a>
             </div>
           </nav>
+          <ColorSchemeToggleButton />
           <div className="content">{props.children}</div>
           <footer className="footer">
             <div className="container">

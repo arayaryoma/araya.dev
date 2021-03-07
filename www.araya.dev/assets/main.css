@@ -1,0 +1,12 @@
+.images {
+  display: flex;
+}
+.item {
+  width: 400px;
+  padding: 16px;
+}
+
+.item img {
+  width: 100%;
+  height: 100%;
+}

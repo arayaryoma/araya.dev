@@ -19,6 +19,7 @@ import { contentHash } from "./hash.ts";
 import { path } from "./path.ts";
 import { Home, meta as homeMeta } from "../pages/home.tsx";
 import { generateFeed } from "./feed-generator.ts";
+import { getLog } from "./git.ts";
 
 declare global {
   namespace JSX {
@@ -63,6 +64,8 @@ const getPosts = async (): Promise<Posts> => {
     const { fileName, date } = parseFileName(dirEntry.name);
     const content = await readFileContent(`${postsDir}/${dirEntry.name}`);
 
+    const changeLogs = await getLog(`${postsDir}/${dirEntry.name}`);
+
     const parsed = Marked.parse(decoder.decode(content));
 
     const { title } = parsed.meta;
@@ -74,6 +77,7 @@ const getPosts = async (): Promise<Posts> => {
       url: `posts/${date}/${fileName}.html`,
       ampUrl: `posts/${date}/${fileName}.amp.html`,
       canonicalUrl: `https://blog.araya.dev/posts/${date}/${fileName}.html`,
+      changeLogs,
     };
     posts.push(post);
   }
@@ -141,7 +145,11 @@ const buildPostPages = async ({ scripts, styles, images }: Subresources) => {
         title={post.title}
         scripts={[{ src: "/js/post.js", module: true }]}
       >
-        <PostComponent title={post.title} date={post.date}>
+        <PostComponent
+          title={post.title}
+          date={post.date}
+          changeLogs={post.changeLogs}
+        >
           <div dangerouslySetInnerHTML={{ __html: post.content }} />
         </PostComponent>
       </Base>

@@ -1,6 +1,16 @@
 import { React } from "../deps.ts";
+import { GitLog } from "../build/types/index.d.ts";
 
-export const Post = (props: any) => {
+const repo = "https://github.com/arayaryoma/araya.dev";
+
+interface Props {
+  changeLogs: GitLog[];
+  title?: string;
+  date?: string;
+  children?: any;
+}
+
+export const Post = (props: Props) => {
   return (
     <>
       <nav className="container">
@@ -19,6 +29,20 @@ export const Post = (props: any) => {
         <main className="post--main">
           <div className="post--content markdown">{props.children}</div>
         </main>
+        <footer>
+          <details>
+            <summary>変更履歴</summary>
+            {props.changeLogs &&
+              props.changeLogs.map((history) => (
+                <p>
+                  <a href={`${repo}/commit/${history.hash}`}>
+                    <code>{history.hash.slice(0, 8)}</code>
+                  </a>
+                  <span>{history.message}</span>
+                </p>
+              ))}
+          </details>
+        </footer>
       </article>
     </>
   );

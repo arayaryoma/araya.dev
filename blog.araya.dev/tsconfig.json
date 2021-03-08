@@ -4,6 +4,7 @@
     "module": "commonjs",
     "strict": true,
     "typeRoots": ["./node_modules/@types/", "./build/types/"],
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "jsx": "react"
   }
 }

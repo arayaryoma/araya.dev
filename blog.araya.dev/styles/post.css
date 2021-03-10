@@ -60,6 +60,13 @@
   overflow: scroll;
 }
 
+.post__changelog {
+}
+
+.post__changelog a {
+  color: var(--eyes-blue);
+}
+
 @media screen and (max-width: 767px) {
   .post-header {
     font-size: 2rem;

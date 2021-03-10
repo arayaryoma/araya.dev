@@ -29,8 +29,8 @@ export const Post = (props: Props) => {
         <main className="post--main">
           <div className="post--content markdown">{props.children}</div>
         </main>
-        <footer>
-          <details>
+        <footer className="post__footer">
+          <details className="post__changelog">
             <summary>変更履歴</summary>
             {props.changeLogs &&
               props.changeLogs.map((history) => (

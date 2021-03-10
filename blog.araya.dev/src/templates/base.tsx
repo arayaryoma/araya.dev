@@ -9,6 +9,14 @@ gtag('js', new Date());
 gtag('config', 'UA-104175258-3');
 `;
 
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      [key: string]: any;
+    }
+  }
+}
+
 export type StyleSheet = {
   href: string;
   rel?: "preconnect" | "prefetch";
@@ -76,7 +84,7 @@ export const Base = (props: Props) => {
               </a>
             </div>
           </nav>
-          <ColorSchemeToggleButton />
+          {/* <ColorSchemeToggleButton /> */}
           <div className="content">{props.children}</div>
           <footer className="footer">
             <div className="container">

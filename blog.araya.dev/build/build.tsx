@@ -150,7 +150,7 @@ const buildPostPages = async ({ scripts, styles, images }: Subresources) => {
   }
 };
 
-const buildPages = async ({ styles, images }: Subresources) => {
+const buildPages = async ({ styles, images, scripts }: Subresources) => {
   const posts = (await getPosts()).sort((a, b) => (a.date < b.date ? 1 : -1));
   const encorder = new TextEncoder();
   const outputFilePath = `${distDir}/index.html`;
@@ -182,15 +182,19 @@ const buildPages = async ({ styles, images }: Subresources) => {
   await writeFile(outputFilePath, encorder.encode(replace(html)));
 };
 
-const [styles, scripts, images] = await Promise.all([
-  buildAssets(`${srcRoot}/styles`),
-  buildAssets(`${srcRoot}/js`),
-  buildAssets(`${srcRoot}/assets`),
-]);
+export async function build() {
+  const [styles, scripts, images] = await Promise.all([
+    buildAssets(`${srcRoot}/styles`),
+    buildAssets(`${srcRoot}/js`),
+    buildAssets(`${srcRoot}/assets`),
+  ]);
 
-await Promise.all([
-  buildPages({ scripts, images, styles }),
-  buildPostPages({ scripts, images, styles }),
-]);
+  await Promise.all([
+    buildPages({ scripts, images, styles }),
+    buildPostPages({ scripts, images, styles }),
+  ]);
 
-await generateFeed(await getPosts(), distDir);
+  await generateFeed(await getPosts(), distDir);
+}
+
+await build();

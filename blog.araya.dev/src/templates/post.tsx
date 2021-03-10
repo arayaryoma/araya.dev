@@ -27,24 +27,25 @@ export const Post = (props: Props) => {
           <h1 className="post-header--title">{props.title}</h1>
         </header>
         <main className="post--main">
-          <div className="post--content markdown">{props.children}</div>
+          <div className="post--content markdown">
+            {props.children}
+            <details className="post__changelog">
+              <summary>変更履歴</summary>
+              {props.changeLogs &&
+                props.changeLogs.map((history) => (
+                  <p>
+                    <a href={`${repo}/commit/${history.hash}`}>
+                      <code>{history.hash.slice(0, 8)}</code>
+                    </a>
+                    <span className="post__changelog-message">
+                      {history.message}
+                    </span>
+                  </p>
+                ))}
+            </details>
+          </div>
         </main>
-        <footer className="post__footer">
-          <details className="post__changelog">
-            <summary>変更履歴</summary>
-            {props.changeLogs &&
-              props.changeLogs.map((history) => (
-                <p>
-                  <a href={`${repo}/commit/${history.hash}`}>
-                    <code>{history.hash.slice(0, 8)}</code>
-                  </a>
-                  <span className="post__changelog-message">
-                    {history.message}
-                  </span>
-                </p>
-              ))}
-          </details>
-        </footer>
+        <footer className="post__footer"></footer>
       </article>
     </>
   );

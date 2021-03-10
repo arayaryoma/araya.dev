@@ -23,7 +23,7 @@
   line-height: 1.5em;
   padding: 30px 0;
   width: 100%;
-  background: var(--gray-light-5);
+  background: var(--gray-light-4);
   display: grid;
   grid-column-gap: var(--grid-column-gap);
   grid-template-columns: var(--grid-template-columns);
@@ -49,7 +49,6 @@
   grid-column-gap: var(--grid-column-gap);
   grid-template-columns: var(--grid-template-columns);
   background: var(--gray-light-5);
-  /* margin-top: 24px; */
   padding: 30px 0;
 }
 

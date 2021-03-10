@@ -21,14 +21,6 @@ import { Home, meta as homeMeta } from "../src/pages/home.tsx";
 import { generateFeed } from "./feed-generator.ts";
 import { getLog } from "./git.ts";
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      [key: string]: any;
-    }
-  }
-}
-
 const distDir = `${CWD}/dist`;
 const srcRoot = `${CWD}/src`;
 const ouputAsetsDir = `assets`;

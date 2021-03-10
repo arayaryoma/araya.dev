@@ -38,7 +38,9 @@ export const Post = (props: Props) => {
                   <a href={`${repo}/commit/${history.hash}`}>
                     <code>{history.hash.slice(0, 8)}</code>
                   </a>
-                  <span>{history.message}</span>
+                  <span className="post__changelog-message">
+                    {history.message}
+                  </span>
                 </p>
               ))}
           </details>

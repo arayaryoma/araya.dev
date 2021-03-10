@@ -67,6 +67,10 @@
   color: var(--eyes-blue);
 }
 
+.post__changelog-message {
+  margin-inline-start: 1em;
+}
+
 @media screen and (max-width: 767px) {
   .post-header {
     font-size: 2rem;

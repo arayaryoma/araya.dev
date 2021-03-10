@@ -1,5 +1,5 @@
-import { React } from "../deps.ts";
-import { GitLog } from "../build/types/index.d.ts";
+import { React } from "../../deps.ts";
+import { GitLog } from "../../build/types/index.d.ts";
 
 const repo = "https://github.com/arayaryoma/araya.dev";
 

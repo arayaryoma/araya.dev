@@ -3,8 +3,8 @@ import { Post } from "./types/index.d.ts";
 import React from "https://dev.jspm.io/react";
 import { ReactDOMServer } from "../deps.ts";
 
-import { Base, StyleSheet } from "../templates/base.tsx";
-import { Post as PostComponent } from "../templates/post.tsx";
+import { Base, StyleSheet } from "../src/templates/base.tsx";
+import { Post as PostComponent } from "../src/templates/post.tsx";
 import {
   copyFile,
   CWD,
@@ -17,7 +17,7 @@ import {
 } from "./io.ts";
 import { contentHash } from "./hash.ts";
 import { path } from "./path.ts";
-import { Home, meta as homeMeta } from "../pages/home.tsx";
+import { Home, meta as homeMeta } from "../src/pages/home.tsx";
 import { generateFeed } from "./feed-generator.ts";
 import { getLog } from "./git.ts";
 
@@ -30,6 +30,7 @@ declare global {
 }
 
 const distDir = `${CWD}/dist`;
+const srcRoot = `${CWD}/src`;
 const ouputAsetsDir = `assets`;
 
 await ensureDir(distDir);
@@ -57,7 +58,7 @@ const parseFileName = (fileName: string): ParseFileNameResult => {
 };
 
 const getPosts = async (): Promise<Posts> => {
-  const postsDir = `${CWD}/posts`;
+  const postsDir = `${srcRoot}/posts`;
   const decoder = new TextDecoder("utf-8");
   const posts: Posts = [];
   for await (const dirEntry of readDir(postsDir)) {
@@ -85,18 +86,17 @@ const getPosts = async (): Promise<Posts> => {
 };
 
 const buildAssets = async (srcDir: string): Promise<Map<string, string>> => {
-  // const srcDir = `${CWD}/js`;
   const map = new Map();
 
   for (const file of await recursiveReaddir(srcDir)) {
     const ext = path.extname(file);
     const out = `${distDir}${file
-      .replace(CWD, "")
+      .replace(srcRoot, "")
       .replace(ext, "")}-${contentHash(
       (await readFileContent(file)).toString()
     )}${ext}`;
     await ensureFile(out);
-    map.set(file.replace(CWD, ""), out.replace(distDir, ""));
+    map.set(file.replace(srcRoot, ""), out.replace(distDir, ""));
     try {
       await copyFile(file, out);
     } catch (e) {
@@ -191,9 +191,9 @@ const buildPages = async ({ styles, images }: Subresources) => {
 };
 
 const [styles, scripts, images] = await Promise.all([
-  buildAssets(`${CWD}/styles`),
-  buildAssets(`${CWD}/js`),
-  buildAssets(`${CWD}/assets`),
+  buildAssets(`${srcRoot}/styles`),
+  buildAssets(`${srcRoot}/js`),
+  buildAssets(`${srcRoot}/assets`),
 ]);
 
 await Promise.all([

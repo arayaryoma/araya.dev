@@ -1,4 +1,4 @@
-import { React } from "../deps.ts";
+import { React } from "../../deps.ts";
 import { ColorSchemeToggleButton } from "./color-scheme-toggle/index.tsx";
 
 const gaScriptContent = `window.dataLayer = window.dataLayer || [];

@@ -1,4 +1,4 @@
-import { React } from "../../../deps.ts";
+import { h } from "../../../deps.ts";
 
 export const ColorSchemeToggleButton = () => {
   return (

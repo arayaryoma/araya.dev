@@ -1,4 +1,4 @@
-import { createHash } from "https://deno.land/std@0.86.0/hash/mod.ts";
+import { createHash } from "../deps.ts";
 
 export const contentHash = (content: string) => {
   const hash = createHash("md5");

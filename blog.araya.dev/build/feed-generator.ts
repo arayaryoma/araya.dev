@@ -1,4 +1,4 @@
-import { Feed } from "https://cdn.skypack.dev/feed";
+import { Feed } from "../deps.ts";
 import { writeFile } from "./io.ts";
 
 type Author = {
@@ -50,5 +50,8 @@ export const generateFeed = async (
       title: post.title,
     });
   });
-  return await writeFile(`${distDir}/feed.xml`, encorder.encode(feed.atom1()));
+  return await writeFile(
+    `${distDir}/feed.xml`,
+    encorder.encode(feed.atom1() as string)
+  );
 };

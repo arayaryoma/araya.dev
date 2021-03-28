@@ -1,5 +1,5 @@
 export { ensureDir, ensureFile } from "https://deno.land/std@0.83.0/fs/mod.ts";
-export { recursiveReaddir } from "https://deno.land/x/recursive_readdir/mod.ts";
+export { recursiveReaddir } from "../deps.ts";
 
 export const CWD = Deno.cwd();
 

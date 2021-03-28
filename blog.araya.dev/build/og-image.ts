@@ -1,7 +1,5 @@
-import Canvas, {
-  CanvasRenderingContext2D,
-  dataURLtoFile,
-} from "https://deno.land/x/canvas@v.1.0.5/mod.ts";
+import { Canvas } from "../deps.ts";
+
 import { writeFile } from "./io.ts";
 
 const canvas = Canvas.MakeCanvas(200, 200);

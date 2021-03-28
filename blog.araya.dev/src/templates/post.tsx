@@ -1,4 +1,4 @@
-import { React } from "../../deps.ts";
+import { h } from "../../deps.ts";
 import { GitLog } from "../../build/types/index.d.ts";
 
 const repo = "https://github.com/arayaryoma/araya.dev";
@@ -12,7 +12,7 @@ interface Props {
 
 export const Post = (props: Props) => {
   return (
-    <>
+    <div>
       <nav className="container">
         <ul className="post__breadcrumb">
           <li className="post__breadcrumb-item">
@@ -47,6 +47,6 @@ export const Post = (props: Props) => {
         </main>
         <footer className="post__footer"></footer>
       </article>
-    </>
+    </div>
   );
 };

@@ -1,6 +1,6 @@
 .PHONY:	build
 build:
-	rm -rf dist && deno run --allow-run --allow-read --allow-write --unstable build/build.tsx
+	rm -rf dist && deno run --config ./tsconfig.json --log-level info --allow-run --allow-read --allow-write --unstable build/build.tsx
 
 .PHONY:	watch
 watch:

@@ -1,8 +1,5 @@
-import { Marked } from "https://deno.land/x/markdown@v2.0.0/mod.ts";
+import { h, renderSSR, Marked } from "../deps.ts";
 import { Post } from "./types/index.d.ts";
-import React from "https://dev.jspm.io/react";
-import { ReactDOMServer } from "../deps.ts";
-
 import { Base, StyleSheet } from "../src/templates/base.tsx";
 import { Post as PostComponent } from "../src/templates/post.tsx";
 import {
@@ -20,6 +17,8 @@ import { path } from "./path.ts";
 import { Home, meta as homeMeta } from "../src/pages/home.tsx";
 import { generateFeed } from "./feed-generator.ts";
 import { getLog } from "./git.ts";
+
+console.log("build start");
 
 const distDir = `${CWD}/dist`;
 const srcRoot = `${CWD}/src`;
@@ -131,7 +130,7 @@ const buildPostPages = async ({ scripts, styles, images }: Subresources) => {
   for (const post of posts) {
     const outputFilePath = `${distDir}/${post.url}`;
     await ensureFile(outputFilePath);
-    const html = ReactDOMServer.renderToString(
+    const html = renderSSR(
       <Base
         styles={stylesheets}
         title={post.title}
@@ -168,7 +167,7 @@ const buildPages = async ({ styles, images, scripts }: Subresources) => {
     }
     return replaced;
   };
-  const html = ReactDOMServer.renderToString(
+  const html = renderSSR(
     <Base
       styles={[...defaultStyleSheets, ...homeMeta.styles].map((styleName) => ({
         href: `/styles/${styleName}`,
@@ -188,11 +187,14 @@ export async function build() {
     buildAssets(`${srcRoot}/js`),
     buildAssets(`${srcRoot}/assets`),
   ]);
+  console.log("completed to build assets");
 
   await Promise.all([
     buildPages({ scripts, images, styles }),
     buildPostPages({ scripts, images, styles }),
   ]);
+
+  console.log("completed to build pages");
 
   await generateFeed(await getPosts(), distDir);
 }

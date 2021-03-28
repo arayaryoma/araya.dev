@@ -1,4 +1,4 @@
-import { React } from "../../deps.ts";
+import { h } from "../../deps.ts";
 import { ColorSchemeToggleButton } from "./color-scheme-toggle/index.tsx";
 
 const gaScriptContent = `window.dataLayer = window.dataLayer || [];
@@ -8,14 +8,6 @@ function gtag() {
 gtag('js', new Date());
 gtag('config', 'UA-104175258-3');
 `;
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      [key: string]: any;
-    }
-  }
-}
 
 export type StyleSheet = {
   href: string;

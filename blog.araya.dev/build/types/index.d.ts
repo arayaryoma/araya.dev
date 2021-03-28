@@ -20,11 +20,3 @@ type Post = {
   changeLogs: Array<GitLog>;
 };
 type Posts = Post[];
-
-declare module "https://dev.jspm.io/react-dom/server" {
-  const ReactDOMServer: {
-    renderToString: (node: unknown) => string;
-  };
-
-  export default ReactDOMServer;
-}

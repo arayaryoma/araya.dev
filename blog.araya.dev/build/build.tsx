@@ -11,7 +11,7 @@ import {
   readFileContent,
   recursiveReaddir,
   writeFile,
-} from "./io.ts";
+} from "./io";
 import { contentHash } from "./hash.ts";
 import { path } from "./path.ts";
 import { Home, meta as homeMeta } from "../src/pages/home.tsx";
@@ -52,7 +52,9 @@ const getPosts = async (): Promise<Posts> => {
   const postsDir = `${srcRoot}/posts`;
   const decoder = new TextDecoder("utf-8");
   const posts: Posts = [];
-  for await (const dirEntry of readDir(postsDir)) {
+  for await (const dirEntry of await readDir(postsDir, {
+    withFileTypes: true,
+  })) {
     const { fileName, date } = parseFileName(dirEntry.name);
     const content = await readFileContent(`${postsDir}/${dirEntry.name}`);
 

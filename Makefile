@@ -1,7 +1,7 @@
 SERVER_IP=52.69.164.172
 .PHONY: ssh
 ssh:
-	ssh -i ~/.ssh/araya.dev.pem ubuntu@${SERVER_IP}
+	ssh -i ~/.ssh/id_rsa ubuntu@${SERVER_IP}
 .PHONY: upload-h2oconf
 upload-h2oconf:
 	scp -r -i ~/.ssh/araya.dev.pem ./h2o.conf ./conf ubuntu@${SERVER_IP}:/var/www/araya.dev/

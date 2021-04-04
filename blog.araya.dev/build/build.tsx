@@ -86,7 +86,7 @@ const buildAssets = async (srcDir: string): Promise<Map<string, string>> => {
       (await readFileContent(file)).toString()
     )}${ext}`;
     await ensureFile(out);
-    map.set(file, out);
+    map.set(file.replace(srcRoot, ""), out.replace(distDir, ""));
     try {
       await copyFile(file, out);
     } catch (e) {

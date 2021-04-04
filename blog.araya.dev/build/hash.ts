@@ -1,7 +1,8 @@
-import { createHash } from "../deps.ts";
+import { createHash } from "crypto";
+
+const hash = createHash("md5");
 
 export const contentHash = (content: string) => {
-  const hash = createHash("md5");
   hash.update(content);
   return hash.toString();
 };

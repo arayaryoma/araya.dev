@@ -1,4 +1,4 @@
-import { join, extname } from "https://deno.land/std/path/mod.ts";
+import { join, extname } from "path";
 
 export const path = {
   join,

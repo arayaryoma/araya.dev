@@ -1,17 +1,20 @@
-import { GitLog } from "./types/index.d.ts";
+import util from "util";
+import childProcess from "child_process";
 
-const decoder = new TextDecoder("utf-8");
+const exec = util.promisify(childProcess.exec);
 const separator = "____";
 
 export async function getLog(filePath: string): Promise<GitLog[]> {
-  const cmd = Deno.run({
+  const cmd = {
     cmd: ["git", "log", `--format=%H${separator}%aI${separator}%s`, filePath],
     stdout: "piped",
     stderr: "piped",
-  });
+  };
+  const { stdout, stderr } = await exec(
+    `git log --format=%H${separator}%aI${separator}%s ${filePath}`
+  );
 
-  const output = decoder.decode(await cmd.output());
-  const logs = output.split("\n");
+  const logs = stdout.split("\n");
 
   // trim unnecessary empty string
   logs.pop();

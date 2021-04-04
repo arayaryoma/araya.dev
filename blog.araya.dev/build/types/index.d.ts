@@ -13,7 +13,7 @@ type Post = {
   content: string;
   title: string;
   date: string;
-  tags: string;
+  tags: string[];
   url: string;
   ampUrl: string;
   canonicalUrl: string;

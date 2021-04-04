@@ -1,5 +1,5 @@
-import { Feed } from "../deps.ts";
-import { writeFile } from "./io.ts";
+import { writeFile } from "./io";
+import { Feed } from "feed";
 
 type Author = {
   name: string;
@@ -35,7 +35,6 @@ export const generateFeed = async (
   posts: Posts,
   distDir: string
 ): Promise<void> => {
-  const encorder = new TextEncoder();
   const feed = new Feed(feedOptions);
   posts.sort((a, b) => (a.date > b.date ? -1 : 1));
   posts.slice(0, 10).forEach((post) => {
@@ -50,8 +49,5 @@ export const generateFeed = async (
       title: post.title,
     });
   });
-  return await writeFile(
-    `${distDir}/feed.xml`,
-    encorder.encode(feed.atom1() as string)
-  );
+  return await writeFile(`${distDir}/feed.xml`, feed.atom1());
 };

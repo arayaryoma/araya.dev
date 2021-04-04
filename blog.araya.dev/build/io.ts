@@ -1,5 +1,5 @@
-import { dir } from "console";
 import legacyFs from "fs";
+import { dirname } from "node:path";
 const fs = legacyFs.promises;
 
 export const CWD = process.cwd();
@@ -31,6 +31,7 @@ export const ensureFile = async (filename: string): Promise<void> => {
   if (await isExist(filename)) {
     return;
   }
+  await ensureDir(dirname(filename));
   await fs.writeFile(filename, new Uint8Array());
 };
 

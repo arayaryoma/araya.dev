@@ -1,7 +1,5 @@
-import { h, renderSSR, Marked } from "../deps.ts";
-import { Post } from "./types/index.d.ts";
-import { Base, StyleSheet } from "../src/templates/base.tsx";
-import { Post as PostComponent } from "../src/templates/post.tsx";
+import { Base, StyleSheet } from "../src/templates/base";
+import { Post as PostComponent } from "../src/templates/post";
 import {
   copyFile,
   CWD,
@@ -12,13 +10,13 @@ import {
   recursiveReaddir,
   writeFile,
 } from "./io";
-import { contentHash } from "./hash.ts";
-import { path } from "./path.ts";
-import { Home, meta as homeMeta } from "../src/pages/home.tsx";
-import { generateFeed } from "./feed-generator.ts";
-import { getLog } from "./git.ts";
-
-console.log("build start");
+import { contentHash } from "./hash";
+import { path } from "./path";
+import { Home, meta as homeMeta } from "../src/pages/home";
+import { generateFeed } from "./feed-generator";
+import { getLog } from "./git";
+import { mdToHtml } from "./md-parser";
+import { renderToString } from "react-dom/server";
 
 const distDir = `${CWD}/dist`;
 const srcRoot = `${CWD}/src`;
@@ -50,7 +48,6 @@ const parseFileName = (fileName: string): ParseFileNameResult => {
 
 const getPosts = async (): Promise<Posts> => {
   const postsDir = `${srcRoot}/posts`;
-  const decoder = new TextDecoder("utf-8");
   const posts: Posts = [];
   for await (const dirEntry of await readDir(postsDir, {
     withFileTypes: true,
@@ -60,14 +57,14 @@ const getPosts = async (): Promise<Posts> => {
 
     const changeLogs = await getLog(`${postsDir}/${dirEntry.name}`);
 
-    const parsed = Marked.parse(decoder.decode(content));
+    const parsed = await mdToHtml(content);
 
-    const { title } = parsed.meta;
+    // const { title } = parsed.meta;
     const post: Post = {
-      content: parsed.content,
+      content: parsed,
       date,
       tags: "",
-      title,
+      title: "",
       url: `posts/${date}/${fileName}.html`,
       ampUrl: `posts/${date}/${fileName}.amp.html`,
       canonicalUrl: `https://blog.araya.dev/posts/${date}/${fileName}.html`,
@@ -82,14 +79,14 @@ const buildAssets = async (srcDir: string): Promise<Map<string, string>> => {
   const map = new Map();
 
   for (const file of await recursiveReaddir(srcDir)) {
-    const ext = path.extname(file);
+    const ext = path.extname(file).toLowerCase();
     const out = `${distDir}${file
       .replace(srcRoot, "")
       .replace(ext, "")}-${contentHash(
       (await readFileContent(file)).toString()
     )}${ext}`;
     await ensureFile(out);
-    map.set(file.replace(srcRoot, ""), out.replace(distDir, ""));
+    map.set(file, out);
     try {
       await copyFile(file, out);
     } catch (e) {
@@ -103,7 +100,6 @@ const defaultStyleSheets = ["main.css", "lib/normalize.css"];
 
 const buildPostPages = async ({ scripts, styles, images }: Subresources) => {
   const posts = await getPosts();
-  const encorder = new TextEncoder();
 
   const replace = (content: string): string => {
     let replaced = content;
@@ -132,7 +128,7 @@ const buildPostPages = async ({ scripts, styles, images }: Subresources) => {
   for (const post of posts) {
     const outputFilePath = `${distDir}/${post.url}`;
     await ensureFile(outputFilePath);
-    const html = renderSSR(
+    const html = renderToString(
       <Base
         styles={stylesheets}
         title={post.title}
@@ -147,13 +143,12 @@ const buildPostPages = async ({ scripts, styles, images }: Subresources) => {
         </PostComponent>
       </Base>
     );
-    await writeFile(outputFilePath, encorder.encode(replace(html)));
+    await writeFile(outputFilePath, replace(html));
   }
 };
 
 const buildPages = async ({ styles, images, scripts }: Subresources) => {
   const posts = (await getPosts()).sort((a, b) => (a.date < b.date ? 1 : -1));
-  const encorder = new TextEncoder();
   const outputFilePath = `${distDir}/index.html`;
   await ensureFile(outputFilePath);
   const replace = (content: string): string => {
@@ -169,7 +164,7 @@ const buildPages = async ({ styles, images, scripts }: Subresources) => {
     }
     return replaced;
   };
-  const html = renderSSR(
+  const html = renderToString(
     <Base
       styles={[...defaultStyleSheets, ...homeMeta.styles].map((styleName) => ({
         href: `/styles/${styleName}`,
@@ -180,7 +175,7 @@ const buildPages = async ({ styles, images, scripts }: Subresources) => {
       <Home posts={posts} />
     </Base>
   );
-  await writeFile(outputFilePath, encorder.encode(replace(html)));
+  await writeFile(outputFilePath, replace(html));
 };
 
 export async function build() {
@@ -189,16 +184,17 @@ export async function build() {
     buildAssets(`${srcRoot}/js`),
     buildAssets(`${srcRoot}/assets`),
   ]);
-  console.log("completed to build assets");
 
   await Promise.all([
     buildPages({ scripts, images, styles }),
     buildPostPages({ scripts, images, styles }),
   ]);
 
-  console.log("completed to build pages");
-
   await generateFeed(await getPosts(), distDir);
 }
-
-await build();
+try {
+  await build();
+} catch (e) {
+  console.error(e);
+  process.exit(1);
+}

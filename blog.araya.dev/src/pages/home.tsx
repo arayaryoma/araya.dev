@@ -1,5 +1,3 @@
-import { h } from "../../deps.ts";
-
 export const meta = {
   title: "Posts | araya's reservoir",
   styles: ["index.css", "posts-list.css"],

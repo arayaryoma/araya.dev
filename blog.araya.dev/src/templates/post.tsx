@@ -1,6 +1,3 @@
-import { h } from "../../deps.ts";
-import { GitLog } from "../../build/types/index.d.ts";
-
 const repo = "https://github.com/arayaryoma/araya.dev";
 
 interface Props {

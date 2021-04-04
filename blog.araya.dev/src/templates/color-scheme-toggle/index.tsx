@@ -1,5 +1,3 @@
-import { h } from "../../../deps.ts";
-
 export const ColorSchemeToggleButton = () => {
   return (
     <div>

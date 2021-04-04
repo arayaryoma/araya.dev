@@ -1,5 +1,5 @@
-import { h } from "../../deps.ts";
-import { ColorSchemeToggleButton } from "./color-scheme-toggle/index.tsx";
+import { FC } from "react";
+import { ColorSchemeToggleButton } from "./color-scheme-toggle";
 
 const gaScriptContent = `window.dataLayer = window.dataLayer || [];
 function gtag() {
@@ -22,11 +22,10 @@ export type Script = {
 type Props = {
   styles?: Array<StyleSheet>;
   scripts?: Array<Script>;
-  children?: unknown;
   title: string;
 };
 
-export const Base = (props: Props) => {
+export const Base: FC<Props> = (props) => {
   return (
     <>
       <html lang="ja">

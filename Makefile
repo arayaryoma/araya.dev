@@ -31,3 +31,16 @@ daemon:
 .PHONY: restart
 restart:
 	sudo kill -TERM `cat /logs/pid-file` && make daemon
+
+.PHONY: certificate
+certificate:
+	sudo certbot certonly \
+	--expand \
+	--webroot \
+	--webroot-path /var/www/araya.dev/www.araya.dev/ \
+	-d araya.dev \
+	-d playground.araya.dev \
+	-d blog.araya.dev \
+	--agree-tos \
+	--non-interactive \
+	--cert-name araya.dev

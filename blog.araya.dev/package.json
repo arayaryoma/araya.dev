@@ -7,12 +7,14 @@
     "node": "16.x"
   },
   "scripts": {
-    "build": "rimraf dist && tsc --project build/tsconfig.json && node --es-module-specifier-resolution=node build/dist/build/build.js"
+    "build": "rimraf dist && tsc --project build/tsconfig.json && node --es-module-specifier-resolution=node build/dist/build/build.js",
+    "watch": "rimraf dist && tsc --project build/tsconfig.json && node --es-module-specifier-resolution=node build/dist/build/watch.js"
   },
   "devDependencies": {
     "@types/node": "^14.14.37",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
+    "chokidar": "^3.5.1",
     "feed": "^4.2.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

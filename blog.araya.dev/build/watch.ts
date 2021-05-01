@@ -1,17 +1,15 @@
-// import { CWD } from "./io.ts";
-// import { build } from "./build.tsx";
+import { watch } from "chokidar";
+import { build } from "./build";
+import { CWD } from "./io";
+import { path } from "./path";
 
-// const watcher = Deno.watchFs(`${CWD}/src`);
-// for await (const event of watcher) {
-//   console.log(event.kind, event.paths);
-//   await build();
-//   await sleep(100);
-// }
+const dirPath = path.resolve(CWD, "src");
 
-// function sleep(ms: number): Promise<void> {
-//   return new Promise((resolve, reject) => {
-//     setTimeout(() => {
-//       resolve(undefined);
-//     }, ms);
-//   });
-// }
+console.log("watching:", dirPath);
+
+watch(dirPath).on("change", (file) => {
+  console.log("Detected file changes. Building...");
+  build().then(() => {
+    console.log("Build has been completed");
+  });
+});

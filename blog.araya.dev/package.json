@@ -7,8 +7,8 @@
     "node": "16.x"
   },
   "scripts": {
-    "build": "rimraf dist && tsc --project build/tsconfig.json && node --es-module-specifier-resolution=node build/dist/build/build.js",
-    "watch": "rimraf dist && tsc --project build/tsconfig.json && node --es-module-specifier-resolution=node build/dist/build/watch.js"
+    "build": "rimraf dist build/dist && tsc --project build/tsconfig.json && node --es-module-specifier-resolution=node build/dist/build/build.js",
+    "watch": "rimraf dist build/dist && tsc --project build/tsconfig.json && node --es-module-specifier-resolution=node build/dist/build/watch.js"
   },
   "devDependencies": {
     "@types/node": "^14.14.37",

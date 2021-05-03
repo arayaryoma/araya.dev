@@ -1,7 +1,15 @@
 import {
   changeColorScheme,
   detectPreferredColorScheme,
+  // @ts-ignore
 } from "/js/lib/color-scheme.js";
+
+/**
+ *
+ * @param {ShadowRoot} shadowRoot
+ * @param {string} theme
+ */
+// @ts-ignore
 class ColorSchemeToggle extends HTMLElement {
   constructor() {
     super();
@@ -9,12 +17,18 @@ class ColorSchemeToggle extends HTMLElement {
   connectedCallback() {
     const colorScheme = detectPreferredColorScheme();
     const checkbox = this.shadowRoot?.querySelector("input");
-    if (!checkbox) return;
+    const label = this.shadowRoot?.querySelector("label");
+    if (!checkbox || !label) return;
     if (colorScheme == "dark") {
       checkbox.checked = true;
     }
+    label.setAttribute("data-color-scheme", colorScheme);
+
     checkbox.addEventListener("change", (ev) => {
-      changeColorScheme(ev.target.checked ? "dark" : "light");
+      // @ts-ignore
+      const newColorScheme = ev.target.checked ? "dark" : "light";
+      changeColorScheme(newColorScheme);
+      label.setAttribute("data-color-scheme", newColorScheme);
     });
   }
 }

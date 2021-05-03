@@ -1,19 +1,14 @@
-:host {
-  --toggle-button-bg-color: var(--gray-light-1);
-  --toggle-button-color: var(--gray-light-5);
-}
-
-@media screen and (prefers-color-scheme: dark) {
-  :host {
-    --toggle-button-bg-color: var(--gray-dark-3);
-    --toggle-button-color: var(--mat-black);
-  }
-}
-
 .label {
   display: inline-flex;
   align-items: center;
   cursor: pointer;
+  --toggle-button-bg-color: var(--gray-light-1);
+  --toggle-button-color: var(--gray-light-5);
+}
+
+.label[data-color-scheme="dark"] {
+  --toggle-button-bg-color: var(--gray-dark-3);
+  --toggle-button-color: var(--mat-black);
 }
 
 .label-text {

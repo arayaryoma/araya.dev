@@ -17,6 +17,9 @@ export const copyFile = (from: string, to: string): Promise<void> => {
 
 export const writeFile = fs.writeFile;
 
+export const forceRemoveDir = (path: string) =>
+  fs.rm(path, { recursive: true, force: true });
+
 // Ensures that the directory exists. If the directory structure does not exist, it is created. Like mkdir -p.
 export const ensureDir = async (dirname: string): Promise<void> => {
   if (!(await isExist(dirname))) {

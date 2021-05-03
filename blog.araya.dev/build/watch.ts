@@ -1,15 +1,19 @@
 import { watch } from "chokidar";
 import { build } from "./build";
-import { CWD } from "./io";
-import { path } from "./path";
+import { CWD, forceRemoveDir } from "./io";
+import rimraf from "rimraf";
 
-const dirPath = path.resolve(CWD, "src");
+const distDir = `${CWD}/dist`;
+const srcRoot = `${CWD}/src`;
 
-console.log("watching:", dirPath);
+console.log("watching:", srcRoot);
 
-watch(dirPath).on("change", (file) => {
+watch(srcRoot).on("change", (file) => {
   console.log("Detected file changes. Building...");
-  build().then(() => {
+  (async () => {
+    await forceRemoveDir(distDir);
+    await build();
+  })().then(() => {
     console.log("Build has been completed");
   });
 });

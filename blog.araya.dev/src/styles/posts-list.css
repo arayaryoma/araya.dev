@@ -1,24 +1,23 @@
+.posts-list__root {
+  --item-bg: var(--gray-light-4);
+  --item-hovered-shadow: 4px 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+:root[data-color-scheme="dark"] .posts-list__root {
+  --item-bg: var(--mat-black);
+  --item-hovered-shadow: 6px 6px 20px rgba(0, 0, 0, 0.2);
+}
+
 .posts-list--list {
   list-style: none;
   padding-left: 0;
 }
 
 .posts-list--item {
-  background: var(--gray-light-4);
+  background: var(--item-bg);
 }
-
-@media only screen and (prefers-color-scheme: dark) {
-  .posts-list--item {
-    background: var(--mat-black);
-  }
-
-  .posts-list--item:hover {
-    box-shadow: 6px 6px 20px rgba(0, 0, 0, 0.2);
-  }
-}
-
 .posts-list--item:hover {
-  box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--item-hovered-shadow);
 }
 
 .posts-list--item > a {

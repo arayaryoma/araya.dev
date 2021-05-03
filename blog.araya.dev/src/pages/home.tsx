@@ -16,7 +16,7 @@ export const Home = (props: Props) => {
     <main>
       <div className="container">
         <h1 className="index-page-title heading__lined">Posts</h1>
-        <ul className="posts-list--list">
+        <ul className="posts-list__root posts-list--list">
           {props.posts.map((post) => (
             <li className="posts-list--item" key={post.url}>
               <a href={post.url}>

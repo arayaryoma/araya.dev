@@ -1,3 +1,13 @@
+.markdown {
+  --inline-codeblock-bg: var(--gray-light-2);
+  --table-accent-color: var(--gray-light-4);
+}
+
+:root[data-color-scheme="dark"] .markdown {
+  --inline-codeblock-bg: var(--black);
+  --table-accent-color: var(--black);
+}
+
 .markdown p {
   margin: 0.5em 0;
   overflow-wrap: break-word;
@@ -48,17 +58,8 @@
 .markdown :not(pre) > code {
   padding: 0 0.5em;
   margin: 0 0.3em;
-}
-
-@media only screen and (prefers-color-scheme: dark) {
-  .markdown tbody tr:nth-child(2n) {
-    background-color: var(--black);
-  }
-  .markdown :not(pre) > code {
-    margin: 0 0.3em;
-    color: var(--gray-light-4);
-    background-color: var(--black);
-  }
+  color: var(--text-face-color);
+  background: var(--inline-codeblock-bg);
 }
 
 .markdown code {
@@ -66,7 +67,6 @@
   max-width: 100%;
   overflow-x: scroll;
   margin: 0 0.2em;
-  background: var(--gray-light-2);
 }
 
 .markdown pre code {
@@ -92,7 +92,7 @@ td {
 }
 
 .markdown tbody tr:nth-child(2n) {
-  background-color: var(--gray-light-4);
+  background-color: var(--table-accent-color);
 }
 .markdown ul li {
   line-height: 1.75em;
@@ -100,12 +100,6 @@ td {
 
 .markdown img {
   max-width: 100%;
-}
-
-@media only screen and (prefers-color-scheme: dark) {
-  .markdown tbody tr:nth-child(2n) {
-    background-color: var(--black);
-  }
 }
 
 .markdown .small {

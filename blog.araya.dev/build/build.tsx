@@ -186,6 +186,7 @@ const buildPages = async ({ styles, images, scripts }: Subresources) => {
         rel: "prefetch",
       }))}
       title={homeMeta.title}
+      scripts={[{ src: "/js/main.js", module: true }]}
     >
       <Home posts={posts} />
     </Base>

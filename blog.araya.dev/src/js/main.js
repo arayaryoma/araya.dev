@@ -1,3 +1,4 @@
+import "/js/webcomponents/color-scheme-toggle.js";
 
 const PREFERRED_COLOR_SCHEME = "preferred-color-scheme";
 

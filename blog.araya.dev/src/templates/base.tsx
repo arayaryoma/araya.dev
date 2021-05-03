@@ -73,9 +73,9 @@ export const Base: FC<Props> = (props) => {
                 />
                 <span className="header-title">araya's Reservoir</span>
               </a>
+              <ColorSchemeToggleButton />
             </div>
           </nav>
-          {/* <ColorSchemeToggleButton /> */}
           <div className="content">{props.children}</div>
           <footer className="footer">
             <div className="container">

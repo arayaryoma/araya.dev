@@ -22,9 +22,6 @@ const distDir = `${CWD}/dist`;
 const srcRoot = `${CWD}/src`;
 const ouputAsetsDir = `assets`;
 
-await ensureDir(distDir);
-await ensureDir(`${distDir}/${ouputAsetsDir}`);
-
 type ImagePathMap = Map<string, string>;
 
 type ScriptPathMap = Map<string, string>;
@@ -75,9 +72,20 @@ const getPosts = async (): Promise<Posts> => {
   return posts;
 };
 
+const replaceJsModulePaths = async (
+  filePath: string,
+  moduleMap: Map<string, string>
+): Promise<void> => {
+  let content = await readFileContent(filePath);
+  for (const key of moduleMap.keys()) {
+    content = content.replaceAll(key, moduleMap.get(key) ?? key);
+  }
+  await writeFile(filePath, content);
+};
+
 const buildAssets = async (srcDir: string): Promise<Map<string, string>> => {
   const map = new Map();
-
+  const builtAssets: string[] = [];
   for (const file of await recursiveReaddir(srcDir)) {
     const ext = path.extname(file).toLowerCase();
     const out = `${distDir}${file
@@ -91,6 +99,10 @@ const buildAssets = async (srcDir: string): Promise<Map<string, string>> => {
       await copyFile(file, out);
     } catch (e) {
       console.error(e);
+    }
+    builtAssets.push(out);
+    for (const asset of builtAssets) {
+      if (asset.endsWith(".js")) replaceJsModulePaths(asset, map);
     }
   }
   return map;
@@ -132,7 +144,10 @@ const buildPostPages = async ({ scripts, styles, images }: Subresources) => {
       <Base
         styles={stylesheets}
         title={post.title}
-        scripts={[{ src: "/js/post.js", module: true }]}
+        scripts={[
+          { src: "/js/post.js", module: true },
+          { src: "/js/main.js", module: true },
+        ]}
       >
         <PostComponent
           title={post.title}
@@ -193,6 +208,8 @@ export async function build() {
   await generateFeed(await getPosts(), distDir);
 }
 try {
+  await ensureDir(distDir);
+  await ensureDir(`${distDir}/${ouputAsetsDir}`);
   await build();
 } catch (e) {
   console.error(e);

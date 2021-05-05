@@ -16,10 +16,6 @@ class ColorSchemeToggle extends HTMLElement {
   }
   connectedCallback() {
     const colorScheme = detectPreferredColorScheme();
-    // if (!this.shadowRoot) {
-    //   const shadow = this.attachShadow({ mode: "open" });
-    //   shadow.appendChild(this.querySelector("template"));
-    // }
     const checkbox = this.shadowRoot?.querySelector("input");
     const label = this.shadowRoot?.querySelector("label");
     if (!checkbox || !label) return;

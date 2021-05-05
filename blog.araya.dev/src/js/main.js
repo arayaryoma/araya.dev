@@ -1,4 +1,4 @@
-import "/js/webcomponents/color-scheme-toggle.js";
+import { initColorSchemeToggle } from "/js/webcomponents/color-scheme-toggle.js";
 
 const PREFERRED_COLOR_SCHEME = "preferred-color-scheme";
 
@@ -13,3 +13,18 @@ const colorScheme = detectPreferredColorScheme();
 
 const html = document.querySelector("html");
 html?.setAttribute("data-color-scheme", colorScheme);
+
+if (!supportsDeclarativeShadowDOM()) {
+  document.querySelectorAll("template[shadowroot]").forEach((template) => {
+    const mode = template.getAttribute("shadowroot");
+    const shadowRoot = template.parentNode.attachShadow({ mode });
+    shadowRoot.appendChild(template.content);
+    template.remove();
+  });
+}
+
+initColorSchemeToggle();
+
+function supportsDeclarativeShadowDOM() {
+  return HTMLTemplateElement.prototype.hasOwnProperty("shadowRoot");
+}

@@ -3,6 +3,13 @@
   --item-hovered-shadow: 4px 4px 20px rgba(0, 0, 0, 0.25);
 }
 
+@media screen and (prefers-color-scheme: dark) {
+  :root:not([data-color-scheme="light"]) .posts-list__root {
+    --item-bg: var(--mat-black);
+    --item-hovered-shadow: 6px 6px 20px rgba(0, 0, 0, 0.2);
+  }
+}
+
 :root[data-color-scheme="dark"] .posts-list__root {
   --item-bg: var(--mat-black);
   --item-hovered-shadow: 6px 6px 20px rgba(0, 0, 0, 0.2);

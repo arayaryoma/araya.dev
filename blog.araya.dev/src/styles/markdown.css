@@ -3,6 +3,13 @@
   --table-accent-color: var(--gray-light-4);
 }
 
+@media screen and (prefers-color-scheme: dark) {
+  :root:not([data-color-scheme="light"]) .markdown {
+    --inline-codeblock-bg: var(--black);
+    --table-accent-color: var(--black);
+  }
+}
+
 :root[data-color-scheme="dark"] .markdown {
   --inline-codeblock-bg: var(--black);
   --table-accent-color: var(--black);

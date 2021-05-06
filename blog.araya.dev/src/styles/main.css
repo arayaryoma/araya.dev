@@ -49,6 +49,13 @@
   --global-nav-bg: var(--gray-light-4);
 }
 
+@media screen and (prefers-color-scheme: dark) {
+  :root:not([data-color-scheme="light"]) {
+    --background-color: var(--gray-dark-3);
+    --text-face-color: var(--gray-light-4);
+    --global-nav-bg: var(--black);
+  }
+}
 html[data-color-scheme="dark"]:root {
   --background-color: var(--gray-dark-3);
   --text-face-color: var(--gray-light-4);

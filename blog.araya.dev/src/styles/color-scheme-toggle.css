@@ -6,6 +6,13 @@
   --toggle-button-color: var(--gray-light-5);
 }
 
+@media screen and (prefers-color-scheme: dark) {
+  .label:not([data-color-scheme="light"]) {
+    --toggle-button-bg-color: var(--gray-dark-3);
+    --toggle-button-color: var(--mat-black);
+  }
+}
+
 .label[data-color-scheme="dark"] {
   --toggle-button-bg-color: var(--gray-dark-3);
   --toggle-button-color: var(--mat-black);

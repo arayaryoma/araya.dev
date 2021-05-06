@@ -55,6 +55,14 @@
   padding: 30px 0;
 }
 
+@media screen and (prefers-color-scheme: dark) {
+  :root:not([data-color-scheme="light"]) .post--main,
+  :root:not([data-color-scheme="light"]) .post-header {
+    background: var(--gray-dark-3);
+    color: var(--gray-light-4);
+  }
+}
+
 :root[data-color-scheme="dark"] .post--main,
 :root[data-color-scheme="dark"] .post-header {
   background: var(--gray-dark-3);

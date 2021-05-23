@@ -2,6 +2,9 @@ SERVER_IP=52.69.164.172
 .PHONY: ssh
 ssh:
 	ssh -i ~/.ssh/id_rsa ubuntu@${SERVER_IP}
+.PHONY: download-access-log
+download-access-log:
+	scp -r -i ~/.ssh/id_rsa ubuntu@${SERVER_IP}:/logs/access-log ./logs/prod/
 .PHONY: upload-h2oconf
 upload-h2oconf:
 	scp -r -i ~/.ssh/id_rsa ./h2o.conf ./conf ubuntu@${SERVER_IP}:/var/www/araya.dev/

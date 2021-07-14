@@ -7,6 +7,8 @@ tags:
 date: "2021-07-15 00:00:00 +0900"
 ---
 
+[tc39_study](https://web-study.connpass.com/event/213676/)のための準備。
+
 tc39 に Operator overloading in JavaScript という仕様が提案されている。これは現在 Stage1 で、将来的に標準化されるとしても**この記事に書かれている多くの API はその頃には大きく変更されている可能性がある**
 
 - [tc39/proposal-operator-overloading](https://github.com/tc39/proposal-operator-overloading)

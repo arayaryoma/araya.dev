@@ -53,13 +53,11 @@ tc39 に Operator overloading in JavaScript という仕様が提案されてい
 const RGBOps = Operators({
   "+"(a, b) {
     // エラーハンドリングは省略している雑な実装
-    return `#${(
-      parseInt(a.slice(1, 3), 16) + parseInt(b.slice(1, 3), 16)
-    ).toString(16)}${(
-      parseInt(a.slice(3, 5), 16) + parseInt(b.slice(3, 5), 16)
-    ).toString(16)}${(
-      parseInt(a.slice(5, 7), 16) + parseInt(b.slice(5, 7), 16)
-    ).toString(16)}`.toUpperCase();
+    return {
+      r: a.r + b.r,
+      g: a.g + b.g,
+      b: a.b + b.b,
+    };
   },
 });
 ```
@@ -68,9 +66,13 @@ const RGBOps = Operators({
 
 ```js
 class RGB extends RGBOps {
-  hex;
+  r;
+  g;
+  b;
   constructor(hex) {
-    this.hex = hex;
+    this.r = parseInt(hex.slice(1, 3), 16);
+    this.g = parseInt(hex.slice(3, 5), 16);
+    this.b = parseInt(hex.slice(5, 7), 16);
   }
 }
 ```
@@ -99,19 +101,21 @@ const RGBOps = Operators(
   {
     "+"(a, b) {
       // エラーハンドリングは省略している雑な実装
-      return `#${(
-        parseInt(a.slice(1, 3), 16) + parseInt(b.slice(1, 3), 16)
-      ).toString(16)}${(
-        parseInt(a.slice(3, 5), 16) + parseInt(b.slice(3, 5), 16)
-      ).toString(16)}${(
-        parseInt(a.slice(5, 7), 16) + parseInt(b.slice(5, 7), 16)
-      ).toString(16)}`.toUpperCase();
+      return {
+        r: a.r + b.r,
+        g: a.g + b.g,
+        b: a.b + b.b,
+      };
     },
   },
   {
     right: Number,
     "*"(a, b) {
-      return `#${(parseInt(a.slice(1, 7), 16) * b).toString(16)}`.toUpperCase();
+      return {
+        r: a.r * b,
+        g: a.g * g,
+        b: a.b * b,
+      };
     },
   }
 );

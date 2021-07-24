@@ -19,8 +19,17 @@ sync-www:
 .PHONY: sync-pg
 sync-pg:
 	rsync --delete -r -e "ssh -i ~/.ssh/id_rsa" ./playground.araya.dev/ ubuntu@${SERVER_IP}:/var/www/araya.dev/playground.araya.dev/
-.PHONY: sync-blog
-sync-blog:
+
+.PHONY: dev-blog
+blog-dev:
+	cd blog.araya.dev && yarn run watch &
+	sudo h2o -c conf/h2o/local/blog.conf
+.PHONY: blog-build
+blog-build: 
+	cd blog.araya.dev && yarn run build && cd ..
+
+.PHONY: blog-deploy
+blog-deploy: blog-build
 	rsync --delete -r -e "ssh -i ~/.ssh/id_rsa" ./blog.araya.dev/dist/ ubuntu@${SERVER_IP}:/var/www/araya.dev/blog.araya.dev/dist
 .PHONY: sync-nevertls
 sync-nevertls:

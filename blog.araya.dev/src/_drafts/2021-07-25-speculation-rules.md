@@ -19,15 +19,15 @@ Chrome にはかつて、リンク先のリソースをユーザーが遷移す�
 
 Chrome の NoState Prefetch はリソースの先読みはするが JS の実行やレンダリングはしない。仕様 としての `prefetch` や `prerender` などは [Resource Hints というひとまとまりのドラフトとして提案されている](https://www.w3.org/TR/resource-hints/)。
 
-JS の事前実行やレンダリングをやめたことにより、メモリを過剰に利用してしまう問題は解消できたが、そもそも prefetch 自体にも、cross-origin での prefetch では、ユーザーが明示的に遷移先に関心を示す前に cookie や IP アドレスなどの情報が遷移先に渡ってしまうというプライバシー上の懸念があった。
+JS の事前実行やレンダリングをやめたことによりメモリを過剰に利用してしまう問題は解消できたが、そもそも prefetch 自体にも、cross-origin での prefetch では、ユーザーが明示的に遷移先に関心を示す前に cookie や IP アドレスなどの情報が遷移先に渡ってしまうというプライバシー上の懸念があった。
 
 ![https://foobar.exampleに対してはユーザーの明示的な遷移、https://hogehoge.exampleに対しては、ユーザーの実際の関心に関係なくprefetchによりIPアドレスなどが送られてしまう](/assets/images/speculation-rules/prefetch.svg)
 
-これを解決するために Chrome チームが実験を進めているのが [Private Prefetch Proxy](https://github.com/buettner/private-prefetch-proxy)という仕組みだ。
+これを解決するために Chrome チームが提案し、実験を進めているのが [Private Prefetch Proxy](https://github.com/buettner/private-prefetch-proxy)という仕組みだ。
 
 ## Private Prefetch Proxy
 
-prefetch をする際に cookie などの特定の HTTP header を送らないようにする仕組みはブラウザのエンジンで実装可能だが、ユーザーの IP アドレスを隠すような仕組みはネットワークの通信に介入する必要がある。
+prefetch を行う際に cookie などの特定の HTTP header を送らないようにする仕組みはブラウザのエンジンで実装可能だが、ユーザーの IP アドレスを隠すような仕組みはネットワークの通信に介入する必要がある。
 このための proxy を用意してしまおうというのが Private Prefetch Proxy だ。
 
 Private Prefetch Proxy は [HTTP/2 CONNECT method](https://httpwg.org/specs/rfc7540.html#rfc.section.8.3)を用いてクライアントサーバー間に Proxy を設置し、prefetch のリクエストが送られてきたサーバーから見ると、リクエスト元の IP アドレスは実際のユーザーではなく中間にいる Proxy のものになる。
@@ -35,4 +35,44 @@ HTTP/2 CONNECT ではクライアント-サーバー間では TLS 接続によ�
 
 ### Google/Chrome での例
 
-Chrome および Google では、例えば Google Search などの Google のサービスからの prefetch でのみ、Google が提供する Proxy を経由してリクエストが送られる。
+Chrome および Google では、Google が提供しているサービスからの prefetch でのみ、Google が提供する Proxy を経由してリクエストが送られる。
+例えば、Google Search で `a.example.com` と `b.example.org` を prefetch するときは下の図のようになる。
+![](/assets/images/speculation-rules/ppp-google-example.svg)
+
+これにより、Google の検索結果ページから各サイトへの prefetch を行うことでサイトへの遷移を高速に行うことができる。
+
+この Google が提供するサービス での例は[Chromium Blog](https://blog.chromium.org/2020/12/continuing-our-journey-to-bring-instant.html)でが紹介されたものだが、記事執筆時点で筆者が Google Search で検証した限りは Private Prefetch Proxy 経由で prefetch/prerender を実行している形跡は見当たらなかった。
+将来的になにかアナウンスがあるかもしれない。
+
+### Opt-out
+
+Private Prefetch Proxy を用いた prefetch / prerender を行って欲しくないユーザーもしくは Web サイトコンテンツ提供者(Publisher)のために、Opt-out する手段も提案されている。
+
+#### Publisher による Opt-out
+
+Publisher による Opt-out は、[Traffic Advice](https://github.com/buettner/private-prefetch-proxy/blob/938f6c024330672e68b7085c1fa17483c1bcbe36/traffic-advice.md)という仕組みを用いる方針で進められている。
+
+`/.well-known/traffic-advice` という Well-Known URI へのリクエストに対し、 `content-type: application/trafficadvice+json` で OK な response を返し、Private Prefetch Proxy からのリクエストを許可しないことを伝える。
+
+```json
+[{ "user_agent": "prefetch-proxy", "disallow": true }]
+```
+
+これを受け取った UA(prefetch-proxy)は、この結果を cache し、定期的に Traffic Advice を再検証するためのリクエスト`GET /.well-known/traffic-advice`を origin server に対し送るが、それ以外のリクエストは許可がされるまで(`"dissallow": false`となるまで) 一切送信しない。
+
+`GET /.well-known/traffic-advice` に対し 404 などのエラーが返された場合は UA(ここでは Private Prefetch Proxy)は自身が持つデフォルトの挙動を採用する。
+
+robots.txt のような仕組みだと捉えるとわかりやすい。robots.txt を使わずにあらたに Well-Known URI を定義したのは
+
+- robots.txt はクローラーエンジンのためのものである
+- robots.txt は path ごとのハンドリングも可能だが、CONNECT proxy のような path ごとに振る舞いを変えないような UA に対しては不向き
+
+といったことが[理由に挙げられている](https://github.com/buettner/private-prefetch-proxy/blob/938f6c024330672e68b7085c1fa17483c1bcbe36/traffic-advice.md#why-not-robotstxt)。
+
+つまり、Well-Known URI で Traffic Advice を提示する以上、Publisher による Opt-out は、現状 Origin 単位でしかできないようだ。
+
+#### User による Opt-out
+
+User による Opt-out の具体的な方法については詳しく述べられていないが、ユーザーの同意なしに勝手に prefetch をすべきではないということになっている。
+
+### Referrer

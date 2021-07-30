@@ -12,6 +12,16 @@ Google / Chromium の開発チームから Speculation Rules という仕組み�
 - Intent to Experiment: https://groups.google.com/a/chromium.org/g/blink-dev/c/Cw-hOjT47qI
 - Origin Trial: https://developer.chrome.com/origintrials/#/view_trial/4576783121315266561
 
+## Terms
+
+この記事および記事中紹介する draft では、prefetch の文脈でいくつかの概念が登場するため、予め簡単に説明しておく。
+
+- User: Web ブラウザを使ってサイトを閲覧しているユーザー
+- Browser: Web ブラウザ
+- Referrer: ユーザーが今滞在しているページ (図中 `a.example.org`)
+- Publisher: prefetch リクエストを送る先の Web サイト、もしくはその提供者 (図中 `b.example.com`)
+- Proxy: Brwoser と、Referrer もしくは Publisher の origin server との中間にある proxy server
+
 ## Prerendering / Prefetch
 
 Chrome にはかつて、リンク先のリソースをユーザーが遷移するよりも先にダウンロードして、バックグラウンドで JS も実行してページをロードしておく[prerendering](https://www.chromium.org/developers/design-documents/prerender)という仕組みがあったが、
@@ -44,6 +54,8 @@ Chrome および Google では、Google が提供しているサービスから�
 この Google が提供するサービス での例は[Chromium Blog](https://blog.chromium.org/2020/12/continuing-our-journey-to-bring-instant.html)でが紹介されたものだが、記事執筆時点で筆者が Google Search で検証した限りは Private Prefetch Proxy 経由で prefetch/prerender を実行している形跡は見当たらなかった。
 将来的になにかアナウンスがあるかもしれない。
 
+### Opt-in / Opt-out
+
 ### Opt-out
 
 Private Prefetch Proxy を用いた prefetch / prerender を行って欲しくないユーザーもしくは Web サイトコンテンツ提供者(Publisher)のために、Opt-out する手段も提案されている。
@@ -73,6 +85,37 @@ robots.txt のような仕組みだと捉えるとわかりやすい。robots.tx
 
 #### User による Opt-out
 
-User による Opt-out の具体的な方法については詳しく述べられていないが、ユーザーの同意なしに勝手に prefetch をすべきではないということになっている。
+提案では User がブラウザのシークレットブラウジングモードを使っているときは prefetch は無効になるべきとされている。また、User はいつでも prefetch を無効にできるとされている。
 
-### Referrer
+> Users can opt-out of the feature at any time. Furthermore, users can temporarily opt-out of the feature by using their browser’s private browsing mode.
+
+### Referrer による Opt-in
+
+Referrer が prefetch が有益だと判断した場合は、Browser に対して prefetch を要求するリソースを指示する。その方法として用いられるのが [Speculation Rules](https://github.com/jeremyroman/alternate-loading-modes/blob/main/triggers.md#speculation-rules)だ。
+
+#### Speculation Rules
+
+Speculation Rules は、HTML 内の`script` タグに `type="speculationrules"` 属性を指定し、json 形式で記述する。
+
+```jsx
+<script type="speculationrules">
+  {
+  "prefetch": [
+    {
+      "source": "list",
+      "urls": ["https://b.example.com/index.html"],
+      "requires": ["anonymous-client-ip-when-cross-origin"]
+    }
+  ],
+  "prerender": [
+    { "source": "list", "urls": ["/page/2"], "score": 0.5 },
+    {
+      "source": "document",
+      "if_href_matches": ["https://*.c.example.net/**"],
+      "if_not_selector_matches": [".restricted-section *"],
+      "score": 0.1
+    }
+  ]
+}
+</script>
+```

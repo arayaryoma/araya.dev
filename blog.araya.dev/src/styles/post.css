@@ -73,7 +73,7 @@
   grid-column: 2 / 12;
   font-size: 1.6rem;
   line-height: 1.5em;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .post__changelog {

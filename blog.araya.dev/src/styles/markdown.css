@@ -61,7 +61,7 @@
 .markdown code {
   font-family: "Source Code Pro", "Lucida Console", Courier, monospace;
   max-width: 100%;
-  overflow-x: scroll;
+  overflow-x: auto;
   margin: 0 0.2em;
 }
 
@@ -100,4 +100,21 @@ td {
 
 .markdown .small {
   font-size: 0.65em;
+}
+
+.markdown blockquote {
+  color: var(--gray-dark-1);
+  position: relative;
+  margin-inline: 0;
+  padding-inline-start: 12px;
+}
+
+.markdown blockquote::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background-color: var(--gray-dark-1);
 }

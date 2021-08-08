@@ -1,12 +1,20 @@
 ---
-title: Speculation Rules
+title: Private Prefetch Proxy と Speculation Rules
 tags:
   - browser
   - Web API
 date: "2021-07-26 00:00:00 +0900"
 ---
 
-Google / Chromium の開発チームから Speculation Rules という仕組みが提案されていれ、Origin Trial による実験が始まっている。
+## はじめに
+
+この記事で述べている情報は、筆者が一次情報を調べ自分なりに理解をまとめたものである。
+[uhyo 氏が言うところの "学習ノート"](https://zenn.dev/uhyo/articles/technical-articles#%E6%8A%80%E8%A1%93%E8%A8%98%E4%BA%8B%E3%81%AE3%E9%A1%9E%E5%9E%8B)であるし、
+[登大遊 氏の言うところの "ジャンクフード"](https://note.lapras.com/interview/dnobori/#:~:text=%E3%82%A2%E3%82%A6%E3%83%88%E3%83%95%E3%82%9A%E3%83%83%E3%83%88%E3%81%AF%E3%82%84%E3%82%8B%E3%81%B8%E3%82%99%E3%81%8D%E3%81%93%E3%81%A8%E3%82%92%E8%B8%8F%E3%81%BE%E3%81%88%E3%81%9F%E4%B8%8A%E3%81%A6%E3%82%99)かもしれない。
+
+先にこの記事で参照している一次情報源をすべて列挙しておく。当然のことだが、最新かつ正確な情報は一次情報を当たることを推奨するし、一次情報を当たることに苦を感じない方にとってはおそらくこの記事は無価値である。
+
+Google / Chromium の開発チームから Speculation Rules という仕組みが提案されていて、Origin Trial による実験が始まっている。
 
 - Explainer: https://github.com/jeremyroman/alternate-loading-modes/blob/main/triggers.md
 - Intent to Experiment: https://groups.google.com/a/chromium.org/g/blink-dev/c/Cw-hOjT47qI
@@ -119,3 +127,39 @@ Speculation Rules は、HTML 内の`script` タグに `type="speculationrules"` 
 }
 </script>
 ```
+
+この JSON 形式で記述する Rules は、UA がすべてを理解することを保証するものではない。UA は理解できないルールを破棄する場合もある。
+
+Rules の中身を見ていく。
+
+##### 'prefetch' | 'prerender' | 'dns-prefetch' ...
+
+まず key でその Rules がなんのアクションに対する Rules なのかを指定する。`prefetch` についての Rules を定義したいときは `"prefetch": Array<Rule>` の形で記述する。
+
+取りうる key の文字列、つまり Speculation Rules で指定するアクションは以下のものがある。
+
+- `"prefetch"`
+- `"prerender"`
+- `"dns-prefetch"`
+- `"preconnect"`
+- `"prefetch_with_subresources"`
+
+##### source
+
+Rule が適用される URL を特定するためのフィールド。
+`"list"` を指定した場合は List rule、 `"document"` を指定した場合は Document rule として扱われる
+
+##### List rule
+
+List rule では `url` フィールドに Rule が適用される URL をリスト形式で明示的に指定する。
+
+```js
+{
+  "source": "list",
+  "urls": ["https://b.example.com/index.html", "https://b.example.com/main.css"],
+}
+```
+
+##### Document rule
+
+Document rule では

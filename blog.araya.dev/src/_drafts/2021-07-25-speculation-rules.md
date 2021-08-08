@@ -146,7 +146,7 @@ Rules の中身を見ていく。
 
 ##### source
 
-Rule が適用される URL を特定するためのフィールド。
+Rule が適用される URL をどういう形式で UA に伝えるかを示すためのフィールド。
 `"list"` を指定した場合は List rule、 `"document"` を指定した場合は Document rule として扱われる
 
 ##### List rule
@@ -162,4 +162,10 @@ List rule では `url` フィールドに Rule が適用される URL をリス�
 
 ##### Document rule
 
-Document rule では
+Document rule では UA に speculation を実行する対象の判断を任せる。
+次に挙げるフィールドで、UA が対象として扱うことのできるリンク先を制限することができる。
+
+- `"if_href_matches": [...]`:
+- `"if_not_href_matches": [...]`:
+- `"if_selector_matches": [...]`:
+- `"if_not_selector_matches": [...]`:

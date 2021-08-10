@@ -1,5 +1,5 @@
 ---
-title: Private Prefetch Proxy と Speculation Rules
+title: Private Prefetch Proxy と Speculation Rulesによるprefetch/prerender
 tags:
   - browser
   - Web API
@@ -9,16 +9,18 @@ date: "2021-07-26 00:00:00 +0900"
 ## はじめに
 
 この記事で述べている情報は、筆者が一次情報を調べ自分なりに理解をまとめたものである。
-[uhyo 氏が言うところの "学習ノート"](https://zenn.dev/uhyo/articles/technical-articles#%E6%8A%80%E8%A1%93%E8%A8%98%E4%BA%8B%E3%81%AE3%E9%A1%9E%E5%9E%8B)であるし、
-[登大遊 氏の言うところの "ジャンクフード"](https://note.lapras.com/interview/dnobori/#:~:text=%E3%82%A2%E3%82%A6%E3%83%88%E3%83%95%E3%82%9A%E3%83%83%E3%83%88%E3%81%AF%E3%82%84%E3%82%8B%E3%81%B8%E3%82%99%E3%81%8D%E3%81%93%E3%81%A8%E3%82%92%E8%B8%8F%E3%81%BE%E3%81%88%E3%81%9F%E4%B8%8A%E3%81%A6%E3%82%99)かもしれない。
 
-先にこの記事で参照している一次情報源をすべて列挙しておく。当然のことだが、最新かつ正確な情報は一次情報を当たることを推奨するし、一次情報を当たることに苦を感じない方にとってはおそらくこの記事は無価値である。
+先にこの記事で参照している情報源をすべて列挙しておく。当然のことだが、最新かつ正確な情報は一次情報を当たることを推奨する。この記事はあくまで筆者のメモである。
 
-Google / Chromium の開発チームから Speculation Rules という仕組みが提案されていて、Origin Trial による実験が始まっている。
-
-- Explainer: https://github.com/jeremyroman/alternate-loading-modes/blob/main/triggers.md
-- Intent to Experiment: https://groups.google.com/a/chromium.org/g/blink-dev/c/Cw-hOjT47qI
-- Origin Trial: https://developer.chrome.com/origintrials/#/view_trial/4576783121315266561
+- [alternate-loading-modes/triggers.md at main · jeremyroman/alternate-loading-modes](https://github.com/jeremyroman/alternate-loading-modes/blob/main/triggers.md)
+- [Chrome Prerendering - The Chromium Projects](https://www.chromium.org/developers/design-documents/prerender)
+- [Intent to Deprecate and Remove: Prerender](https://groups.google.com/a/chromium.org/g/Blink-dev/c/0nSxuuv9bBw/m/l0pN2tUjCQAJ)
+- [Introducing NoState Prefetch | Web | Google Developers](https://developers.google.com/web/updates/2018/07/nostate-prefetch)
+- [Resource Hints](https://www.w3.org/TR/resource-hints/)
+- [buettner/private-prefetch-proxy: Proposal to use a CONNECT proxy to obfuscate the user IP address for privacy-enhanced prefetching.](https://github.com/buettner/private-prefetch-proxy)
+- [private-prefetch-proxy/traffic-advice.md at main · buettner/private-prefetch-proxy](https://github.com/buettner/private-prefetch-proxy/blob/main/traffic-advice.md)
+- [Chromium Blog: Continuing our journey to bring instant experiences to the whole web](https://blog.chromium.org/2020/12/continuing-our-journey-to-bring-instant.html)
+- [Prerender2 [public]](https://docs.google.com/document/d/1P2VKCLpmnNm_cRAjUeE-bqLL0bslL_zKqiNeCzNom_w/edit#heading=h.ze3eels8iahe)
 
 ## Terms
 
@@ -103,7 +105,7 @@ Referrer が prefetch が有益だと判断した場合は、Browser に対し�
 
 #### Speculation Rules
 
-Speculation Rules は、HTML 内の`script` タグに `type="speculationrules"` 属性を指定し、json 形式で記述する。
+Speculation Rules は、HTML 内の`script` タグに `type="speculationrules"` 属性を付け、JSON で記述する。
 
 ```jsx
 <script type="speculationrules">
@@ -134,9 +136,9 @@ Rules の中身を見ていく。
 
 ##### 'prefetch' | 'prerender' | 'dns-prefetch' ...
 
-まず key でその Rules がなんのアクションに対する Rules なのかを指定する。`prefetch` についての Rules を定義したいときは `"prefetch": Array<Rule>` の形で記述する。
+まず key でその Rules がなんのアクションに対する Rules なのかを明示する。`prefetch` についての Rules を定義したいときは `"prefetch": Array<Rule>` の形で記述する。
 
-取りうる key の文字列、つまり Speculation Rules で指定するアクションは以下のものがある。
+取りうる key の文字列、つまり Speculation Rules で提示するアクションは以下のものがある。
 
 - `"prefetch"`
 - `"prerender"`
@@ -165,7 +167,54 @@ List rule では `url` フィールドに Rule が適用される URL をリス�
 Document rule では UA に speculation を実行する対象の判断を任せる。
 次に挙げるフィールドで、UA が対象として扱うことのできるリンク先を制限することができる。
 
-- `"if_href_matches": [...]`:
-- `"if_not_href_matches": [...]`:
-- `"if_selector_matches": [...]`:
-- `"if_not_selector_matches": [...]`:
+- `"if_href_matches": [...]`: リンクの URL がリスト内の pattern のいずれかに一致することを要求
+- `"if_not_href_matches": [...]`: リンクの URL がリスト内のどの pattern にもマッチしない
+- `"if_selector_matches": [...]`: `link`要素がリスト内のいずれかのセレクタにマッチする
+- `"if_not_selector_matches": [...]`: `link`要素がリスト内のどのセレクタにマッチしない
+
+リスト内の要素は現在策定中の[URLPattern](https://github.com/WICG/urlpattern)で pattern を記述することができ、URLPattern のルールに従ってマッチするかどうかが判定される。
+
+##### 拡張フィールド
+
+Speculation Rules では将来的に Rule を拡張できるように設計されている。前述のとおり、UA は理解できない Rule は無視するので、拡張を理解できる UA だけがその拡張を使った Rule を適用することができる。
+
+提案内では 2 つの拡張フィールドが例示されている。これらはあくまで例なので実際に UA がサポートするかは全くわからない。
+
+###### Requirements
+
+```js
+"requires": ["anonymous-client-ip-when-cross-origin"]
+```
+
+Cross-Origin のリクエストが発行された場合に、UA がリクエスト先のオリジンサーバーにクライアントの IP アドレスが見えないようにできるときだけ Rule がマッチする。
+
+###### Handler URLs
+
+```js
+"handler": "/details/_prerender"
+```
+
+ナビゲーションが実際に発生する前に、同一 Origin 上の任意の URL を prerender する。これにより例えば各商品ページの共通のテンプレートのみを prerendering できるようになる。
+
+## これからの prefetch と prerender
+
+- Referrer による Speculation Rules を用いた Opt-in
+- Publisher による Traffic Advice を用いた Opt-out
+- User のブラウザの設定やブラウジングモードによる Opt-out
+
+これらと既存の CSP などの仕組みを組み合わせて、セキュリティ面でもプライバシー面でもユーザーにとって安全な prefetch/prerender を実現しようという取り組みが Chromium チームを中心に進められている。
+
+この取り組みは[Prerender2](https://docs.google.com/document/d/1P2VKCLpmnNm_cRAjUeE-bqLL0bslL_zKqiNeCzNom_w/edit?usp=sharing)と名付けられ、これからの実験の予定や懸念事項などがまとめられている。
+
+現在は[Speculation Rules の Origin Trial](https://developer.chrome.com/origintrials/#/view_trial/4576783121315266561)が進行中だ。この Origin Trial は以下の制限付きで実施されている。
+
+- 追加された Rule の処理のみを行う。削除については無視される。
+- "prefetch_with_subresources" のみを受け入れる。
+- List rules のみを受け入れる。
+- same-origin URL のみを受け入れる。
+- "anonymous-client-ip-when-cross-origin" の場合を除きリダイレクトには従わない。
+  - 実験のため、これを持つ Rule は Google が持つ allow list に登録されている origin からのみ受け入れられる。
+
+どうやら Chrome では先述した Rule 拡張である `"requires": ["anonymous-client-ip-when-cross-origin"]`をサポートする予定のようだ。
+
+## 試してみた

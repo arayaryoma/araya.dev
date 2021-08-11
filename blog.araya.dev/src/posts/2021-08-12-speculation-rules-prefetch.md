@@ -32,7 +32,7 @@ date: "2021-08-12 00:00:00 +0900"
 - Publisher: prefetch リクエストを送る先の Web サイト、もしくはその提供者 (図中 `b.example.com`)
 - Proxy: Brwoser と、Referrer もしくは Publisher の origin server との中間にある proxy server
 
-![User, Browser, Referrer, Publisher, Proxy](/assets/images/speculation-rules/ppp-google-example.svg)
+![User, Browser, Referrer, Publisher, Proxy](/assets/images/speculation-rules/terms.svg)
 
 ## Prerendering / Prefetch
 

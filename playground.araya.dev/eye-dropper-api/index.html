@@ -12,43 +12,56 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <button id="eyedropper" class="eyedropper-button">
-      <img src="./icon-eye-dropper.svg" alt="" class="eyedropper-icon" />
-      Open EyeDropper
-    </button>
-    <div>
-      Picked color: <span id="picked-color" class="picked-color-result"></span>
-    </div>
-    <p>Color Examples</p>
-    <div class="color-examples">
-      <div class="color-example-item" style="background-color: #ff3366">
-        <span class="color-example-item-text">#ff3366</span>
+    <section>
+      <h2>Using <code>&#x3C;input type="color" /></code></h2>
+      <input type="color" id="color-input" name="color-input" value="#f6b73c" />
+      <label for="color-input"
+        >Picked color: <span id="color-input-picked-color"></span
+      ></label>
+    </section>
+    <section>
+      <h2>Using EyeDropper API</h2>
+      <button id="eyedropper" class="eyedropper-button">
+        <img src="./icon-eye-dropper.svg" alt="" class="eyedropper-icon" />
+        Open EyeDropper
+      </button>
+      <div>
+        Picked color:
+        <span id="picked-color" class="picked-color-result"></span>
       </div>
-      <div class="color-example-item" style="background-color: #cc66ff">
-        <span class="color-example-item-text">#cc66ff</span>
+    </section>
+    <section>
+      <h2>Color Examples</h2>
+      <div class="color-examples">
+        <div class="color-example-item" style="background-color: #ff3366">
+          <span class="color-example-item-text">#ff3366</span>
+        </div>
+        <div class="color-example-item" style="background-color: #cc66ff">
+          <span class="color-example-item-text">#cc66ff</span>
+        </div>
+        <div class="color-example-item" style="background-color: #663399">
+          <span class="color-example-item-text">#663399</span>
+        </div>
+        <div class="color-example-item" style="background-color: #99ffcc">
+          <span class="color-example-item-text">#99ffcc</span>
+        </div>
+        <div class="color-example-item" style="background-color: #3399cc">
+          <span class="color-example-item-text">#3399cc</span>
+        </div>
+        <div class="color-example-item" style="background-color: #dc7633">
+          <span class="color-example-item-text">#DC7633</span>
+        </div>
       </div>
-      <div class="color-example-item" style="background-color: #663399">
-        <span class="color-example-item-text">#663399</span>
-      </div>
-      <div class="color-example-item" style="background-color: #99ffcc">
-        <span class="color-example-item-text">#99ffcc</span>
-      </div>
-      <div class="color-example-item" style="background-color: #3399cc">
-        <span class="color-example-item-text">#3399cc</span>
-      </div>
-      <div class="color-example-item" style="background-color: #dc7633">
-        <span class="color-example-item-text">#DC7633</span>
-      </div>
-    </div>
-    <p>sRGB color space</p>
-    <a
-      title="PolBr, CC BY-SA 4.0 &lt;https://creativecommons.org/licenses/by-sa/4.0&gt;, via Wikimedia Commons"
-      href="https://commons.wikimedia.org/wiki/File:SRGB_chromaticity_CIE1931.svg"
-      ><img
-        width="512"
-        alt="SRGB chromaticity CIE1931"
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/SRGB_chromaticity_CIE1931.svg/512px-SRGB_chromaticity_CIE1931.svg.png"
-    /></a>
+      <p>sRGB color space</p>
+      <a
+        title="PolBr, CC BY-SA 4.0 &lt;https://creativecommons.org/licenses/by-sa/4.0&gt;, via Wikimedia Commons"
+        href="https://commons.wikimedia.org/wiki/File:SRGB_chromaticity_CIE1931.svg"
+        ><img
+          width="512"
+          alt="SRGB chromaticity CIE1931"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/SRGB_chromaticity_CIE1931.svg/512px-SRGB_chromaticity_CIE1931.svg.png"
+      /></a>
+    </section>
 
     <script src="./main.js" defer></script>
   </body>

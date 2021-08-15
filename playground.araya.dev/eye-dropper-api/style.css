@@ -1,3 +1,6 @@
+section {
+  margin-block-start: 24px;
+}
 .eyedropper-button {
   background: #ffffff;
   display: flex;

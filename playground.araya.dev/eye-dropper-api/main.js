@@ -20,3 +20,11 @@ if (typeof window.EyeDropper === "undefined") {
       });
   });
 }
+
+const colorInputResultText = document.getElementById(
+  "color-input-picked-color"
+);
+const colorInputElement = document.getElementById("color-input");
+colorInputElement.addEventListener("input", (e) => {
+  colorInputResultText.innerText = colorInputElement.value;
+});

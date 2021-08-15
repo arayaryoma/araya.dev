@@ -1,0 +1,41 @@
+.eyedropper-button {
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  height: 2em;
+  border: none;
+  border: 1px solid #cccccc;
+  border-radius: 0.5em;
+  padding: 0.5em;
+  cursor: pointer;
+}
+.eyedropper-button:hover {
+  background: #dddddd;
+}
+
+.eyedropper-icon {
+  height: 100%;
+  margin-inline-end: 1em;
+}
+
+.picked-color-result {
+  font-family: "Courier New", Courier, monospace;
+}
+
+.color-examples {
+  display: flex;
+}
+.color-example-item {
+  width: 120px;
+  height: 120px;
+  display: flex;
+}
+
+.color-example-item-text {
+  box-sizing: border-box;
+  background-color: black;
+  padding: 0.5em;
+  height: 2em;
+  color: white;
+  font-family: "Courier New", Courier, monospace;
+}

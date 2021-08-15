@@ -6,6 +6,8 @@ if (typeof window.EyeDropper === "undefined") {
   const eyeDropper = new EyeDropper();
   const resultTextArea = document.getElementById("picked-color");
 
+  // calling EyeDropper::open without user gesture will cause an exception:
+  //   DOMException: Failed to execute 'open' on 'EyeDropper': EyeDropper::open() requires user gesture.
   document.getElementById("eyedropper").addEventListener("click", (e) => {
     eyeDropper
       .open()
@@ -14,7 +16,7 @@ if (typeof window.EyeDropper === "undefined") {
         console.log(colorSelectionResult);
       })
       .catch((error) => {
-        console.error(colorSelectionResult);
+        console.error(error);
       });
   });
 }

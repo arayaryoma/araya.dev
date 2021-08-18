@@ -63,7 +63,7 @@ eyeDropper
 
 [draft の`ColorSectionReulst`の定義](https://wicg.github.io/eyedropper-api/#colorselectionresult-dictionary)を見ると、`sRGBHex` というキーで、取得した色の sRGB 色空間での値が取れることがわかる。実際にデモでも期待する動作が得られた。
 
-でも動画内では同一のページ内からのみ色を取得しているが、実際には**スクリーン上のどのピクセルからでも**色を取得することができる。
+デモ動画内では同一のページ内からのみ色を取得しているが、実際には**スクリーン上のどのピクセルからでも**色を取得することができる。
 
 ユーザーが eyedropper での色取得をキャンセルした場合は`DOMException`で reject される。
 他にも eyedropper を重複して呼び出そうとした場合などには reject される。詳しくは[`open()`メソッドの定義](https://wicg.github.io/eyedropper-api/#eyedropper-interface)を見てほしい。

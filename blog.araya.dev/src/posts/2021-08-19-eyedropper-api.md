@@ -26,7 +26,7 @@ OS	macOS Version 11.4 (Build 20F71)
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/bXvhmeY1atA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-ボタンを押すとカラーピッカー UI を介すことなく eyedropper が起動し、取得した色をボタンの下に出力している。
+ボタンを押すとカラーピッカー UI を介すことなく eyedropper が起動している。取得した色はボタンの下に出力している。
 
 ## モチベーション
 
@@ -72,7 +72,7 @@ eyeDropper
 
 `EyeDropper::open()` を呼び出すときには、ユーザーがクリックなどの明示的なジェスチャーを示していることが必要。このハンドルをせずに、単に`open()`メソッドを呼び出した場合は reject される。
 
-これにより、ユーザーが意図しないうちに eyedropper が起動していてクリックをしたら Web アプリケーションにスクリーン上(Web アプリ内とは限らない)のピクセルデータが渡ってしまうことを防いでいる。
+これにより、ユーザーが意図しないうちに eyedropper が起動していて、クリックをしたら Web アプリケーションにスクリーン上 (Web アプリ内とは限らない)のピクセルデータが渡ってしまう、ということを防いでいる。
 
 ## 他ブラウザのサポート
 

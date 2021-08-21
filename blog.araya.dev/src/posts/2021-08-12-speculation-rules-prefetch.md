@@ -38,7 +38,7 @@ date: "2021-08-12 00:00:00 +0900"
 
 [Resource Hints](https://www.w3.org/TR/resource-hints/) の 1 つである Prerender の、 [Chrome におけるかつての実装](https://www.chromium.org/developers/design-documents/prerender)では
 リンク先のリソースをユーザーが遷移するよりも先にダウンロードして、バックグラウンドで JS も実行してページを内部的にレンダリングしていたが、
-2017 年はじめに[取り下げられた]。(https://groups.google.com/a/chromium.org/g/Blink-dev/c/0nSxuuv9bBw/m/l0pN2tUjCQAJ)、2018 年には[NoState Prefetch](https://developers.google.com/web/updates/2018/07/nostate-prefetch)という仕組みに置き換えられている。
+2017 年はじめに[取り下げられ](https://groups.google.com/a/chromium.org/g/Blink-dev/c/0nSxuuv9bBw/m/l0pN2tUjCQAJ)、2018 年には[NoState Prefetch](https://developers.google.com/web/updates/2018/07/nostate-prefetch)という仕組みに置き換えられている。
 
 Chrome の NoState Prefetch prerender の Resource Hint に対して発火し、リソースの先読みはするが JS の実行やレンダリングはしない。prefetch とは異なり、事前取得の対象が html なら html をスキャンして、サブリソースも含めて事前取得しておく。
 
@@ -67,7 +67,7 @@ Chrome および Google では、Google が提供しているサービスから�
 この Google が提供するサービス での例は[Chromium Blog](https://blog.chromium.org/2020/12/continuing-our-journey-to-bring-instant.html)でが紹介されたものだが、記事執筆時点で筆者が Google Search で検証した限りは Private Prefetch Proxy 経由での prefetch や prerender は発見できなかった。
 将来的になにかアナウンスがあるかもしれない。
 
-### Opt-in / Opt-out
+## Opt-in / Opt-out
 
 ### Opt-out
 

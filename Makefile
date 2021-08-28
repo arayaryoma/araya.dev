@@ -29,7 +29,7 @@ blog-build:
 	cd blog.araya.dev && yarn run build && cd ..
 
 .PHONY: blog-deploy
-blog-deploy: blog-build
+blog-deploy:
 	rsync --delete -r -e "ssh -i ~/.ssh/id_rsa" ./blog.araya.dev/dist/ ubuntu@${SERVER_IP}:/var/www/araya.dev/blog.araya.dev/dist
 .PHONY: sync-nevertls
 sync-nevertls:

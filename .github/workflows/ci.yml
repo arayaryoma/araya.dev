@@ -7,12 +7,20 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-blog:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
-    - name: Hello World
+    - name: Setup Node.js env
+      uses: actions/setup-node@v2.4.0
+      with:
+        node-version: 16
+        check-latest: true
+    - name: Build blog
+      workikng-directory: ./blog.araya.dev
       run: |
-        echo "Hello, World"
+        yarn
+        yarn run build
+        

@@ -19,7 +19,7 @@ jobs:
         node-version: 16
         check-latest: true
     - name: Build blog
-      workikng-directory: ./blog.araya.dev
+      working-directory: ./blog.araya.dev
       run: |
         yarn
         yarn run build

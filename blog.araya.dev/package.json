@@ -22,7 +22,7 @@
     "remark": "^13.0.0",
     "remark-extract-frontmatter": "^3.1.0",
     "remark-frontmatter": "^3.0.0",
-    "remark-html": "^13.0.1",
+    "remark-html": "^13.0.2",
     "rimraf": "^3.0.2",
     "to-vfile": "^6.1.0",
     "ts-node": "^9.1.1",

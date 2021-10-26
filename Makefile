@@ -16,16 +16,16 @@ upload-h2oconf:
 upload-makefile:
 	scp -r -i ~/.ssh/id_rsa ./Makefile ubuntu@${SERVER_IP}:/var/www/araya.dev/
 
-.PHONY: sync-all
-sync-all:
+.PHONY: deploy-all
+deploy-all:
 	rsync --exclude "**/node_modules" --delete -r -e "ssh -i ~/.ssh/id_rsa" ./ ubuntu@${SERVER_IP}:/var/www/araya.dev/
 
-.PHONY: sync-www
-sync-www:
+.PHONY: deploy-www
+deploy-www:
 	rsync --delete -r -e "ssh -i ~/.ssh/id_rsa" ./www.araya.dev/ ubuntu@${SERVER_IP}:/var/www/araya.dev/www.araya.dev/
 
-.PHONY: sync-pg
-sync-pg:
+.PHONY: deploy-pg
+deploy-pg:
 	rsync --delete -r -e "ssh -i ~/.ssh/id_rsa" ./playground.araya.dev/ ubuntu@${SERVER_IP}:/var/www/araya.dev/playground.araya.dev/
 
 .PHONY: dev-blog
@@ -33,16 +33,16 @@ blog-dev:
 	cd blog.araya.dev && yarn run watch &
 	sudo h2o -c conf/h2o/local/blog.conf
 
-.PHONY: blog-build
+.PHONY: build-blog
 blog-build: 
 	cd blog.araya.dev && yarn run build && cd ..
 
-.PHONY: blog-deploy
-blog-deploy:
+.PHONY: deploy-blog 
+deploy-blog:
 	rsync --delete -r -e "ssh -i ~/.ssh/id_rsa" ./blog.araya.dev/dist/ ubuntu@${SERVER_IP}:/var/www/araya.dev/blog.araya.dev/dist
 
-.PHONY: sync-nevertls
-sync-nevertls:
+.PHONY: deploy-nevertls
+deploy-nevertls:
 	rsync --delete -r -e "ssh -i ~/.ssh/id_rsa" ./nevertls.araya.dev/ ubuntu@${SERVER_IP}:/var/www/araya.dev/nevertls.araya.dev/
 
 .PHONY: start

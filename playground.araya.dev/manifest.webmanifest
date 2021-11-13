@@ -1,0 +1,16 @@
+{
+  "short_name": "Playground",
+  "name": "araya's playground",
+  "start_url": "/",
+  "background_color": "#6450A1",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#6450A1",
+  "icons": [
+    {
+      "src": "/images/icon.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    }
+  ]
+}

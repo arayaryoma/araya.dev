@@ -12,5 +12,8 @@
       "type": "image/png",
       "sizes": "1195x1195"
     }
+  ],
+  "protocol_handlers": [
+    { "protocol": "web+arayapg", "url": "/url-protocol-handler?params=%s" }
   ]
 }

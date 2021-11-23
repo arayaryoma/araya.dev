@@ -15,5 +15,6 @@
   ],
   "protocol_handlers": [
     { "protocol": "web+arayapg", "url": "/url-protocol-handler?params=%s" }
-  ]
+  ],
+  "display_override": ["window-controls-overlay"]
 }

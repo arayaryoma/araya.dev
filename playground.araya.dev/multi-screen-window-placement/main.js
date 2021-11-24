@@ -20,3 +20,8 @@ btn.addEventListener("click", () => {
     document.exitFullscreen();
   }
 });
+
+window.screen.addEventListener("change", (e) => {
+  console.log("window.screen has changed: ", e);
+});
+

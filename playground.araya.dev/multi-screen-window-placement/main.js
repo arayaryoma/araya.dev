@@ -34,3 +34,18 @@ getScreenDetailBtn.addEventListener("click", async () => {
     console.error("Failed to get screen details: ", e);
   }
 });
+
+const moveToForm = document.querySelector("#moveToForm");
+moveToForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const x = e.target.elements.x.value;
+  const y = e.target.elements.y.value;
+
+  window.moveTo(screen.availLeft + x, screen.availTop + y);
+});
+const permissionStatusEl = document.querySelector("#permissionStatus");
+navigator.permissions
+  .query({ name: "window-placement" })
+  .then(function (status) {
+    permissionStatusEl.innerText = status.state;
+  });

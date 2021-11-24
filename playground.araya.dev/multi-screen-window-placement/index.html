@@ -14,19 +14,35 @@
   <body>
     <div id="mainContent">
       <section>
-        <h1>How to use</h1>
         <button id="toggleBtn">Toggle Fullscreen</button>
-
+      </section>
+      <section>
+        <h1>window.moveTo</h1>
+        <form id="moveToForm">
+          <label for="x">x</label>
+          <input type="number" id="x" name="x" />
+          <label for="y">y</label>
+          <input type="number" id="y" name="y" />
+          <button type="submit">Move</button>
+        </form>
+      </section>
+      <section>
+        <h1>Screen nums detector</h1>
+        <p><span id="screensNumMessage"></span></p>
+      </section>
+      <section>
+        <h1>Window Placement permission status</h1>
+        <p>
+          You'll see the below status has changed after you woud click "Get
+          screen detail" button and allow the permission, and reload the page.
+        </p>
         <button id="getScreenDetailBtn">Get Screen detail</button>
         <p>
           <a href="chrome://settings/content/windowPlacement"
             >[Chrome] You can remove this site from the allow/deny list</a
           >
         </p>
-      </section>
-      <section>
-        <h1>Execution log</h1>
-        <p><span id="screensNumMessage"></span></p>
+        <p>Status: <span id="permissionStatus"></span></p>
       </section>
     </div>
     <script src="./main.js" defer></script>

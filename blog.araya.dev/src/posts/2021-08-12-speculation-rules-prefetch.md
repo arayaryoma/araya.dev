@@ -4,6 +4,7 @@ tags:
   - browser
   - Web API
 date: "2021-08-12 00:00:00 +0900"
+description: origin をまたいでsecureにprefetchを実行するために、中間にproxyを挟む提案がChromeチームから出されている。
 ---
 
 ## はじめに

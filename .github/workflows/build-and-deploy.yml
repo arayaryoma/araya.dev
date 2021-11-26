@@ -1,0 +1,35 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  deploy-blog:
+    runs-on: ubuntu-latest
+    env:
+      SSH_KEY: ${{ secrets.SSH_KEY }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node.js env
+        uses: actions/setup-node@v2.4.0
+        with:
+          node-version: 16
+          check-latest: true
+      - name: Build blog
+        working-directory: ./blog.araya.dev
+        run: |
+          yarn
+          yarn run build
+      - name: Setup SSH keys
+        run: |
+          mkdir -p ~/.ssh
+          echo -e "${SSH_KEY}" > ~/.ssh/key
+          chmod og-rwx ~/.ssh/key
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+          ssh-keyscan -H bitbucket.org >> ~/.ssh/known_hosts
+      - name: Deploy all
+        run: |
+          rsync --exclude "**/node_modules" --delete -r -e "ssh -i ~/.ssh/key" ./ ubuntu@${SERVER_IP}:/var/www/araya.dev/

@@ -54,7 +54,7 @@ const getPosts = async (): Promise<Posts> => {
 
     const changeLogs = await getLog(`${postsDir}/${dirEntry.name}`);
 
-    const { content: parsed, title, tags } = await mdToHtml(content);
+    const { content: parsed, title, description } = await mdToHtml(content);
 
     // const { title } = parsed.meta;
     const post: Post = {
@@ -66,6 +66,7 @@ const getPosts = async (): Promise<Posts> => {
       ampUrl: `posts/${date}/${fileName}.amp.html`,
       canonicalUrl: `https://blog.araya.dev/posts/${date}/${fileName}.html`,
       changeLogs,
+      description,
     };
     posts.push(post);
   }

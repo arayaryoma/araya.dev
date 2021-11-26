@@ -15,6 +15,7 @@ type Post = {
   date: string;
   tags: string[];
   url: string;
+  description?: string;
   ampUrl: string;
   canonicalUrl: string;
   changeLogs: Array<GitLog>;

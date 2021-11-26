@@ -4,11 +4,7 @@ export const meta = {
 };
 
 type Props = {
-  posts: Array<{
-    title: string;
-    date: string;
-    url: string;
-  }>;
+  posts: Array<Post>;
 };
 
 const speculationRules = `{
@@ -44,6 +40,9 @@ export const Home = (props: Props) => {
                       {post.date}
                     </time>
                     <h2 className="posts-list-item__title">{post.title}</h2>
+                    <p className="posts-list-item__description">
+                      {post.description}
+                    </p>
                   </article>
                 </a>
               </li>

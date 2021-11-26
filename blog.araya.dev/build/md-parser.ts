@@ -11,11 +11,21 @@ const parser = remark()
 
 export const mdToHtml = async (
   mdContent: string
-): Promise<{ content: string; title: string; tags: string[] }> => {
+): Promise<{
+  content: string;
+  title: string;
+  tags: string[];
+  description: string | undefined;
+}> => {
   return new Promise((resolve, reject) => {
     parser.process(mdContent, (err, file) => {
       const data: any = file.data;
-      resolve({ content: file.toString(), title: data.title, tags: data.tags });
+      resolve({
+        content: file.toString(),
+        title: data.title,
+        tags: data.tags,
+        description: data.description,
+      });
     });
   });
 };

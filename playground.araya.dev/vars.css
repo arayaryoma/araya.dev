@@ -1,0 +1,49 @@
+:root {
+  --black: #13111d;
+  --navy: #1c1b3c;
+  --mat-black: #333333;
+  --gray-dark-3: #272627;
+  --gray-dark-2: #4f4f4f;
+  --gray-dark-1: #828282;
+  --gray-light-1: #bdbdbd;
+  --gray-light-2: #dedede;
+  --gray-light-3: #e0e0e0;
+  --gray-light-4: #f2f2f2;
+  --gray-light-5: #f8f8f8;
+  --mat-red: #eb5757;
+  --orange: #f2994a;
+  --canary-yellow: #f2c94c;
+  --forest-green: #219653;
+  --lime-green: #27ae60;
+  --emeral-green: #6fcf97;
+  --eyes-blue: #2f80ed;
+  --butterfly-blue: #2d9cdb;
+  --sky-blue: #56ccf2;
+  --violet: #9b51e0;
+  --amethyst-purple: #bb6bd9;
+  --araya-purple: #6450a1;
+  --dracula-bg: #282a36;
+  --box-shadow-gray: rgba(0, 0, 0, 0.2);
+  --lavendar-purple: #9d8ec7;
+  --background-color: var(--gray-light-2);
+  --text-face-color: var(--black);
+  --xs-max: 425px;
+  --sm-min: 426px;
+  --sm-max: 767px;
+  --md-min: 768px;
+  --md-max: 1024px;
+  --lg-min: 1025px;
+  --lg-max: 1440px;
+  --xl-min: 1441px;
+  --grid-column-gap: 20px;
+  --grid-template-columns: repeat(
+    12,
+    calc((100% - var(--grid-column-gap) * 11) / 12)
+  );
+  --footer-height: 142px;
+  --font-size-huge: 4.8rem;
+  --font-size-large: 2rem;
+  --default-font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN",
+    "Hiragino Sans", Meiryo, sans-serif;
+  --global-nav-bg: var(--gray-light-4);
+}

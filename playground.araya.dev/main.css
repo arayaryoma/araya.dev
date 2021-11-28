@@ -1,0 +1,16 @@
+@import url("./vars.css");
+
+body {
+  --background-color: var(--gray-light-2);
+  --text-face-color: var(--black);
+}
+@media screen and (prefers-color-scheme: dark) {
+  body {
+    background-color: var(--gray-dark-3);
+    color: var(--gray-light-2);
+  }
+}
+
+a {
+  color: var(--butterfly-blue);
+}

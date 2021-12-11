@@ -106,6 +106,7 @@ const buildAssets = async (srcDir: string): Promise<Map<string, string>> => {
       if (asset.endsWith(".js")) replaceJsModulePaths(asset, map);
     }
   }
+  console.log(map)
   return map;
 };
 

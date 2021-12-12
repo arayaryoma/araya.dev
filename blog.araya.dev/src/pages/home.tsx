@@ -29,7 +29,7 @@ export const Home = (props: Props) => {
                 <a href={post.url}>
                   <article className="posts-list-item__content">
                     <img
-                      src={props.defaultThumbnailSrc}
+                      src="/assets/images/default-thumbnail.svg"
                       alt="thumbnail"
                       className="posts-list-item__thumbnail"
                       loading="lazy"

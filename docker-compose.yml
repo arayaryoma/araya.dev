@@ -13,3 +13,5 @@ services:
       - "./www.araya.dev:/var/www/araya.dev/www.araya.dev"
       - "./playground.araya.dev:/var/www/araya.dev/playground.araya.dev"
       - "./logs:/var/logs"
+      - "./conf/nginx/nginx.local.conf:/etc/nginx/nginx.conf"
+      - "./conf/nginx/share:/etc/nginx/share"

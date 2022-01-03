@@ -21,7 +21,8 @@ sudo apt install -y \
 	gcc \
 	g++ \
 	make \
-	golang
+	golang \
+	libunwind-dev
 
 sudo mkdir -p /var/logs
 mkdir -p /etc/nginx

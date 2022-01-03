@@ -12,6 +12,11 @@ download-access-log:
 upload-h2oconf:
 	scp -r -i ~/.ssh/id_rsa ./h2o.conf ./conf ubuntu@${SERVER_IP}:/var/www/araya.dev/
 
+
+.PHONY: upload-scripts
+upload-scripts:
+	scp -r -i ~/.ssh/id_rsa ./scripts ubuntu@${SERVER_IP}:/var/www/araya.dev/
+
 .PHONY: upload-makefile
 upload-makefile:
 	scp -r -i ~/.ssh/id_rsa ./Makefile ubuntu@${SERVER_IP}:/var/www/araya.dev/

@@ -8,10 +8,6 @@ ssh:
 download-access-log:
 	scp -r -i ~/.ssh/id_rsa ubuntu@${SERVER_IP}:/logs/access-log ./logs/prod/
 
-.PHONY: upload-h2oconf
-upload-h2oconf:
-	scp -r -i ~/.ssh/id_rsa ./h2o.conf ./conf ubuntu@${SERVER_IP}:/var/www/araya.dev/
-
 .PHONY: upload-nginxconf
 upload-nginxconf:
 	scp -r -i ~/.ssh/id_rsa ./conf/nginx/nginx.conf ubuntu@${SERVER_IP}:/etc/nginx/nginx.conf
@@ -54,17 +50,13 @@ deploy-blog:
 deploy-nevertls:
 	rsync --delete -r -e "ssh -i ~/.ssh/id_rsa" ./nevertls.araya.dev/ ubuntu@${SERVER_IP}:/var/www/araya.dev/nevertls.araya.dev/
 
-.PHONY: start
+.PHONY: start:prod
 start:
-	sudo h2o -c ./h2o.conf
+	sudo nginx
 
-.PHONY: daemon
-daemon:
-	sudo h2o -m daemon -c ./h2o.conf
-
-.PHONY: restart
+.PHONY: restart:prod
 restart:
-	sudo kill -TERM `cat /logs/pid-file` && make daemon
+	sudo nginx -s reload
 
 .PHONY: certificate
 certificate:

@@ -12,6 +12,10 @@ download-access-log:
 upload-h2oconf:
 	scp -r -i ~/.ssh/id_rsa ./h2o.conf ./conf ubuntu@${SERVER_IP}:/var/www/araya.dev/
 
+.PHONY: upload-nginxconf
+upload-nginxconf:
+	scp -r -i ~/.ssh/id_rsa ./conf/nginx/nginx.conf ubuntu@${SERVER_IP}:/etc/nginx/nginx.conf
+	scp -r -i ~/.ssh/id_rsa ./conf/nginx/share ubuntu@${SERVER_IP}:/etc/nginx/
 
 .PHONY: upload-scripts
 upload-scripts:

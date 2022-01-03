@@ -1,9 +1,10 @@
 #!/bin/bash
 
 NGINX_VERSION=1.21.5
+sudo add-apt-repository -y ppa:longsleep/golang-backports
+sudo apt update
 
-apt update && \
-	apt install -y \
+sudo apt install -y \
 	openssh-client \
 	git \
 	wget \
@@ -19,7 +20,8 @@ apt update && \
 	automake \
 	gcc \
 	g++ \
-	make
+	make \
+	golang
 
 sudo mkdir -p /var/logs
 mkdir -p /etc/nginx
@@ -42,4 +44,15 @@ sudo make && sudo make install
 
 echo "export PATH=/etc/nginx/sbin:$PATH" >> .zshrc
 source ~/.zshrc
+
+# Build BoringSSL
+cd /etc
+git clone https://boringssl.googlesource.com/boringssl
+cd boringssl
+mkdir -p build
+cd build
+cmake ..
+make
+
+
 

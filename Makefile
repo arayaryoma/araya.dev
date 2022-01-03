@@ -50,12 +50,12 @@ deploy-blog:
 deploy-nevertls:
 	rsync --delete -r -e "ssh -i ~/.ssh/id_rsa" ./nevertls.araya.dev/ ubuntu@${SERVER_IP}:/var/www/araya.dev/nevertls.araya.dev/
 
-.PHONY: start:prod
-start:
+.PHONY: start-prod
+start-prod:
 	sudo nginx
 
-.PHONY: restart:prod
-restart:
+.PHONY: restart-prod
+restart-prod:
 	sudo nginx -s reload
 
 .PHONY: certificate

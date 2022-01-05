@@ -28,13 +28,17 @@ mkdir -p /etc/nginx
 cd /etc/nginx
 
 hg clone -b quic https://hg.nginx.org/nginx-quic
-git clone https://github.com/openresty/headers-more-nginx-module.git
+git clone --depth 1 https://github.com/openresty/headers-more-nginx-module.git
+git clone --depth 1 https://github.com/google/ngx_brotli.git
+cd ngx_brotli
+git submodule update --init
 
-cd nginx-quic
+cd /etc/nginx/nginx-quic
 
 ./auto/configure --prefix=/etc/nginx \
 --conf-path=/etc/nginx/nginx.conf \
 --add-dynamic-module=/etc/nginx/headers-more-nginx-module \
+--add-dynamic-module=/etc/nginx/ngx_brotli \
 --with-http_ssl_module \
 --with-http_v2_module \
 --with-debug --with-http_v3_module \
@@ -42,7 +46,7 @@ cd nginx-quic
 --with-ld-opt="-L../boringssl/build/ssl -L../boringssl/build/crypto"
 
 make modules
-cp objs/ngx_http_headers_more_filter_module.so /etc/nginx/modules/
+cp objs/*.so /etc/nginx/modules/
 
 make && make install
 

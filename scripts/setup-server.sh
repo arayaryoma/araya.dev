@@ -1,10 +1,8 @@
 #!/bin/bash
 
-NGINX_VERSION=1.21.5
-sudo add-apt-repository -y ppa:longsleep/golang-backports
-sudo apt update
+apt update
 
-sudo apt install -y \
+apt install -y \
 	openssh-client \
 	git \
 	wget \
@@ -21,39 +19,33 @@ sudo apt install -y \
 	gcc \
 	g++ \
 	make \
-	golang \
-	libunwind-dev
+	mercurial
 
-sudo mkdir -p /var/logs
+mkdir -p /var/logs
 mkdir -p /etc/nginx
 
+# Build Nginx with BoringSSL
 cd /etc/nginx
 
-wget "http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz" && \
-	tar -xzvf nginx-${NGINX_VERSION}.tar.gz
-
+hg clone -b quic https://hg.nginx.org/nginx-quic
 git clone https://github.com/openresty/headers-more-nginx-module.git
 
-cd /etc/nginx/nginx-${NGINX_VERSION}
+cd nginx-quic
 
-./configure --prefix=/etc/nginx --conf-path=/etc/nginx/nginx.conf --add-dynamic-module=/etc/nginx/headers-more-nginx-module --with-http_ssl_module --with-http_v2_module
+./auto/configure --prefix=/etc/nginx \
+--conf-path=/etc/nginx/nginx.conf \
+--add-dynamic-module=/etc/nginx/headers-more-nginx-module \
+--with-http_ssl_module \
+--with-http_v2_module \
+--with-debug --with-http_v3_module \
+--with-cc-opt="-I../boringssl/include" \
+--with-ld-opt="-L../boringssl/build/ssl -L../boringssl/build/crypto"
 
 make modules
 cp objs/ngx_http_headers_more_filter_module.so /etc/nginx/modules/
 
-sudo make && sudo make install
+make && make install
 
-echo "export PATH=/etc/nginx/sbin:$PATH" >> .zshrc
-source ~/.zshrc
-
-# Build BoringSSL
-cd /etc
-git clone https://boringssl.googlesource.com/boringssl
-cd boringssl
-mkdir -p build
-cd build
-cmake ..
-make
-
-
-
+# echo "export PATH=/etc/nginx/sbin:$PATH" >> .zshrc
+# source ~/.zshrc
+cp /etc/nginx/sbin/nginx /usr/local/sbin

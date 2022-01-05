@@ -15,7 +15,7 @@ upload-nginxconf:
 
 .PHONY: upload-scripts
 upload-scripts:
-	scp -r -i ~/.ssh/id_rsa ./scripts ubuntu@${SERVER_IP}:/var/www/araya.dev/
+	scp -r -i ~/.ssh/id_rsa ./scripts/* ubuntu@${SERVER_IP}:/scripts
 
 .PHONY: upload-makefile
 upload-makefile:

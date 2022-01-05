@@ -41,9 +41,11 @@ cd /etc/nginx/nginx-quic
 --add-dynamic-module=/etc/nginx/ngx_brotli \
 --with-http_ssl_module \
 --with-http_v2_module \
---with-debug --with-http_v3_module \
+--with-debug \
+--with-http_v3_module \
 --with-cc-opt="-I../boringssl/include" \
---with-ld-opt="-L../boringssl/build/ssl -L../boringssl/build/crypto"
+--with-ld-opt="-L../boringssl/build/ssl \
+-L../boringssl/build/crypto"
 
 make modules
 cp objs/*.so /etc/nginx/modules/

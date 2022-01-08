@@ -29,6 +29,7 @@ cd /etc/nginx
 
 hg clone -b quic https://hg.nginx.org/nginx-quic
 git clone --depth 1 https://github.com/openresty/headers-more-nginx-module.git
+git clone --depth 1 https://github.com/flano-yuki/ngx_http_early_hints.git
 git clone --depth 1 https://github.com/google/ngx_brotli.git
 cd ngx_brotli
 git submodule update --init
@@ -39,6 +40,7 @@ cd /etc/nginx/nginx-quic
 --conf-path=/etc/nginx/nginx.conf \
 --add-dynamic-module=/etc/nginx/headers-more-nginx-module \
 --add-dynamic-module=/etc/nginx/ngx_brotli \
+--add-dynamic-module=/etc/nginx/ngx_http_early_hints \
 --with-http_ssl_module \
 --with-http_v2_module \
 --with-debug \

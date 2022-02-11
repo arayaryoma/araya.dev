@@ -49,7 +49,6 @@ cd /etc/nginx/nginx-quic
 --with-ld-opt="-L../boringssl/build/ssl \
 -L../boringssl/build/crypto"
 
-make modules
 cp objs/*.so /etc/nginx/modules/
 
 make && make install

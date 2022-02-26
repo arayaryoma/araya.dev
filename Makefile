@@ -70,3 +70,9 @@ certificate:
 	--agree-tos \
 	--non-interactive \
 	--cert-name araya.dev
+
+.PHONY: build-boringssl
+build-boringssl:
+	docker build -f Dockerfile.boringssl -t boringssl-builder .
+	docker run --rm -v ${PWD}/lib/boringssl:/etc/boringssl boringssl-builder /scripts/build-boringssl
+

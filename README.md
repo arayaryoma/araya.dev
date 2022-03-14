@@ -3,3 +3,7 @@
 1. Add certificate files into certs/ directory. fullchain.pem and privkey.pem is required to launch HTTPS server.
 2. `docker-compose build && docker-compose up -d`
 3. Go to https://local.araya.dev:8443
+
+## Build BoringSSL for ubuntu env
+
+`make build-boringssl` will generate lib/boringssl/build.

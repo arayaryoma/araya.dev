@@ -1,10 +1,18 @@
 :root {
-    --primary-color: #6450A1;
-    --black: #3E3E3E;
-    --vivid-purple: #542EBD;
-    --blue: #6c92ff;
-    --dark-gray-1: #5E5E5E;
-    --gray-1: #CECECE;
-    --gray-2: #FCFCFC;
-    --gray-3: #EFEFEF;
+  --primary-color: #6450a1;
+  --black: #3e3e3e;
+  --vivid-purple: #542ebd;
+  --blue: #6c92ff;
+  --dark-gray-1: #5e5e5e;
+  --gray-1: #cecece;
+  --gray-2: #fcfcfc;
+  --gray-3: #efefef;
+  --dark: #342d48;
+  --orange: #c8a378;
+  --background: linear-gradient(
+    127.83deg,
+    #342d48 30.19%,
+    var(--primary-color) 53.86%,
+    var(--orange) 97.13%
+  );
 }

@@ -9,7 +9,7 @@
     "prettier": "^2.6.0"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,css,md,html}": "prettier --write"
+    "*.{js,jsx,ts,tsx,css,md,html}": "yarn run prettier --write"
   },
   "scripts": {
     "prepare": "husky install"

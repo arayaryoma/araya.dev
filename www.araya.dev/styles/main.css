@@ -13,10 +13,15 @@ body {
   background: var(--background);
   color: var(--gray-1);
 }
+* {
+  box-sizing: border-box;
+}
 
 .container {
-  width: 900px;
-  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  padding: 60px;
+  display: grid;
 }
 
 .profile {
@@ -51,8 +56,44 @@ body {
 }
 
 .icon {
-  width: 200px;
-  height: 200px;
+  --hex-width: 200px;
+  --hex-height: calc(1.732 / 2 * var(--hex-width));
+  --border-radius: 16px / 4%;
+  border-radius: var(--border-radius);
+  background: var(--primary-color);
+  width: calc(var(--hex-width) / 2);
+  height: var(--hex-height);
+  position: relative;
+  justify-self: end;
+  place-self: end;
+  display: grid;
+  place-content: center;
+  margin-inline-end: calc(var(--hex-width) / 4);
+}
+
+.icon::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  background: var(--primary-color);
+  width: calc(var(--hex-width) / 2);
+  height: var(--hex-height);
+  border-radius: var(--border-radius);
+  transform: rotate(60deg);
+}
+.icon::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  background: var(--primary-color);
+  width: calc(var(--hex-width) / 2);
+  height: var(--hex-height);
+  border-radius: var(--border-radius);
+  transform: rotate(-60deg);
 }
 
 .icon img {

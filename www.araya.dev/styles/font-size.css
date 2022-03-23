@@ -1,0 +1,7 @@
+:root {
+  font-size: 0.625rem; /* 10px */
+  --font-size-120: 12rem;
+  --font-size-64: 6.4rem;
+
+  --font-size-heading-1: var(--font-size-120);
+}

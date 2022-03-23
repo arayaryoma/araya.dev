@@ -1,20 +1,32 @@
 @import url("https://necolas.github.io/normalize.css/8.0.1/normalize.css");
 @import url("https://fonts.googleapis.com/css?family=Muli");
 @import "variables.css";
+@import "font-size.css";
+
 html {
   height: 100%;
 }
 
 body {
-  font-family: "Muli", sans-serif;
+  font-family: "Helvetica", sans-serif;
   height: 100%;
   display: flex;
   align-items: center;
   background: var(--background);
-  color: var(--gray-1);
+  color: var(--white);
 }
 * {
   box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
 }
 
 .container {
@@ -24,35 +36,23 @@ body {
   display: grid;
 }
 
-.profile {
+.nav {
+  justify-self: end;
+}
+.nav-list {
   display: flex;
-  justify-content: center;
-}
-.profile-contents {
-  margin-left: 2em;
-}
-.profile-color {
-  position: relative;
-  padding-left: 1.5em;
-}
-.profile-color::before {
-  position: absolute;
-  top: 0;
-  left: 0;
-  content: "";
-  width: 1em;
-  height: 1em;
-  border: 1px solid black;
-  background-color: var(--primary-color);
-}
-
-.profile-list {
+  flex-direction: column;
+  align-items: flex-end;
   list-style: none;
-  padding: 0;
+}
+.nav-item {
+  font-size: var(--font-size-64);
+  font-weight: bold;
 }
 
-.profile-list li {
-  line-height: 1.5em;
+.section-heading {
+  font-size: var(--font-size-heading-1);
+  font-weight: bold;
 }
 
 .icon {
@@ -100,6 +100,8 @@ body {
   width: 100%;
 }
 
+/*
+
 .links {
   list-style: none;
   display: flex;
@@ -117,3 +119,34 @@ body {
 .links img {
   height: 100%;
 }
+.profile {
+  display: flex;
+  justify-content: center;
+}
+.profile-contents {
+  margin-left: 2em;
+}
+.profile-color {
+  position: relative;
+  padding-left: 1.5em;
+}
+.profile-color::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: "";
+  width: 1em;
+  height: 1em;
+  border: 1px solid black;
+  background-color: var(--primary-color);
+}
+
+.profile-list {
+  list-style: none;
+  padding: 0;
+}
+
+.profile-list li {
+  line-height: 1.5em;
+}
+*/

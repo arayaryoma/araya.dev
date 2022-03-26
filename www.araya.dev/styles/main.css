@@ -1,6 +1,8 @@
 @import url("https://necolas.github.io/normalize.css/8.0.1/normalize.css");
 @import url("https://fonts.googleapis.com/css?family=Muli");
 @import "variables.css";
+@import "font-size.css";
+
 html {
   height: 100%;
 }
@@ -48,6 +50,10 @@ body {
 
 .profile-list li {
   line-height: 1.5em;
+}
+
+.section-heading {
+  font-size: var(--font-size-heading-1);
 }
 
 .icon {

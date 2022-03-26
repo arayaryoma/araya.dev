@@ -57,6 +57,22 @@ body {
 }
 
 .icon {
+  --hex-width: 200px;
+  --hex-height: calc(1.732 / 2 * var(--hex-width));
+  --border-radius: 16px / 4%;
+  border-radius: var(--border-radius);
+  background: var(--primary-color);
+  width: calc(var(--hex-width) / 2);
+  height: var(--hex-height);
+  position: relative;
+  justify-self: end;
+  place-self: end;
+  display: grid;
+  place-content: center;
+  margin-inline-end: calc(var(--hex-width) / 4);
+}
+
+.icon {
   width: 200px;
   height: 200px;
 }

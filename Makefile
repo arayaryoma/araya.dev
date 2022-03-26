@@ -50,6 +50,10 @@ deploy-blog:
 deploy-nevertls:
 	rsync --delete -r -e "ssh -i ~/.ssh/id_rsa" ./nevertls.araya.dev/ ubuntu@${SERVER_IP}:/var/www/araya.dev/nevertls.araya.dev/
 
+.PHONY: start-dev
+start-dev:
+	docker-compose build && docker-compose up -d
+
 .PHONY: start-prod
 start-prod:
 	sudo nginx

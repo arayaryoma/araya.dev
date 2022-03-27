@@ -34,10 +34,16 @@ p {
   height: 100%;
   padding: 60px;
   display: grid;
+  grid-template-areas: "main nav";
+}
+
+.main-contents {
+  grid-area: main;
 }
 
 .nav {
   justify-self: end;
+  grid-area: nav;
 }
 .nav-list {
   display: flex;

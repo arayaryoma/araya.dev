@@ -3,6 +3,8 @@
   --font-size-120: 12rem;
   --font-size-64: 6.4rem;
   --font-size-16: 1.6rem;
+  --font-size-18: 1.8rem;
+  --font-size-24: 2.4rem;
 
   --font-size-heading-1: var(--font-size-120);
 }

@@ -1,0 +1,26 @@
+p {
+  margin: 0;
+}
+.job-item {
+  display: grid;
+  grid-template-areas:
+    "hex time"
+    "hex role";
+  grid-template-columns: 6rem 1fr;
+  gap: 8px;
+}
+.hex {
+  grid-area: hex;
+  background-image: url("/assets/outlined-hexagon.svg");
+  background-position-x: center;
+  background-position-y: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.time {
+  font-size: var(--font-size-18);
+}
+.role {
+  font-size: var(--font-size-24);
+}

@@ -19,10 +19,15 @@ function supportsDeclarativeShadowDOM() {
   const { LoremIpsum } = await import(
     "./webcomponents/lorem-ipsum/lorem-ipsum.js"
   );
+  const { JobHistoryItem } = await import(
+    "./webcomponents/job-history-item/job-history-item.js"
+  );
 
   customElements.define("lorem-ipsum", LoremIpsum);
 
-  if (!supportsDeclarativeShadowDOM()) {
-    attachShadowRoots(document);
-  }
+  customElements.define("job-history-item", JobHistoryItem);
+
+  // if (!supportsDeclarativeShadowDOM()) {
+  //   attachShadowRoots(document);
+  // }
 })();

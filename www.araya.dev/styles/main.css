@@ -29,6 +29,15 @@ p {
   margin: 0;
 }
 
+.about-sub-heading {
+  margin-block-start: 1em;
+  font-size: var(--font-size-32);
+}
+p {
+  font-size: var(--font-size-18);
+  line-height: 1.86em;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -36,6 +45,12 @@ a {
 
 ul {
   list-style: none;
+}
+
+.contacts-list {
+  padding: 0;
+  font-size: var(--font-size-18);
+  line-height: 1.86em;
 }
 
 .job-history-list > li + li {

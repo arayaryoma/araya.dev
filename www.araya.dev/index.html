@@ -24,12 +24,112 @@
   </head>
   <body>
     <div class="container">
-      <section id="about">
-        <h1 class="section-heading">About</h1>
-      </section>
-      <div class="icon">
-        <img src="/assets/white-cat.svg" alt="icon" />
-      </div>
+      <main class="main-contents">
+        <section id="about" class="section">
+          <h1 class="section-heading">About</h1>
+          <p>
+            I'm a Japanese Web developer and particularly interested in Web
+            standards(WHATWG standards, W3C specs, IETF RFCs) and Browsers API.
+          </p>
+          <p>
+            At work, I do Web service development using React / Node.js /
+            TypeScript / Fastly VCL / Go and various other programming languages
+            and frameworks.
+          </p>
+          <h2 class="about-sub-heading">Contacts</h2>
+          <ul class="contacts-list">
+            <li>
+              <a
+                href="https://github.com/arayaryoma"
+                target="_blank"
+                referrerpolicy="no-referrer"
+                rel="noopener"
+              >
+                GitHub: @arayaryoma
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://twitter.com/arayaryoma"
+                target="_blank"
+                referrerpolicy="no-referrer"
+                rel="noopener"
+              >
+                Twitter: @arayaryoma
+              </a>
+            </li>
+            <li>Email: r1o.ryoma.abe@gmail.com</li>
+          </ul>
+        </section>
+        <section id="job-history" class="section">
+          <h1 class="section-heading">Job history</h1>
+          <ul class="job-history-list">
+            <li>
+              <job-history-item>
+                <template shadowroot="open">
+                  <div class="job-item">
+                    <div class="hex"></div>
+                    <p class="time">Apr. 2020 ~</p>
+                    <p class="role">
+                      Software Engineer at Japanese newspapaer company
+                    </p>
+                  </div>
+                  <link
+                    rel="stylesheet"
+                    href="./webcomponents/job-history-item/job-history-item.css"
+                  />
+                </template>
+              </job-history-item>
+            </li>
+            <li>
+              <job-history-item>
+                <template shadowroot="open">
+                  <div class="job-item">
+                    <div class="hex"></div>
+                    <p class="time">Oct. 2017 ~ Mar. 2020</p>
+                    <p class="role">Lead Engineer at Hematite inc.</p>
+                  </div>
+                  <link
+                    rel="stylesheet"
+                    href="./webcomponents/job-history-item/job-history-item.css"
+                  />
+                </template>
+              </job-history-item>
+            </li>
+            <li>
+              <job-history-item>
+                <template shadowroot="open">
+                  <div class="job-item">
+                    <div class="hex"></div>
+                    <p class="time">Oct. 2015 ~ Sep. 2017</p>
+                    <p class="role">Web Frontend Engineer at Fuller, inc.</p>
+                  </div>
+                  <link
+                    rel="stylesheet"
+                    href="./webcomponents/job-history-item/job-history-item.css"
+                  />
+                </template>
+              </job-history-item>
+            </li>
+          </ul>
+        </section>
+      </main>
+      <nav class="nav">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="#about">About</a>
+          </li>
+          <li class="nav-item">
+            <a href="#job-history">Job history</a>
+          </li>
+          <li class="nav-item">
+            <a href="https://blog.araya.dev" target="_blank">Blog (ja)</a>
+          </li>
+        </ul>
+        <div class="icon">
+          <img src="/assets/white-cat.svg" alt="icon" />
+        </div>
+      </nav>
       <!-- <div class="profile">
         
         <div class="profile-contents">
@@ -72,8 +172,9 @@
             <img src="/assets/icon-playground.svg" alt="Playground" />
           </a>
         </li>
-      </ul>
-       -->
+      </ul> -->
     </div>
+    <script defer src="./main.js"></script>
+    <script></script>
   </body>
 </html>

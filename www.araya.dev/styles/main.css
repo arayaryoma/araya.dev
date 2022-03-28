@@ -8,19 +8,191 @@ html {
 }
 
 body {
-  font-family: "Muli", sans-serif;
+  font-family: "Helvetica", sans-serif;
   height: 100%;
   display: flex;
   align-items: center;
   background: var(--background);
-  color: var(--gray-1);
+  color: var(--white);
+}
+* {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+.about-sub-heading {
+  margin-block-start: 1em;
+  font-size: var(--font-size-32);
+}
+p {
+  font-size: var(--font-size-18);
+  line-height: 1.86em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+.contacts-list {
+  padding: 0;
+  font-size: var(--font-size-18);
+  line-height: 1.86em;
+}
+
+.job-history-list > li + li {
+  margin-top: 36px;
 }
 
 .container {
-  width: 900px;
-  margin: 0 auto;
+  --container-padding: 60px;
+  width: 100%;
+  height: 100%;
+  padding: var(--container-padding);
+  display: grid;
+  grid-template-areas: "main nav";
 }
 
+.main-contents {
+  grid-area: main;
+  overflow-y: hidden;
+}
+
+.section {
+  height: calc(100vh);
+  height: calc(100dvh);
+}
+
+.nav {
+  justify-self: end;
+  grid-area: nav;
+  display: grid;
+  grid-template-areas:
+    "navigation"
+    "icon";
+  grid-template-rows: 1fr 180px;
+  gap: 24px;
+}
+
+.nav-list {
+  grid-area: navigation;
+  place-self: end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  list-style: none;
+}
+
+.nav-item {
+  font-size: var(--font-size-64);
+  font-weight: bold;
+}
+
+.section-heading {
+  font-size: var(--font-size-heading-1);
+  font-weight: bold;
+  margin-bottom: 90px;
+  text-transform: uppercase;
+}
+
+.section-heading {
+  font-size: var(--font-size-heading-1);
+}
+
+.icon {
+  --hex-width: 200px;
+  --hex-height: calc(1.732 / 2 * var(--hex-width));
+  --border-radius: 16px / 4%;
+  border-radius: var(--border-radius);
+  background: var(--primary-color);
+  width: calc(var(--hex-width) / 2);
+  height: var(--hex-height);
+  position: relative;
+  justify-self: end;
+  place-self: end;
+  display: grid;
+  place-content: center;
+  margin-inline-end: calc(var(--hex-width) / 4);
+}
+
+.icon {
+  --hex-width: 200px;
+  --hex-height: calc(1.732 / 2 * var(--hex-width));
+  --border-radius: 16px / 4%;
+  grid-area: icon;
+  border-radius: var(--border-radius);
+  background: var(--primary-color);
+  width: calc(var(--hex-width) / 2);
+  height: var(--hex-height);
+  position: relative;
+  justify-self: end;
+  place-self: end;
+  display: grid;
+  place-content: center;
+  margin-inline-end: calc(var(--hex-width) / 4);
+}
+
+.icon::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  background: var(--primary-color);
+  width: calc(var(--hex-width) / 2);
+  height: var(--hex-height);
+  border-radius: var(--border-radius);
+  transform: rotate(60deg);
+}
+.icon::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  background: var(--primary-color);
+  width: calc(var(--hex-width) / 2);
+  height: var(--hex-height);
+  border-radius: var(--border-radius);
+  transform: rotate(-60deg);
+}
+
+.icon img {
+  width: 100%;
+}
+
+/*
+
+.links {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+}
+.links li {
+  height: 2em;
+  margin: 0 1em;
+}
+.links a {
+  display: inline-block;
+  height: 100%;
+}
+
+.links img {
+  height: 100%;
+}
 .profile {
   display: flex;
   justify-content: center;
@@ -51,50 +223,4 @@ body {
 .profile-list li {
   line-height: 1.5em;
 }
-
-.section-heading {
-  font-size: var(--font-size-heading-1);
-}
-
-.icon {
-  --hex-width: 200px;
-  --hex-height: calc(1.732 / 2 * var(--hex-width));
-  --border-radius: 16px / 4%;
-  border-radius: var(--border-radius);
-  background: var(--primary-color);
-  width: calc(var(--hex-width) / 2);
-  height: var(--hex-height);
-  position: relative;
-  justify-self: end;
-  place-self: end;
-  display: grid;
-  place-content: center;
-  margin-inline-end: calc(var(--hex-width) / 4);
-}
-
-.icon {
-  width: 200px;
-  height: 200px;
-}
-
-.icon img {
-  width: 100%;
-}
-
-.links {
-  list-style: none;
-  display: flex;
-  justify-content: center;
-}
-.links li {
-  height: 2em;
-  margin: 0 1em;
-}
-.links a {
-  display: inline-block;
-  height: 100%;
-}
-
-.links img {
-  height: 100%;
-}
+*/

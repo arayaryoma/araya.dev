@@ -7,5 +7,11 @@
   --font-size-24: 2.4rem;
   --font-size-32: 3.2rem;
 
-  --font-size-heading-1: var(--font-size-120);
+  --font-size-heading-1: var(--font-size-64);
+}
+
+@media screen and (min-width: 768px) {
+  :root {
+    --font-size-heading-1: var(--font-size-120);
+  }
 }

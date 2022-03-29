@@ -1,6 +1,17 @@
 p {
   margin: 0;
 }
+
+.job-history-list {
+  padding: 0;
+}
+
+@media screen and (min-width: 768px) {
+  .job-history-list {
+    padding-inline-start: 16px;
+  }
+}
+
 .job-item {
   display: grid;
   grid-template-areas:

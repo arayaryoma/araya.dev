@@ -6,13 +6,22 @@
 html {
   height: 100%;
 }
+html:before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--background);
+  position: fixed;
+  left: 0;
+  top: 0;
+}
 
 body {
   font-family: "Helvetica", sans-serif;
   height: 100%;
   display: flex;
   align-items: center;
-  background: var(--background);
   color: var(--white);
 }
 * {
@@ -64,8 +73,8 @@ ul {
   padding: var(--container-padding);
   display: grid;
   grid-template-areas:
-    "main main"
-    "main main"
+    "main nav"
+    "main nav"
     "main nav";
 }
 
@@ -78,7 +87,6 @@ ul {
 
 .main-contents {
   grid-area: main;
-  overflow-y: hidden;
 }
 
 .section {
@@ -86,7 +94,12 @@ ul {
   height: calc(100dvh);
 }
 
-.nav {
+.section {
+  height: 100vh;
+}
+
+.nav-bar {
+  position: fixed;
   justify-self: end;
   grid-area: nav;
   display: grid;
@@ -95,16 +108,20 @@ ul {
     "icon";
   grid-template-rows: 1fr auto;
   gap: 24px;
+  height: 100%;
+}
+
+.nav {
+  grid-area: navigation;
+  place-self: end;
 }
 
 .nav-list {
-  grid-area: navigation;
-  place-self: end;
+  list-style: none;
+  font-size: var(--font-size-24);
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  list-style: none;
-  font-size: var(--font-size-24);
 }
 
 @media screen and (min-width: 768px) {

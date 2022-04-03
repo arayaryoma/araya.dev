@@ -25,7 +25,7 @@
   <body>
     <div class="container">
       <main class="main-contents">
-        <section id="about" class="section">
+        <section id="about" class="section" data-contents-section>
           <h1 class="section-heading">About</h1>
           <p>
             I'm a Japanese Web developer and particularly interested in Web
@@ -61,7 +61,7 @@
             <li>Email: r1o.ryoma.abe@gmail.com</li>
           </ul>
         </section>
-        <section id="job-history" class="section">
+        <section id="job-history" class="section" data-contents-section>
           <h1 class="section-heading">Job history</h1>
           <ul class="job-history-list">
             <li>
@@ -114,22 +114,7 @@
           </ul>
         </section>
       </main>
-      <nav class="nav">
-        <ul class="nav-list">
-          <li class="nav-item">
-            <a href="#about">About</a>
-          </li>
-          <li class="nav-item">
-            <a href="#job-history">Job history</a>
-          </li>
-          <li class="nav-item">
-            <a href="https://blog.araya.dev" target="_blank">Blog (ja)</a>
-          </li>
-        </ul>
-        <div class="icon">
-          <img src="/assets/white-cat.svg" alt="icon" />
-        </div>
-      </nav>
+      <nav-bar class="nav-bar"></nav-bar>
     </div>
     <script defer src="./main.js"></script>
     <script></script>

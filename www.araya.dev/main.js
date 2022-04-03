@@ -23,11 +23,50 @@ function supportsDeclarativeShadowDOM() {
     "./webcomponents/job-history-item/job-history-item.js"
   );
 
+  const { NavBar } = await import("./webcomponents/nav-bar/nav-bar.js");
+
   customElements.define("lorem-ipsum", LoremIpsum);
 
   customElements.define("job-history-item", JobHistoryItem);
+
+  customElements.define("nav-bar", NavBar);
 
   // if (!supportsDeclarativeShadowDOM()) {
   //   attachShadowRoots(document);
   // }
 })();
+
+window.addEventListener("load", () => {
+  console.log("load:", location.hash);
+  onLocationHashChanged(location.hash);
+});
+
+window.addEventListener("hashchange", () => {
+  console.log("hashchange:", location.hash);
+  onLocationHashChanged(location.hash);
+});
+
+/**
+ *
+ * @param {string} hash
+ */
+function onLocationHashChanged(hash) {
+  // The default visible contents is About section
+  hash = hash || "about";
+  changeVisibleContents(hash);
+}
+
+/**
+ *
+ * @param {string} hash
+ */
+function changeVisibleContents(hash) {
+  const el = document.querySelector(hash);
+  el.classList.add("active-section");
+  const sections = document.querySelectorAll("[data-contents-section]");
+  for (const section of sections) {
+    if (`#${section.id}` !== hash) {
+      section.classList.remove("active-section");
+    }
+  }
+}

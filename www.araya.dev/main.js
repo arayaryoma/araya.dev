@@ -30,7 +30,6 @@ function supportsDeclarativeShadowDOM() {
   customElements.define("job-history-item", JobHistoryItem);
 
   customElements.define("nav-bar", NavBar);
-
 })();
 
 window.addEventListener("load", () => {
@@ -50,7 +49,7 @@ window.addEventListener("hashchange", () => {
 function onLocationHashChanged(hash) {
   // The default visible contents is About section
   hash = hash || "about";
-  changeVisibleContents(hash);
+  // changeVisibleContents(hash);
 }
 
 /**

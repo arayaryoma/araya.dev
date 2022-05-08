@@ -106,13 +106,8 @@ ul {
 .nav-bar {
   justify-self: end;
   grid-area: nav;
-  display: grid;
-  grid-template-areas:
-    "navigation"
-    "icon";
-  grid-template-rows: 1fr auto;
-  gap: 24px;
   height: 100%;
+  width: 100%;
 }
 
 .section-heading {

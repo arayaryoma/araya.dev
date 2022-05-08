@@ -2,24 +2,21 @@ p {
   margin: 0;
 }
 
-.job-history-list {
-  padding: 0;
-}
-
-@media screen and (min-width: 768px) {
-  .job-history-list {
-    padding-inline-start: 16px;
-  }
-}
-
 .job-item {
   display: grid;
   grid-template-areas:
     "hex time"
     "hex role";
-  grid-template-columns: 6rem 1fr;
+  grid-template-columns: 2rem 1fr;
   gap: 8px;
 }
+
+@media screen and (min-width: 768px) {
+  .job-item {
+    grid-template-columns: 6rem 1fr;
+  }
+}
+
 .hex {
   grid-area: hex;
   background-image: url("/assets/outlined-hexagon.svg");
@@ -30,8 +27,19 @@ p {
 }
 
 .time {
+  font-size: var(--font-size-16);
+}
+
+.role {
   font-size: var(--font-size-18);
 }
-.role {
-  font-size: var(--font-size-24);
+
+@media screen and (min-width: 768px) {
+  .time {
+    font-size: var(--font-size-18);
+  }
+
+  .role {
+    font-size: var(--font-size-24);
+  }
 }

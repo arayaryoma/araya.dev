@@ -1,32 +1,44 @@
+:host * {
+  box-sizing: border-box;
+}
 a {
   color: inherit;
   text-decoration: none;
 }
 
 .nav {
-  grid-area: navigation;
   place-self: end;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+  .nav {
+    padding-block: var(--container-padding);
+    font-size: var(--font-size-32);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    height: 100%;
+    justify-content: flex-end;
+  }
 }
 
 .nav-list {
   list-style: none;
   font-size: var(--font-size-24);
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
-.nav-list {
-  grid-area: navigation;
-  place-self: end;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  list-style: none;
-  font-size: var(--font-size-24);
+@media screen and (min-width: 768px) {
+  .nav-list {
+    flex-direction: column;
+    align-items: flex-end;
+  }
 }
 
 @media screen and (min-width: 768px) {
@@ -43,6 +55,14 @@ a {
 
 .nav-item {
   font-weight: bold;
+  width: 5em;
+}
+
+@media screen and (min-width: 768px) {
+  .nav-item {
+    font-size: var(--font-size-32);
+    width: 100%;
+  }
 }
 
 .icon {
@@ -55,8 +75,6 @@ a {
   width: calc(var(--hex-width) / 2);
   height: var(--hex-height);
   position: relative;
-  justify-self: end;
-  place-self: end;
   display: grid;
   place-content: center;
   margin-inline-end: calc(var(--hex-width) / 4);
@@ -67,6 +85,8 @@ a {
     --hex-width: 200px;
     --hex-height: calc(1.732 / 2 * var(--hex-width));
     --border-radius: 16px / 4%;
+    justify-self: end;
+    place-self: end;
   }
 }
 
@@ -82,6 +102,7 @@ a {
   border-radius: var(--border-radius);
   transform: rotate(60deg);
 }
+
 .icon::after {
   content: "";
   position: absolute;

@@ -114,7 +114,24 @@
           </ul>
         </section>
       </main>
-      <nav-bar class="nav-bar"></nav-bar>
+      <nav-bar class="nav-bar">
+        <template shadowroot="open">
+          <link rel="stylesheet" href="./webcomponents/nav-bar/nav-bar.css" />
+          <nav class="nav">
+            <ul class="nav-list">
+              <li class="nav-item">
+                <a href="#about">About</a>
+              </li>
+              <li class="nav-item">
+                <a href="#job-history">Job History</a>
+              </li>
+            </ul>
+            <div class="icon">
+              <img src="/assets/white-cat.svg" alt="My profile icon" />
+            </div>
+          </nav>
+        </template>
+      </nav-bar>
     </div>
     <script defer src="./main.js"></script>
     <script></script>

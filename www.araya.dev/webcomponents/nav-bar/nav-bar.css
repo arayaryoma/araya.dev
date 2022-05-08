@@ -117,5 +117,5 @@ a {
 }
 
 .icon img {
-  width: 100%;
+  width: calc(var(--hex-width) / 2);
 }

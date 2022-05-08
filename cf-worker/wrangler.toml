@@ -1,8 +1,8 @@
 name = "cf-worker"
 type = "javascript"
-zone_id = ""
-account_id = ""
-route = ""
+zone_id = "871a88091bcd425b2e05e328adbb5a3b"
+account_id = "c58610597d85017856a3eaa95a937958"
+route = "araya.dev/*"
 workers_dev = true
 compatibility_date = "2022-05-08"
 
@@ -10,3 +10,7 @@ compatibility_date = "2022-05-08"
 command = "npm install && npm run build"
 [build.upload]
 format = "service-worker"
+
+[env.production]
+zone_id = "871a88091bcd425b2e05e328adbb5a3b"
+routes = ["araya.dev/*"]

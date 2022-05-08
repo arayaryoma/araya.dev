@@ -31,9 +31,6 @@ function supportsDeclarativeShadowDOM() {
 
   customElements.define("nav-bar", NavBar);
 
-  // if (!supportsDeclarativeShadowDOM()) {
-  //   attachShadowRoots(document);
-  // }
 })();
 
 window.addEventListener("load", () => {

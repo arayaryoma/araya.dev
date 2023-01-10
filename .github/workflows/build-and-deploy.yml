@@ -27,7 +27,7 @@ jobs:
       - name: Setup SSH keys
         run: |
           mkdir -p ~/.ssh
-          echo -e "${SSH_KEY//_/\\n}" > ~/.ssh/key
+          echo -e "${SSH_KEY}" > ~/.ssh/key
           chmod og-rwx ~/.ssh/key
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
           ssh-keyscan -H bitbucket.org >> ~/.ssh/known_hosts

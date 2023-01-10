@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "engines": {
-    "node": "16.x"
+    "node": "19.x"
   },
   "scripts": {
     "build": "rimraf dist build/dist && tsc --project build/tsconfig.json && node --es-module-specifier-resolution=node build/dist/build/build.js",

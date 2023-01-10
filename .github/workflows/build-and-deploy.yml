@@ -15,9 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Setup Node.js env
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2.4.0
         with:
-          node-version: 19
+          node-version: 16
           check-latest: true
       - name: Build blog
         working-directory: ./blog.araya.dev

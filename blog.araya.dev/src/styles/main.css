@@ -43,11 +43,13 @@
   --footer-height: 142px;
   --font-size-huge: 4.8rem;
   --font-size-large: 2rem;
+  --font-size-body: 1.6rem;
   --default-font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN",
     "Hiragino Sans", Meiryo, sans-serif;
   /* Set 1rem as 10px for the default env(1rem == 16px) */
   font-size: 0.625rem;
   --global-nav-bg: var(--gray-light-4);
+  --global-nav-height: 8.2rem;
 }
 
 @media screen and (prefers-color-scheme: dark) {
@@ -129,7 +131,7 @@ a {
 }
 
 .global-nav {
-  height: 8.2rem;
+  height: var(--global-nav-height);
   background: var(--global-nav-bg);
 }
 

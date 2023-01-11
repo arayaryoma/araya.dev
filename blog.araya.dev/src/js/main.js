@@ -1,3 +1,4 @@
+import { initSitePreference } from "/js/webcomponents/site-preference.js";
 import { initColorSchemeToggle } from "/js/webcomponents/color-scheme-toggle.js";
 
 const PREFERRED_COLOR_SCHEME = "preferred-color-scheme";
@@ -24,6 +25,7 @@ if (!supportsDeclarativeShadowDOM()) {
 }
 
 initColorSchemeToggle();
+initSitePreference();
 
 function supportsDeclarativeShadowDOM() {
   return HTMLTemplateElement.prototype.hasOwnProperty("shadowRoot");

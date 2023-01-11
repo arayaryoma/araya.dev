@@ -1,4 +1,4 @@
-import { Base, StyleSheet } from "../src/templates/base";
+import { type StyleSheet } from "../src/templates/base";
 import { Post as PostComponent } from "../src/templates/post";
 import {
   copyFile,
@@ -106,7 +106,6 @@ const buildAssets = async (srcDir: string): Promise<Map<string, string>> => {
       if (asset.endsWith(".js")) replaceJsModulePaths(asset, map);
     }
   }
-  console.log(map)
   return map;
 };
 
@@ -138,6 +137,8 @@ const buildPostPages = async ({ scripts, styles, images }: Subresources) => {
     href: `/styles/${name}`,
     rel: "prefetch",
   }));
+
+  const { Base } = await import("../src/templates/base.js");
 
   for (const post of posts) {
     const outputFilePath = `${distDir}/${post.url}`;
@@ -181,6 +182,7 @@ const buildPages = async ({ styles, images, scripts }: Subresources) => {
     }
     return replaced;
   };
+  const { Base } = await import("../src/templates/base.js");
   const html = renderToString(
     <Base
       styles={[...defaultStyleSheets, ...homeMeta.styles].map((styleName) => ({

@@ -9,70 +9,85 @@
     <script src="./main.js" defer></script>
   </head>
   <body>
-    <div class="images">
-      <div class="item">
-        <image-info>
-          <template id="image-info-template" shadowroot="open">
-            <slot> </slot>
-            <span>size: </span>
-            <span data-size-value>calculating...</span>
-          </template>
-          <img src="./profile-icon.png" alt="profile-icon.png" />
-        </image-info>
+    <section>
+      <h1>Profile Images</h1>
+      <div class="images">
+        <div class="item">
+          <image-info>
+            <template id="image-info-template" shadowroot="open">
+              <slot> </slot>
+              <span>size: </span>
+              <span data-size-value>calculating...</span>
+            </template>
+            <img src="./profile-icon.png" alt="profile-icon.png" />
+          </image-info>
+        </div>
+        <div class="item">
+          <image-info>
+            <template id="image-info-template" shadowroot="open">
+              <slot> </slot>
+              <span>size: </span>
+              <span data-size-value>calculating...</span>
+            </template>
+            <img src="./profile-icon@2x.png" alt="profile-icon@2x.png" />
+          </image-info>
+        </div>
+        <div class="item">
+          <image-info>
+            <template id="image-info-template" shadowroot="open">
+              <slot></slot>
+              <span>size: </span>
+              <span data-size-value>calculating...</span>
+            </template>
+            <img src="./profile-icon@3x.png" alt="profile-icon@3x.png" />
+          </image-info>
+        </div>
+        <div class="item">
+          <image-info>
+            <template id="image-info-template" shadowroot="open">
+              <slot> </slot>
+              <span>size: </span>
+              <span data-size-value>calculating...</span>
+            </template>
+            <img src="./profile-icon@4x.png" alt="profile-icon@4x.png" />
+          </image-info>
+        </div>
+        <div class="item">
+          <image-info>
+            <template id="image-info-template" shadowroot="open">
+              <slot> </slot>
+              <span>size: </span>
+              <span data-size-value>calculating...</span>
+            </template>
+            <img
+              src="./purple-cat-with-white-bg.jpg"
+              alt="purple cat with white background"
+            />
+          </image-info>
+        </div>
+        <div class="item">
+          <image-info>
+            <template id="image-info-template" shadowroot="open">
+              <slot> </slot>
+              <span>size: </span>
+              <span data-size-value>calculating...</span>
+            </template>
+            <img src="./purple-cat.png" alt="purple cat"
+          /></image-info>
+        </div>
       </div>
-      <div class="item">
-        <image-info>
-          <template id="image-info-template" shadowroot="open">
-            <slot> </slot>
-            <span>size: </span>
-            <span data-size-value>calculating...</span>
-          </template>
-          <img src="./profile-icon@2x.png" alt="profile-icon@2x.png" />
-        </image-info>
-      </div>
-      <div class="item">
-        <image-info>
-          <template id="image-info-template" shadowroot="open">
-            <slot></slot>
-            <span>size: </span>
-            <span data-size-value>calculating...</span>
-          </template>
-          <img src="./profile-icon@3x.png" alt="profile-icon@3x.png" />
-        </image-info>
-      </div>
-      <div class="item">
-        <image-info>
-          <template id="image-info-template" shadowroot="open">
-            <slot> </slot>
-            <span>size: </span>
-            <span data-size-value>calculating...</span>
-          </template>
-          <img src="./profile-icon@4x.png" alt="profile-icon@4x.png" />
-        </image-info>
-      </div>
-      <div class="item">
-        <image-info>
-          <template id="image-info-template" shadowroot="open">
-            <slot> </slot>
-            <span>size: </span>
-            <span data-size-value>calculating...</span>
-          </template>
-          <img
-            src="./purple-cat-with-white-bg.jpg"
-            alt="purple cat with white background"
-          />
-        </image-info>
-      </div>
-      <div class="item">
-        <image-info>
-          <template id="image-info-template" shadowroot="open">
-            <slot> </slot>
-            <span>size: </span>
-            <span data-size-value>calculating...</span>
-          </template>
-          <img src="./purple-cat.png" alt="purple cat"
-        /></image-info>
-      </div>
-    </div>
+    </section>
+
+    <section class="icons-for-dark">
+      <h1>Icons for dark theme</h1>
+      <ul class="icon-list">
+        <li>
+          <div class="icon-container">
+            <img src="./gear-white.svg" alt="gear" />
+            <span class="icon-name">gear</span>
+          </div>
+        </li>
+      </ul>
+    </section>
   </body>
 </html>

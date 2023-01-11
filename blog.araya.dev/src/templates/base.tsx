@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { ColorSchemeToggleButton } from "./color-scheme-toggle";
+import { SitePreference } from "./site-preference/site-preference";
 
 const gaScriptContent = `window.dataLayer = window.dataLayer || [];
 function gtag() {
@@ -73,7 +73,7 @@ export const Base: FC<Props> = (props) => {
                 />
                 <span className="header-title">araya's Reservoir</span>
               </a>
-              <ColorSchemeToggleButton />
+              <SitePreference />
             </div>
           </nav>
           <div className="content">{props.children}</div>

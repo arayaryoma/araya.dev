@@ -27,11 +27,12 @@ jobs:
       - name: Setup SSH keys
         run: |
           mkdir -p ~/.ssh
+          ssh-keyscan -H ${SERVER_IP} >> ~/.ssh/known_hosts
           echo -e "$SSH_KEY" > ~/.ssh/key
           chmod 600 ~/.ssh/key
       - name: Deploy all
         run: |
           rsync --exclude "**/node_modules" --delete -r -e "ssh -i ~/.ssh/key" ./ ubuntu@${SERVER_IP}:/var/www/araya.dev/
-      - name: Debug
-        if: ${{ always() }}
-        uses: mxschmitt/action-tmate@v3
+      #- name: Debug
+      #  if: ${{ always() }}
+      #  uses: mxschmitt/action-tmate@v3

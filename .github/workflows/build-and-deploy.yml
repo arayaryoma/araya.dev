@@ -27,7 +27,7 @@ jobs:
       - name: Setup SSH keys
         run: |
           mkdir -p ~/.ssh
-          echo -e "${SSH_KEY}" > ~/.ssh/key
+          echo -e "$SSH_KEY" > ~/.ssh/key
           chmod 600 ~/.ssh/key
       - name: Deploy all
         run: |

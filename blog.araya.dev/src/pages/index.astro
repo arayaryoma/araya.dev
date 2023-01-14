@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import type { MarkdownInstance } from "astro";
+import defaultThumbnailImage from '../assets/images/default-thumbnail.svg'
 
 const posts: Array<
   MarkdownInstance<{
@@ -32,7 +33,7 @@ const posts: Array<
                 <a href={post.url}>
                   <article class="posts-list-item__content">
                     <img
-                      src="/assets/images/default-thumbnail.svg"
+                      src={defaultThumbnailImage}
                       alt="thumbnail"
                       class="posts-list-item__thumbnail"
                       loading="lazy"

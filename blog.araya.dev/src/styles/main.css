@@ -97,6 +97,11 @@ html[data-color-scheme="dark"]:root {
   box-sizing: border-box;
 }
 
+html,
+body {
+  margin: 0;
+}
+
 body {
   font-family: var(--default-font-family);
   background-color: var(--background-color);

@@ -1,0 +1,291 @@
+---
+const { frontmatter } = Astro.props;
+import Layout from "./Layout.astro";
+---
+
+<Layout title={frontmatter.title}>
+  <div>
+    <nav class="container">
+      <ul class="post__breadcrumb">
+        <li class="post__breadcrumb-item">
+          <a href="/">投稿一覧</a>
+        </li>
+        <li class="post__breadcrumb-item">{frontmatter.title}</li>
+      </ul>
+    </nav>
+    <article class="container post__container">
+      <header class="post-header">
+        <time class="post-header--datetime">{frontmatter.date}</time>
+        <h1 class="post-header--title">{frontmatter.title}</h1>
+      </header>
+      <main class="post--main">
+        <div class="post--content markdown">
+          <slot />
+          <details class="post__changelog">
+            <summary>変更履歴</summary>
+            {
+              frontmatter.changeLogs &&
+                frontmatter.changeLogs.map((history) => (
+                  <p>
+                    <a href={`${repo}/commit/${history.hash}`}>
+                      <code>{history.hash.slice(0, 8)}</code>
+                    </a>
+                    <span class="post__changelog-message">
+                      {history.message}
+                    </span>
+                  </p>
+                ))
+            }
+          </details>
+        </div>
+      </main>
+      <footer class="post__footer"></footer>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  :root {
+    --post-header-bg-color: ;
+  }
+  .post__breadcrumb {
+    margin: 62px 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 2rem;
+  }
+
+  .post__breadcrumb-item a {
+    color: var(--butterfly-blue);
+  }
+
+  .post__breadcrumb-item:not(:first-child)::before {
+    content: ">";
+    display: inline-block;
+    text-align: center;
+    width: 1em;
+    height: 1em;
+  }
+
+  .post-header {
+    font-size: 3.6rem;
+    line-height: 1.5em;
+    padding: 30px 0;
+    width: 100%;
+    background: var(--gray-light-4);
+    display: grid;
+    grid-column-gap: var(--grid-column-gap);
+    grid-template-columns: var(--grid-template-columns);
+  }
+
+  .post-header--datetime {
+    font-size: 1.4rem;
+    grid-column: 2 / 12;
+    height: auto;
+    line-height: 1.5em;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .post-header--title {
+    font-size: inherit;
+    grid-column: 2 / 12;
+    margin: 0;
+  }
+
+  .post--main {
+    display: grid;
+    grid-column-gap: var(--grid-column-gap);
+    grid-template-columns: var(--grid-template-columns);
+    background: var(--gray-light-5);
+    padding: 30px 0;
+  }
+
+  @media screen and (prefers-color-scheme: dark) {
+    :root:not([data-color-scheme="light"]) .post--main,
+    :root:not([data-color-scheme="light"]) .post-header {
+      background: var(--gray-dark-3);
+      color: var(--gray-light-4);
+    }
+  }
+
+  :root[data-color-scheme="dark"] .post--main,
+  :root[data-color-scheme="dark"] .post-header {
+    background: var(--gray-dark-3);
+    color: var(--gray-light-4);
+  }
+
+  .post--content {
+    grid-column: 2 / 12;
+    font-size: 1.6rem;
+    line-height: 1.5em;
+    overflow: auto;
+  }
+
+  .post__changelog {
+  }
+
+  .post__changelog a {
+    color: var(--eyes-blue);
+  }
+
+  .post__changelog-message {
+    margin-inline-start: 1em;
+  }
+
+  @media screen and (max-width: 767px) {
+    .post-header {
+      font-size: 2rem;
+    }
+    .post__container {
+      width: 100%;
+    }
+    .post__breadcrumb {
+      margin: 62px 0;
+      font-size: 1.2rem;
+      padding: 0;
+    }
+  }
+
+  .markdown {
+    --inline-codeblock-bg: var(--gray-light-2);
+    --table-accent-color: var(--gray-light-4);
+  }
+
+  @media screen and (prefers-color-scheme: dark) {
+    :root:not([data-color-scheme="light"]) .markdown {
+      --inline-codeblock-bg: var(--black);
+      --table-accent-color: var(--black);
+    }
+  }
+
+  :root[data-color-scheme="dark"] .markdown {
+    --inline-codeblock-bg: var(--black);
+    --table-accent-color: var(--black);
+  }
+
+  .markdown p {
+    margin: 0.5em 0;
+    overflow-wrap: break-word;
+    line-height: 2em;
+  }
+
+  .markdown a {
+    overflow-wrap: break-word;
+    color: var(--butterfly-blue);
+  }
+
+  .markdown a:hover {
+    color: var(--violet);
+  }
+
+  .markdown h1 {
+    font-size: 2em;
+  }
+  .markdown h2 {
+    font-size: 1.75em;
+  }
+  .markdown h3 {
+    font-size: 1.6em;
+  }
+
+  .markdown h4 {
+    font-size: 1.5em;
+  }
+  .markdown h5 {
+    font-size: 1.25em;
+  }
+  .markdown h6 {
+    font-size: 1.1em;
+  }
+
+  .markdown h2 {
+    margin-top: 3em;
+    position: relative;
+  }
+
+  .markdown h2::before {
+    content: "";
+    display: flex;
+    height: 100%;
+    width: 8px;
+    position: absolute;
+    top: 0;
+    left: -1em;
+    background-color: var(--violet);
+  }
+
+  .markdown h3 {
+    position: relative;
+    display: inline-flex;
+  }
+
+  .markdown :not(pre) > code {
+    padding: 0.2em 0.5em;
+    margin: 0 0.3em;
+    color: var(--text-face-color);
+    background: var(--inline-codeblock-bg);
+  }
+
+  .markdown code {
+    font-family: "Source Code Pro", "Lucida Console", Courier, monospace;
+    max-width: 100%;
+    overflow-x: auto;
+    margin: 0 0.2em;
+  }
+
+  .markdown pre code {
+    font-family: "Source Code Pro", "Lucida Console", Courier, monospace;
+    width: 100%;
+    margin: 0;
+    padding: 0 0.2em;
+    background-color: var(--dracula-bg);
+    padding: 1em;
+  }
+
+  .markdown table {
+    border-collapse: collapse;
+  }
+
+  .markdown th,
+  td {
+    border: 1px solid var(--gray-light-1);
+  }
+
+  .markdown td {
+    padding: 0.4em 1em;
+  }
+
+  .markdown tbody tr:nth-child(2n) {
+    background-color: var(--table-accent-color);
+  }
+  .markdown ul li {
+    line-height: 1.75em;
+  }
+
+  .markdown img {
+    max-width: 100%;
+  }
+
+  .markdown .small {
+    font-size: 0.65em;
+  }
+
+  .markdown blockquote {
+    color: var(--gray-dark-1);
+    position: relative;
+    margin-inline: 0;
+    padding-inline-start: 12px;
+  }
+
+  .markdown blockquote::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background-color: var(--gray-dark-1);
+  }
+</style>

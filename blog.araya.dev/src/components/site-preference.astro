@@ -21,5 +21,45 @@
         </ul>
       </dialog>
     </div>
+    <style>
+      .container {
+        position: relative;
+      }
+      .icon {
+        width: 48px;
+      }
+
+      .toggle-button {
+        background: none;
+        border: none;
+      }
+
+      .dropdown-menu {
+        list-style: none;
+      }
+
+      dialog:not([open]) {
+        pointer-events: none;
+        opacity: 0;
+      }
+
+      .dropdown-menu {
+        display: flex;
+        width: 320px;
+        flex-direction: column;
+        background: var(--mat-black);
+        box-shadow: 0 0 10px 0 var(--black);
+        position: absolute;
+        top: var(--global-nav-height);
+        color: var(--gray-light-5);
+        font-size: var(--font-size-body);
+      }
+
+      .dropdown-menu-item {
+        height: 100px;
+        display: flex;
+        align-items: center;
+      }
+    </style>
   </template>
 </site-preference>

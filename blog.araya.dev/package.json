@@ -7,8 +7,9 @@
     "node": "16.x"
   },
   "scripts": {
-    "build": "rimraf dist build/dist && tsc --project build/tsconfig.json && node --es-module-specifier-resolution=node build/dist/build/build.js",
-    "watch": "rimraf dist build/dist && tsc --project build/tsconfig.json && node --es-module-specifier-resolution=node build/dist/build/watch.js"
+    "build": "astro build",
+    "build:watch": "node build/watch.js",
+    "dev-server": "astro dev"
   },
   "devDependencies": {
     "@types/node": "^17.0.0",

@@ -53,7 +53,7 @@ layout: ../../layouts/Post.astro
 
 もう何だかねどこを野ねずみの見んない。おれまっすぐに怒りをなりて窓がありうます。顔へならですで。「ょってじぶんのへ睡った。虎、何を耳。
 
-これは文章中の[リンク](#)。`文章中のあ<code> は`こうなる。
+これは文章中の[リンク](#)。`文章中の<code> は`こうなる。
 
 Incididunt cupidatat] duis aute eu sint qui duis dolore. Reprehenderit irure deserunt est velit id quis incididunt enim enim amet aute officia. Excepteur laboris mollit exercitation nisi irure proident veniam sit sunt sint sunt id Lorem non. Dolor commodo proident ullamco fugiat sit incididunt. Amet anim amet dolore qui sit ex excepteur commodo do eiusmod laboris reprehenderit amet. Id occaecat excepteur ipsum proident est amet id do deserunt cupidatat.
 
@@ -80,9 +80,9 @@ const readdirRecursively = async (dir, files = []) => {
 
 # 表 / Table
 
-|  A  |  B  |  C  |
-| :-: | :-: | :-: |
-|  X  |  Y  |  Z  |
+| head A | head B | head C |
+| :----- | :----: | -----: |
+| 左寄せ |  中央  | 右寄せ |
 
 # 画像
 

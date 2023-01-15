@@ -2,7 +2,7 @@ import {
   changeColorScheme,
   detectPreferredColorScheme,
   // @ts-ignore
-} from "/js/lib/color-scheme.js";
+} from "/lib/color-scheme.js";
 
 /**
  *

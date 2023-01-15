@@ -4,7 +4,6 @@ import ColorSchemeToggle from "./color-scheme-toggle.astro";
 
 <site-preference>
   <template shadowroot="open">
-    <link rel="stylesheet" href="/styles/site-preference.css" />
     <div class="container">
       <button type="button" data-toggle-button class="toggle-button">
         <img
@@ -24,6 +23,16 @@ import ColorSchemeToggle from "./color-scheme-toggle.astro";
       </dialog>
     </div>
     <style>
+      :root {
+        --dropdown-menu-width: 320px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      ul {
+        padding: 0;
+        margin: 0;
+      }
       .container {
         position: relative;
       }
@@ -47,12 +56,14 @@ import ColorSchemeToggle from "./color-scheme-toggle.astro";
 
       .dropdown-menu {
         display: flex;
-        width: 320px;
+        width: var(--dropdown-menu-width);
         flex-direction: column;
         background: var(--mat-black);
         box-shadow: 0 0 10px 0 var(--black);
         position: absolute;
         top: var(--global-nav-height);
+        right: 0;
+        left: calc(-1 * var(--dropdown-menu-width));
         color: var(--gray-light-5);
         font-size: var(--font-size-body);
       }

@@ -48,7 +48,7 @@
     "Hiragino Sans", Meiryo, sans-serif;
   /* Set 1rem as 10px for the default env(1rem == 16px) */
   font-size: 0.625rem;
-  --global-nav-bg: var(--gray-light-4);
+  --global-nav-bg: var(--black);
   --global-nav-height: 8.2rem;
 }
 
@@ -56,13 +56,11 @@
   :root:not([data-color-scheme="light"]) {
     --background-color: var(--gray-dark-3);
     --text-face-color: var(--gray-light-4);
-    --global-nav-bg: var(--black);
   }
 }
 html[data-color-scheme="dark"]:root {
   --background-color: var(--gray-dark-3);
   --text-face-color: var(--gray-light-4);
-  --global-nav-bg: var(--black);
 }
 
 @media screen and (min-width: 1441px) {
@@ -142,6 +140,7 @@ ul {
 .global-nav {
   height: var(--global-nav-height);
   background: var(--global-nav-bg);
+  color: var(--gray-light-4);
 }
 
 .global-nav-content {

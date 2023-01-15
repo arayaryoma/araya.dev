@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "engines": {
-    "node": "16.x"
+    "node": "19.x"
   },
   "scripts": {
     "build": "astro build",

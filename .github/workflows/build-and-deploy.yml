@@ -14,16 +14,16 @@ jobs:
       SERVER_IP: 52.69.164.172
     steps:
       - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2
       - name: Setup Node.js env
         uses: actions/setup-node@v2.4.0
         with:
-          node-version: 16
-          check-latest: true
+          node-version-file: .nvmrc
       - name: Build blog
         working-directory: ./blog.araya.dev
         run: |
-          yarn
-          yarn run build
+          pnpm install 
+          pnpm build
       - name: Setup SSH keys
         run: |
           mkdir -p ~/.ssh

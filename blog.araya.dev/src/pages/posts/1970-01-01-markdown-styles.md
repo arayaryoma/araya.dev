@@ -77,3 +77,7 @@ const readdirRecursively = async (dir, files = []) => {
 ```
 
 # 表 / Table
+
+# 画像
+
+![テスト表示用のデフォルトサムネイル画像](/assets/images/default-thumbnail.svg)

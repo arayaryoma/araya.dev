@@ -11,6 +11,7 @@
     "build:watch": "node build/watch.js",
     "dev-server": "astro dev"
   },
+  "packageManager": "pnpm@7.0.1",
   "devDependencies": {
     "@types/node": "^17.0.0",
     "@types/react": "^17.0.37",

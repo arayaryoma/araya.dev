@@ -1,14 +1,8 @@
 ---
-import {
-  changeColorScheme,
-  detectPreferredColorScheme,
-  // @ts-ignore
-} from "../../lib/color-scheme";
 ---
 
 <color-scheme-toggle>
   <template @ts-expect-error shadowroot="open">
-    <link rel="stylesheet" href="/styles/color-scheme-toggle.css" />
     <label class="label">
       <div class="toggle">
         <input
@@ -21,6 +15,9 @@ import {
       </div>
     </label>
     <style>
+      * {
+        box-sizing: border-box;
+      }
       .label {
         display: inline-flex;
         align-items: center;
@@ -77,6 +74,11 @@ import {
 </color-scheme-toggle>
 
 <script>
+  import {
+    changeColorScheme,
+    detectPreferredColorScheme,
+    // @ts-ignore
+  } from "../lib/color-scheme";
   /**
    *
    * @param {ShadowRoot} shadowRoot

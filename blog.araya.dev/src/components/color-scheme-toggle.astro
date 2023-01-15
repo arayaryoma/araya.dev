@@ -1,0 +1,110 @@
+---
+import {
+  changeColorScheme,
+  detectPreferredColorScheme,
+  // @ts-ignore
+} from "../../lib/color-scheme";
+---
+
+<color-scheme-toggle>
+  <template @ts-expect-error shadowroot="open">
+    <link rel="stylesheet" href="/styles/color-scheme-toggle.css" />
+    <label class="label">
+      <div class="toggle">
+        <input
+          class="toggle-state"
+          type="checkbox"
+          name="toggle light and dark"
+          value="check"
+        />
+        <div class="indicator"></div>
+      </div>
+    </label>
+    <style>
+      .label {
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+        --toggle-button-bg-color: var(--gray-light-1);
+        --toggle-button-color: var(--gray-light-5);
+      }
+
+      @media screen and (prefers-color-scheme: dark) {
+        .label:not([data-color-scheme="light"]) {
+          --toggle-button-bg-color: var(--gray-dark-3);
+          --toggle-button-color: var(--mat-black);
+        }
+      }
+
+      .label[data-color-scheme="dark"] {
+        --toggle-button-bg-color: var(--gray-dark-3);
+        --toggle-button-color: var(--mat-black);
+      }
+
+      .label-text {
+        margin-left: 16px;
+      }
+
+      .toggle {
+        isolation: isolate;
+        position: relative;
+        height: 30px;
+        width: 60px;
+        border-radius: 15px;
+        overflow: hidden;
+        background-color: var(--toggle-button-bg-color);
+      }
+
+      .toggle-state {
+        display: none;
+      }
+
+      .indicator {
+        height: 100%;
+        width: 200%;
+        background-color: var(--toggle-button-color);
+        border-radius: 15px;
+        transform: translate3d(-75%, 0, 0);
+        transition: transform 0.4s cubic-bezier(0.85, 0.05, 0.18, 1.35);
+      }
+
+      .toggle-state:checked ~ .indicator {
+        transform: translate3d(25%, 0, 0);
+        background-color: var(--toggle-button-color);
+      }
+    </style>
+  </template>
+</color-scheme-toggle>
+
+<script>
+  /**
+   *
+   * @param {ShadowRoot} shadowRoot
+   * @param {string} theme
+   */
+  // @ts-ignore
+  class ColorSchemeToggle extends HTMLElement {
+    constructor() {
+      super();
+    }
+    connectedCallback() {
+      const colorScheme = detectPreferredColorScheme();
+      const checkbox = this.shadowRoot?.querySelector("input");
+      const label = this.shadowRoot?.querySelector("label");
+      if (!checkbox || !label) return;
+      if (colorScheme == "dark") {
+        checkbox.checked = true;
+      }
+      label.setAttribute("data-color-scheme", colorScheme);
+
+      checkbox.addEventListener("change", (ev) => {
+        // @ts-ignore
+        const newColorScheme = ev.target.checked ? "dark" : "light";
+        changeColorScheme(newColorScheme);
+        label.setAttribute("data-color-scheme", newColorScheme);
+      });
+    }
+  }
+
+  customElements.define("color-scheme-toggle", ColorSchemeToggle);
+</script>

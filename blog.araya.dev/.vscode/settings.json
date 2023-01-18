@@ -3,5 +3,7 @@
   "deno.lint": true,
   "deno.unstable": true,
   "deno.config": "./tsconfig.json",
-  "debug.javascript.unmapMissingSources": true
+  "debug.javascript.unmapMissingSources": true,
+  "cssCustomProperties.files": ["src/styles/main.css"],
+  "cssCustomProperties.languages": ["css"]
 }

@@ -70,12 +70,12 @@ const posts: Array<
 
 <style>
   .index-page-title {
-    font-size: 3.6rem;
+    font-size: var(--font-size-xxl);
     margin: 80px 0;
   }
 
   h1 {
-    font-size: 3rem;
+    font-size: var(--font-size-xl);
     font-weight: 800;
     margin: 0;
   }
@@ -151,7 +151,7 @@ const posts: Array<
 
   .posts-list-item__content {
     display: grid;
-    font-size: 1.5rem;
+    font-size: var(--font-size-sm);
     grid-template-areas:
       "img"
       "date"
@@ -171,7 +171,7 @@ const posts: Array<
   }
 
   .posts-list-item__title {
-    font-size: 2rem;
+    font-size: var(--font-size-md);
     line-height: 1.5em;
     align-self: center;
     grid-area: title;
@@ -186,12 +186,12 @@ const posts: Array<
   @media screen and (min-width: 768px) {
     .posts-list-item__content {
       display: grid;
-      font-size: 1.5rem;
+      font-size: var(--font-size-sm);
       grid-template-areas:
         "img date"
         "img title"
         "img description";
-      grid-template-rows: 1.5em 8rem auto;
+      grid-template-rows: 1.5em 8px auto;
       column-gap: var(--grid-column-gap);
       row-gap: 12px;
       grid-template-columns: 40% 1fr;
@@ -202,7 +202,7 @@ const posts: Array<
     }
     .posts-list-item__title {
       grid-area: title;
-      font-size: 2rem;
+      font-size: var(--font-size-md);
       line-height: 2em;
     }
   }

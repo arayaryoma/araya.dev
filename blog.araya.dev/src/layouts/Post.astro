@@ -69,7 +69,7 @@ import Layout from "./Layout.astro";
   }
 
   .post-header {
-    font-size: 3.6rem;
+    font-size: var(--font-size-xxl);
     line-height: 1.5em;
     padding: 30px 0;
     width: 100%;
@@ -80,7 +80,7 @@ import Layout from "./Layout.astro";
   }
 
   .post-header--datetime {
-    font-size: 1.4rem;
+    font-size: var(--font-size-s);
     grid-column: 2 / 12;
     height: auto;
     line-height: 1.5em;
@@ -118,7 +118,7 @@ import Layout from "./Layout.astro";
 
   .post--content {
     grid-column: 2 / 12;
-    font-size: 1.6rem;
+    font-size: var(--font-size-sm);
     line-height: 1.5em;
     overflow: auto;
   }
@@ -136,14 +136,14 @@ import Layout from "./Layout.astro";
 
   @media screen and (max-width: 767px) {
     .post-header {
-      font-size: 2rem;
+      font-size: var(--font-size-md);
     }
     .post__container {
       width: 100%;
     }
     .post__breadcrumb {
       margin: 62px 0;
-      font-size: 1.2rem;
+      font-size: var(--font-size-xs);
       padding: 0;
     }
   }

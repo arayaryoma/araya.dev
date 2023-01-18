@@ -41,15 +41,21 @@
     calc((100% - var(--grid-column-gap) * 11) / 12)
   );
   --footer-height: 142px;
-  --font-size-huge: 4.8rem;
-  --font-size-large: 2rem;
-  --font-size-body: 1.6rem;
+  --font-size-xxxl: calc(40 / 16 * 1rem);
+  --font-size-xxl: calc(32 / 16 * 1rem);
+  --font-size-xl: calc(28 / 16 * 1rem);
+  --font-size-l: calc(24 / 16 * 1rem);
+  --font-size-md: calc(20 / 16 * 1rem);
+  --font-size-sm: calc(16 / 16 * 1rem);
+  --font-size-s: calc(14 / 16 * 1rem);
+  --font-size-xs: calc(12 / 16 * 1rem);
+  --font-size-xxs: calc(10 / 16 * 1rem);
+
+  --font-size-body: var(--font-size-md);
   --default-font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN",
     "Hiragino Sans", Meiryo, sans-serif;
-  /* Set 1rem as 10px for the default env(1rem == 16px) */
-  font-size: 0.625rem;
   --global-nav-bg: var(--black);
-  --global-nav-height: 8.2rem;
+  --global-nav-height: 5.125rem;
 }
 
 @media screen and (prefers-color-scheme: dark) {
@@ -117,93 +123,7 @@ ul {
   margin: 0;
 }
 
-.heading__lined {
-  position: relative;
-}
-
-.heading__lined::before {
-  content: "";
-  display: flex;
-  height: 100%;
-  width: 5px;
-  position: absolute;
-  top: 0;
-  left: -24px;
-  background-color: var(--violet);
-}
-
 .container {
   width: var(--container-width);
   margin: 0 auto;
-}
-
-.global-nav {
-  height: var(--global-nav-height);
-  background: var(--global-nav-bg);
-  color: var(--gray-light-4);
-}
-
-.global-nav-content {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.content {
-  padding-bottom: calc(var(--footer-height) + 80px);
-}
-
-.top-header-link {
-  display: flex;
-  align-items: center;
-  padding: 1em;
-  height: 100%;
-}
-
-.header-icon {
-  height: 100%;
-}
-
-.header-title {
-  font-size: var(--font-size-huge);
-  display: flex;
-  height: 100%;
-  align-items: center;
-  margin-left: 16px;
-  font-family: var(--default-font-family);
-  font-weight: 500;
-}
-
-@media screen and (max-width: 767px) {
-  .header-title {
-    font-size: var(--font-size-large);
-  }
-}
-.page-title {
-  font-size: 4rem;
-}
-
-.footer {
-  height: var(--footer-height);
-  font-size: 1.6em;
-  background-color: var(--global-nav-bg);
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  color: var(--text-face-color);
-}
-
-.footer--contents {
-  display: flex;
-  flex-direction: column;
-}
-
-.footer--license {
-  width: 5em;
-}
-
-.footer--copy-right {
-  padding: 1em 0;
 }

@@ -6,6 +6,7 @@ export interface Props {
 import CCBy from "../assets/images/cc-by.svg";
 
 const { title } = Astro.props;
+import { BLOG_TITLE } from "../constants";
 ---
 
 <!DOCTYPE html>
@@ -17,7 +18,7 @@ const { title } = Astro.props;
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <title>{title}</title>
+    <title>{title} - {BLOG_TITLE}</title>
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=UA-104175258-3"
@@ -41,7 +42,10 @@ const { title } = Astro.props;
             alt="icon image"
             class="header-icon"
           />
-          <span class="header-title">araya's Reservoir</span>
+          <p class="header-title">
+            <span class="header-title-main">{BLOG_TITLE}</span>
+            <span class="header-title-sub">blog by araya</span>
+          </p>
         </a>
         <SitePreference />
       </div>
@@ -64,4 +68,97 @@ const { title } = Astro.props;
 </html>
 <style is:global>
   @import "../styles/main.css";
+</style>
+<style>
+  .heading__lined {
+    position: relative;
+  }
+
+  .heading__lined::before {
+    content: "";
+    display: flex;
+    height: 100%;
+    width: 5px;
+    position: absolute;
+    top: 0;
+    left: -24px;
+    background-color: var(--violet);
+  }
+
+  .global-nav {
+    height: var(--global-nav-height);
+    background: var(--global-nav-bg);
+    color: var(--gray-light-4);
+  }
+
+  .global-nav-content {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .content {
+    padding-bottom: calc(var(--footer-height) + 80px);
+  }
+
+  .top-header-link {
+    display: flex;
+    align-items: center;
+    padding: 1em;
+    height: 100%;
+  }
+
+  .header-icon {
+    height: 100%;
+  }
+
+  .header-title {
+    display: inline-flex;
+    height: 100%;
+    align-items: flex-end;
+    margin-left: 16px;
+    font-family: var(--default-font-family);
+    font-weight: 500;
+  }
+  .header-title-main {
+    font-size: var(--font-size-xxl);
+    line-height: 1;
+  }
+  .header-title-sub {
+    margin-inline-start: 8px;
+  }
+
+  @media screen and (max-width: 767px) {
+    .header-title {
+      font-size: var(--font-size-md);
+    }
+  }
+  .page-title {
+    font-size: 4rem;
+  }
+
+  .footer {
+    height: var(--footer-height);
+    font-size: 1.6em;
+    background-color: var(--global-nav-bg);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    color: var(--text-face-color);
+  }
+
+  .footer--contents {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .footer--license {
+    width: 5em;
+  }
+
+  .footer--copy-right {
+    padding: 1em 0;
+  }
 </style>

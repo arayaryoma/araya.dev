@@ -10,6 +10,7 @@
   --gray-light-3: #e0e0e0;
   --gray-light-4: #f2f2f2;
   --gray-light-5: #f8f8f8;
+  --dark-grayish-purple: #282638;
   --mat-red: #eb5757;
   --orange: #f2994a;
   --canary-yellow: #f2c94c;
@@ -60,12 +61,12 @@
 
 @media screen and (prefers-color-scheme: dark) {
   :root:not([data-color-scheme="light"]) {
-    --background-color: var(--gray-dark-3);
+    --background-color: var(--dark-grayish-purple);
     --text-face-color: var(--gray-light-4);
   }
 }
 html[data-color-scheme="dark"]:root {
-  --background-color: var(--gray-dark-3);
+  --background-color: var(--dark-grayish-purple);
   --text-face-color: var(--gray-light-4);
 }
 

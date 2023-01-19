@@ -74,7 +74,6 @@ import "../styles/markdown.css";
     line-height: 1.5em;
     padding: 30px 0;
     width: 100%;
-    background: var(--gray-light-4);
     display: grid;
     grid-column-gap: var(--grid-column-gap);
     grid-template-columns: var(--grid-template-columns);
@@ -99,27 +98,24 @@ import "../styles/markdown.css";
     display: grid;
     grid-column-gap: var(--grid-column-gap);
     grid-template-columns: var(--grid-template-columns);
-    background: var(--gray-light-5);
     padding: 30px 0;
   }
 
   @media screen and (prefers-color-scheme: dark) {
     :root:not([data-color-scheme="light"]) .post--main,
     :root:not([data-color-scheme="light"]) .post-header {
-      background: var(--gray-dark-3);
       color: var(--gray-light-4);
     }
   }
 
   :root[data-color-scheme="dark"] .post--main,
   :root[data-color-scheme="dark"] .post-header {
-    background: var(--gray-dark-3);
     color: var(--gray-light-4);
   }
 
   .post--content {
     grid-column: 2 / 12;
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-md);
     line-height: 1.5em;
     overflow: auto;
   }

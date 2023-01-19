@@ -37,14 +37,15 @@ import ColorSchemeToggle from "./color-scheme-toggle.astro";
         position: relative;
       }
       .icon {
-        width: 48px;
+        width: 32px;
       }
 
-      .toggle-button {
-        background: none;
+      button {
         border: none;
+        background: none;
+        cursor: pointer;
+        outline: none;
       }
-
       .dropdown-menu {
         list-style: none;
       }
@@ -66,12 +67,14 @@ import ColorSchemeToggle from "./color-scheme-toggle.astro";
         left: calc(-1 * var(--dropdown-menu-width));
         color: var(--gray-light-5);
         font-size: var(--font-size-body);
+        border: none;
       }
 
       .dropdown-menu-item {
         height: 100px;
         display: flex;
         align-items: center;
+        gap: 16px;
       }
     </style>
   </template>

@@ -123,6 +123,13 @@ ul {
   margin: 0;
 }
 
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  outline: none;
+}
+
 .container {
   width: var(--container-width);
   margin: 0 auto;

@@ -1,1 +1,1 @@
-export const BLOG_TITLE = "燃やすしかないゴミ";
+export const BLOG_TITLE = "araya's reservoir";

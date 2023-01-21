@@ -12,7 +12,7 @@ import ColorSchemeToggle from "./color-scheme-toggle.astro";
           class="icon"
         />
       </button>
-      <dialog data-dropdown-menu class="dropdown-menu">
+      <dialog data-dropdown-menu class="dropdown-menu" inert>
         <ul>
           <li class="dropdown-menu-item">
             <span>Light</span>
@@ -53,21 +53,38 @@ import ColorSchemeToggle from "./color-scheme-toggle.astro";
       dialog:not([open]) {
         pointer-events: none;
         opacity: 0;
+        transition: opacity 0.5s;
+      }
+
+      dialog {
+        transition: opacity 0.5s;
+      }
+
+      @media (prefers-reduced-motion) {
+        dialog,
+        dialog:not([open]) {
+          transition: none;
+        }
       }
 
       .dropdown-menu {
         display: flex;
         width: var(--dropdown-menu-width);
+        background: var(--gray-light-5);
+        color: var(--mat-black);
         flex-direction: column;
-        background: var(--mat-black);
         box-shadow: 0 0 10px 0 var(--black);
         position: absolute;
         top: var(--global-nav-height);
         right: 0;
         left: calc(-1 * var(--dropdown-menu-width));
-        color: var(--gray-light-5);
         font-size: var(--font-size-body);
         border: none;
+      }
+
+      [data-dropdown-menu][data-color-scheme="dark"] {
+        background: var(--mat-black);
+        color: var(--gray-light-5);
       }
 
       .dropdown-menu-item {
@@ -81,6 +98,8 @@ import ColorSchemeToggle from "./color-scheme-toggle.astro";
 </site-preference>
 
 <script>
+  import { detectPreferredColorScheme } from "../lib/color-scheme";
+
   class SitePreference extends HTMLElement {
     /**
      * @type {HTMLButtonElement | null}
@@ -115,15 +134,19 @@ import ColorSchemeToggle from "./color-scheme-toggle.astro";
         e.preventDefault();
         this.toggleDropdownMenu();
       });
+      const colorScheme = detectPreferredColorScheme();
+      this.#dropdownMenuDialog.setAttribute("data-color-scheme", colorScheme);
     }
 
     toggleDropdownMenu() {
       if (this.#dropdownMenuState === "close") {
         this.#dropdownMenuState = "open";
         this.#dropdownMenuDialog?.show();
+        this.#dropdownMenuDialog?.removeAttribute("inert");
       } else {
         this.#dropdownMenuState = "close";
         this.#dropdownMenuDialog?.close();
+        this.#dropdownMenuDialog?.setAttribute("inert", "");
       }
     }
   }

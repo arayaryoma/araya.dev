@@ -98,7 +98,10 @@ import ColorSchemeToggle from "./color-scheme-toggle.astro";
 </site-preference>
 
 <script>
-  import { detectPreferredColorScheme } from "../lib/color-scheme";
+  import {
+    detectPreferredColorScheme,
+    onChnageColorScheme,
+  } from "../lib/color-scheme";
 
   class SitePreference extends HTMLElement {
     /**
@@ -136,6 +139,12 @@ import ColorSchemeToggle from "./color-scheme-toggle.astro";
       });
       const colorScheme = detectPreferredColorScheme();
       this.#dropdownMenuDialog.setAttribute("data-color-scheme", colorScheme);
+
+      const htmlNode = document.querySelector("html");
+
+      onChnageColorScheme((colorScheme) => {
+        this.#dropdownMenuDialog.setAttribute("data-color-scheme", colorScheme);
+      });
     }
 
     toggleDropdownMenu() {

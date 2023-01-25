@@ -1,7 +1,6 @@
 ---
 title: "Firebase Hostingを使って静的Webサイトを独自ドメインかつSSL証明書付きで公開する"
 date: "2017-10-26 15:41:04 +0900"
-layout: ../../layouts/Post.astro
 ---
 
 ブログのホスティング先を GitHub Pages から Firebase Hosting に変えてみた。

@@ -3,7 +3,6 @@ title: Safari Technology Preview 92
 tags:
   - browser
   - safari
-layout: ../../layouts/Post.astro
 ---
 
 2019-09-18 に Safari Technology Preview 92 が[リリースされた](https://webkit.org/blog/9568/release-notes-for-safari-technology-preview-92/)

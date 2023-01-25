@@ -3,7 +3,6 @@ title: "React Nativeの一部のライブラリが原因でAndroidのビルド�
 date: "2018-03-22 10:00:00 +0900"
 tags:
   - React Native
-layout: ../../layouts/Post.astro
 ---
 
 ## 何が起こっているか

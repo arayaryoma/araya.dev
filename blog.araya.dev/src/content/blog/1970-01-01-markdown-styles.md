@@ -3,7 +3,6 @@ title: Markdown Stylesheets playground
 tags:
 date: "1970-01-01 00:00:00"
 description: Markdown の stylesheets を試すためのページ
-layout: ../../layouts/Post.astro
 ---
 
 # 見出し 1 / Heading 1

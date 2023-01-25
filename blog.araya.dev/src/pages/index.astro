@@ -3,14 +3,8 @@ import Layout from "../layouts/Layout.astro";
 import type { MarkdownInstance } from "astro";
 import defaultThumbnailImage from '../assets/images/default-thumbnail.svg'
 
-const posts: Array<
-  MarkdownInstance<{
-    title: string;
-    date: string;
-    tags?: Array<string>;
-    description?: string;
-  }>
-> = await Astro.glob("./posts/*.md");
+import { getCollection } from 'astro:content';
+const posts = await getCollection('blog');
 ---
 
 <Layout title="Posts">
@@ -22,15 +16,15 @@ const posts: Array<
           // Sort in descending order by datetime
           posts
             .sort((a, b) => {
-              return new Date(a.frontmatter.date).getTime() -
-                new Date(b.frontmatter?.date).getTime() <
+              return new Date(a.data.date?? 0).getTime() -
+                new Date(b.data.date ?? 0).getTime() <
                 0
                 ? 1
                 : -1;
             })
             .map((post) => (
               <li class="posts-list__item">
-                <a href={post.url}>
+                <a href={`/posts/${post.slug}/`}>
                   <article class="posts-list-item__content">
                     <img
                       src={defaultThumbnailImage}
@@ -40,15 +34,15 @@ const posts: Array<
                     />
                     <time
                       class="posts-list-item__date"
-                      datetime={post.frontmatter.date}
+                      datetime={post.data.date}
                     >
-                      {post.frontmatter.date}
+                      {post.data.date}
                     </time>
                     <h2 class="posts-list-item__title">
-                      {post.frontmatter.title}
+                      {post.data.title}
                     </h2>
                     <p class="posts-list-item__description">
-                      {post.frontmatter.description}
+                      {post.data.description}
                     </p>
                   </article>
                 </a>

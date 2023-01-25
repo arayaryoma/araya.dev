@@ -3,7 +3,6 @@ title: "InsideFrontend #2 に参加してきた"
 date: "2018-02-19 16:00:00 +0900"
 tags:
   - 勉強会レポート
-layout: ../../layouts/Post.astro
 ---
 
 2/11 に日経カンファレンスルームで開催された[Inside Frontend #2](https://inside-frontend.com/)に参加してきました。

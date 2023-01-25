@@ -4,7 +4,6 @@ tags:
   - ECMAScript
   - JavaScript
   - Proposals
-layout: ../../layouts/Post.astro
 ---
 
 | 変更前 | 変更後 | proposal                                                                                          | 備考    |

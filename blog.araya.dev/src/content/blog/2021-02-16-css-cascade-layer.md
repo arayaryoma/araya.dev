@@ -5,7 +5,6 @@ tags:
   - css
   - w3c
 date: "2021-02-16 00:53:00 +0900"
-layout: ../../layouts/Post.astro
 ---
 
 2021 年 1 月に [CSS Cascading and Inheritance Level 5 の First Public Working Draft](https://www.w3.org/TR/css-cascade-5/) が公開された。

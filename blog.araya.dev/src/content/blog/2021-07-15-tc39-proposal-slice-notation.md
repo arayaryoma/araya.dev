@@ -5,7 +5,6 @@ tags:
   - ECMA262
   - TC39
 date: "2021-07-15 00:00:00 +0900"
-layout: ../../layouts/Post.astro
 ---
 
 [tc39_study](https://web-study.connpass.com/event/213676/)のための準備。

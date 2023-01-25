@@ -3,7 +3,6 @@ title: "JavaScript の NaN について"
 date: "2017-12-15 15:44:13 +0900"
 tags:
   - JavaScript
-layout: ../../layouts/Post.astro
 ---
 
 この記事は[#kosen10s Advent Calendar 2017](https://adventar.org/calendars/2199)の 15 日目の記事です。

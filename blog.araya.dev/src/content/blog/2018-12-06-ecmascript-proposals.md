@@ -1,7 +1,6 @@
 ---
 title: "ECMAScriptのproposalで個人的に気になっているものを紹介する"
 date: "2018-12-06 00:00:00 +0900"
-layout: ../../layouts/Post.astro
 ---
 
 これは[#kosen10s Advent Calendar 2018](https://adventar.org/calendars/3004)６日目の記事です。

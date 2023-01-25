@@ -5,7 +5,6 @@ tags:
   - Web API
 date: "2021-08-19 01:18:00 +0900"
 description: EyeDropper APIという API が WICG で提案されている。"eyedropper"とは、スポイトのことで、画像編集ソフトなどによくある色を抽出する機能のことだ。eyedropper を OS などのカラーピッカーを介さずにブラウザから直接起動できる API がこの EyeDropper API で、Chrome ではすでに実装が進み、Chrome に搭載されることがアナウンスされている。
-layout: ../../layouts/Post.astro
 ---
 
 ## EyeDropper API とは

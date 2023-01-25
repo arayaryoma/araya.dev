@@ -4,7 +4,6 @@ date: "2017-06-20 19:42:53 +0900"
 tags:
   - イベントレポート
   - Google Cloud Platform
-layout: ../../layouts/Post.astro
 ---
 
 株式会社メルカリさんのオフィスで開催された[GCP Global Meetup](https://gcpug-tokyo.connpass.com/event/58494/)に参加してきた。

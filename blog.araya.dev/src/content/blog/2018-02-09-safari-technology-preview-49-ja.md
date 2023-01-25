@@ -5,7 +5,6 @@ tags:
   - Safari
   - Browser
   - 翻訳
-layout: ../../layouts/Post.astro
 ---
 
 Safari Technology Preview 49 の変更点を訳しただけ。

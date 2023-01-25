@@ -5,7 +5,6 @@ tags:
   - JavaScript
   - tips
   - 公開API
-layout: ../../layouts/Post.astro
 ---
 
 日本の各都道府県および市区町村には[全国地方公共団体コード](https://ja.wikipedia.org/wiki/全国地方公共団体コード)というものが割り振られています。

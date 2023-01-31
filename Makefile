@@ -2,36 +2,36 @@ SERVER_IP=52.69.164.172
 
 .PHONY: ssh
 ssh:
-	ssh -i ~/.ssh/id_rsa ubuntu@${SERVER_IP}
+	ssh -i ~/.ssh/arayadev-github-action ubuntu@${SERVER_IP}
 
 .PHONY: download-access-log
 download-access-log:
-	scp -r -i ~/.ssh/id_rsa ubuntu@${SERVER_IP}:/logs/access-log ./logs/prod/
+	scp -r -i ~/.ssh/arayadev-github-action ubuntu@${SERVER_IP}:/logs/access-log ./logs/prod/
 
 .PHONY: upload-nginxconf
 upload-nginxconf:
-	scp -r -i ~/.ssh/id_rsa ./conf/nginx/nginx.conf ubuntu@${SERVER_IP}:/etc/nginx/nginx.conf
-	scp -r -i ~/.ssh/id_rsa ./conf/nginx/share ubuntu@${SERVER_IP}:/etc/nginx/
+	scp -r -i ~/.ssh/arayadev-github-action ./conf/nginx/nginx.conf ubuntu@${SERVER_IP}:/etc/nginx/nginx.conf
+	scp -r -i ~/.ssh/arayadev-github-action ./conf/nginx/share ubuntu@${SERVER_IP}:/etc/nginx/
 
 .PHONY: upload-scripts
 upload-scripts:
-	scp -r -i ~/.ssh/id_rsa ./scripts/* ubuntu@${SERVER_IP}:/scripts
+	scp -r -i ~/.ssh/arayadev-github-action ./scripts/* ubuntu@${SERVER_IP}:/scripts
 
 .PHONY: upload-makefile
 upload-makefile:
-	scp -r -i ~/.ssh/id_rsa ./Makefile ubuntu@${SERVER_IP}:/var/www/araya.dev/
+	scp -r -i ~/.ssh/arayadev-github-action ./Makefile ubuntu@${SERVER_IP}:/var/www/araya.dev/
 
 .PHONY: deploy-all
 deploy-all:
-	rsync --exclude "**/node_modules" --delete -r -e "ssh -i ~/.ssh/id_rsa" ./ ubuntu@${SERVER_IP}:/var/www/araya.dev/
+	rsync --exclude "**/node_modules" --delete -r -e "ssh -i ~/.ssh/arayadev-github-action" ./ ubuntu@${SERVER_IP}:/var/www/araya.dev/
 
 .PHONY: deploy-www
 deploy-www:
-	rsync --delete -r -e "ssh -i ~/.ssh/id_rsa" ./www.araya.dev/ ubuntu@${SERVER_IP}:/var/www/araya.dev/www.araya.dev/
+	rsync --delete -r -e "ssh -i ~/.ssh/arayadev-github-action" ./www.araya.dev/ ubuntu@${SERVER_IP}:/var/www/araya.dev/www.araya.dev/
 
 .PHONY: deploy-pg
 deploy-pg:
-	rsync --delete -r -e "ssh -i ~/.ssh/id_rsa" ./playground.araya.dev/ ubuntu@${SERVER_IP}:/var/www/araya.dev/playground.araya.dev/
+	rsync --delete -r -e "ssh -i ~/.ssh/arayadev-github-action" ./playground.araya.dev/ ubuntu@${SERVER_IP}:/var/www/araya.dev/playground.araya.dev/
 
 .PHONY: dev-blog
 blog-dev:
@@ -44,11 +44,11 @@ blog-build:
 
 .PHONY: deploy-blog 
 deploy-blog:
-	rsync --delete -r -e "ssh -i ~/.ssh/id_rsa" ./blog.araya.dev/dist/ ubuntu@${SERVER_IP}:/var/www/araya.dev/blog.araya.dev/dist
+	rsync --delete -r -e "ssh -i ~/.ssh/arayadev-github-action" ./blog.araya.dev/dist/ ubuntu@${SERVER_IP}:/var/www/araya.dev/blog.araya.dev/dist
 
 .PHONY: deploy-nevertls
 deploy-nevertls:
-	rsync --delete -r -e "ssh -i ~/.ssh/id_rsa" ./nevertls.araya.dev/ ubuntu@${SERVER_IP}:/var/www/araya.dev/nevertls.araya.dev/
+	rsync --delete -r -e "ssh -i ~/.ssh/arayadev-github-action" ./nevertls.araya.dev/ ubuntu@${SERVER_IP}:/var/www/araya.dev/nevertls.araya.dev/
 
 .PHONY: start-dev
 start-dev:

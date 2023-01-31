@@ -14,15 +14,17 @@ fn main() {
 
 fn handle_connection(mut stream: TcpStream) {
     let buf_reader = BufReader::new(&mut stream);
-    let http_request: Vec<_> = buf_reader
-        .lines()
-        .map(|result| result.unwrap())
-        .take_while(|line| !line.is_empty())
-        .collect();
-
-    println!("Request: {:#?}", http_request);
-
-    let response = "HTTP/1.1 200 OK\r\n\r\n";
-
-    stream.write_all(response.as_bytes()).unwrap();
+    let request_line = buf_reader.lines().next().unwrap().unwrap();
+    
+    if !request_line.starts_with("GET") {
+        let response = "HTTP/1.1 405 MethodNotFound\r\n\r\n";
+        stream.write_all(response.as_bytes()).unwrap();
+        return;
+    }else if request_line == "GET / HTTP/1.1" {
+        let response = "HTTP/1.1 200 OK\r\n\r\n";
+        stream.write_all(response.as_bytes()).unwrap();
+    } else {
+        let response = "HTTP/1.1 404 NotFound";
+        stream.write_all(response.as_bytes()).unwrap();
+    }
 }

@@ -13,15 +13,18 @@ fn main() {
 }
 
 fn handle_connection(mut stream: TcpStream) {
+    let peer_ip = stream.peer_addr().unwrap();
     let buf_reader = BufReader::new(&mut stream);
     let request_line = buf_reader.lines().next().unwrap().unwrap();
-    
+
     if !request_line.starts_with("GET") {
         let response = "HTTP/1.1 405 MethodNotFound\r\n\r\n";
         stream.write_all(response.as_bytes()).unwrap();
         return;
-    }else if request_line == "GET / HTTP/1.1" {
-        let response = "HTTP/1.1 200 OK\r\n\r\n";
+    } else if request_line == "GET / HTTP/1.1" {
+        let contents = format!("{peer_ip}");
+        let length = contents.len();
+        let response = format!("HTTP/1.1 200 OK\r\ncontent-length: {length}\r\n\r\n{contents}");
         stream.write_all(response.as_bytes()).unwrap();
     } else {
         let response = "HTTP/1.1 404 NotFound";

@@ -33,6 +33,10 @@ deploy-www:
 deploy-pg:
 	rsync --delete -r -e "ssh -i ~/.ssh/arayadev-github-action" ./playground.araya.dev/ ubuntu@${SERVER_IP}:/var/www/araya.dev/playground.araya.dev/
 
+.PHONY: deploy-myip
+deploy-myip:
+	rsync --delete -r -e "ssh -i ~/.ssh/arayadev-github-action" ./myip.araya.dev/myip-araya-dev ubuntu@${SERVER_IP}:/var/www/araya.dev/myip.araya.dev/
+
 .PHONY: dev-blog
 blog-dev:
 	cd blog.araya.dev && yarn run watch &

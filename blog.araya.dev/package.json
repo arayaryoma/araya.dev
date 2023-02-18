@@ -9,7 +9,7 @@
   "scripts": {
     "build": "astro build",
     "build:watch": "node build/watch.js",
-    "dev-server": "astro dev"
+    "dev-server": "DRAFTS=1 astro dev"
   },
   "packageManager": "pnpm@7.0.1",
   "devDependencies": {

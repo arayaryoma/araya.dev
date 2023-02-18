@@ -2,9 +2,13 @@
 import Layout from "../layouts/Layout.astro";
 import type { MarkdownInstance } from "astro";
 import defaultThumbnailImage from '../assets/images/default-thumbnail.svg'
+import { ENABLED_SERVE_DRAFTS } from "../constants";
 
 import { getCollection } from 'astro:content';
 const posts = await getCollection('blog');
+const nonDraftPosts = ENABLED_SERVE_DRAFTS ? posts : posts.filter(p => {
+  return !p.data.draft
+});
 ---
 
 <Layout title="Posts">
@@ -14,7 +18,7 @@ const posts = await getCollection('blog');
       <ul class="posts-list__root posts-list__list">
         {
           // Sort in descending order by datetime
-          posts
+          nonDraftPosts
             .sort((a, b) => {
               return new Date(a.data.date?? 0).getTime() -
                 new Date(b.data.date ?? 0).getTime() <

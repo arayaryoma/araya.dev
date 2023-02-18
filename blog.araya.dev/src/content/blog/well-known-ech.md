@@ -5,6 +5,7 @@ tags:
   - IETF draft
 date: "2023-02-17 23:23:23 +0900"
 description: IETF でdraftとして議論が進められている A well-known URI for publishing ECHConfigList values. のメモ
+draft: true
 ---
 
 ## Encrypted Client Hello (ECH) の設定の課題

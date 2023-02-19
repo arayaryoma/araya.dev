@@ -16,7 +16,12 @@ draft: true
 - サーバー管理者の管轄外の DNS に resource record が登録されている可能性がある
 - 鍵の更新時に resource record の値を自動的に書き換える API が DNS プロバイダーから提供されているとは限らない
 
-という課題があった
+という課題があった。
+
+<figure>
+<img src=/assets/images/well-known-uri-ech/https-record.png alt="HTTPS record のみでの ECH のイメージ図">
+<figcaption>fig.1: HTTP record のみで ECH を設定するときのイメージ図</figcaption>
+</figure>
 
 ## well-known URI と zone factory
 
@@ -40,7 +45,7 @@ draft: true
 - SvcParamKey の port に対応する設定
 - ECHConfigList を 含む base64 encoded な文字列。SvcParamKey の ech に対応する設定
 
-JSON format は現在議論中であり、draft-00 から draft-01 でも大きく変わったため、今後も変更される可能性が大いにある。
+JSON content のフォーマットは現在議論中であり、draft-00 から draft-01 でも大きく変わったため、今後も変更される可能性が大いにある。
 
 #### AliasMode 相当
 
@@ -92,3 +97,9 @@ zone factory は `/.well-known/origin-svcb` から JSON を fetch したら、DN
 #### `/.well-known/origin-svcb` の freshness と DNS の TTL
 
 サーバー管理者が`/.well-known/origin-svcb`に配置する JSON を、例えば `cache-control: max-age=3600` で配布しているとする。これは ECH の設定が最短 1h で更新されうることを意味する。そのため、zone facttory はこの JSON の freshness time を考慮して十分短い時間で DNS の resource record の TTL を設定する必要がある。
+
+## 参考資料
+
+- [TLS Encrypted Client Hello](https://www.ietf.org/archive/id/draft-ietf-tls-esni-15.html)
+- [Service binding and parameter specification via the DNS (DNS SVCB and HTTPS RRs)](https://www.ietf.org/archive/id/draft-ietf-dnsop-svcb-https-11.html)
+- [A well-known URI for publishing ECHConfigList values.](https://www.ietf.org/archive/id/draft-ietf-tls-wkech-01.html)

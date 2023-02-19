@@ -5,7 +5,6 @@ tags:
   - IETF draft
 date: "2023-02-17 23:23:23 +0900"
 description: IETF でdraftとして議論が進められている A well-known URI for publishing ECHConfigList values. のメモ
-draft: true
 ---
 
 ## Encrypted Client Hello (ECH) の設定の課題
@@ -19,8 +18,8 @@ draft: true
 という課題があった。
 
 <figure>
-<img src=/assets/images/well-known-uri-ech/https-record.png alt="HTTPS record のみでの ECH のイメージ図">
-<figcaption>fig.1: HTTP record のみで ECH を設定するときのイメージ図</figcaption>
+  <img src=/assets/images/well-known-uri-ech/https-record.png alt="HTTPS record のみでの ECH のイメージ図" >
+  <figcaption>fig.1: HTTPS record のみで ECH を設定するときのイメージ図</figcaption>
 </figure>
 
 ## well-known URI と zone factory
@@ -34,6 +33,8 @@ draft: true
   - (draft ではこのような存在を **zone factory** と呼称している)
 
 という仕組みでサーバー側の鍵更新と DNS の resource record の更新を同期させることを提案している。
+
+draft に明記はされていないが、おそらく zone factory は各種 DNS プロバイダーがデプロイすることになるだろう。
 
 ### well-known URI で ECHConfigList の値を配布する
 
@@ -97,6 +98,11 @@ zone factory は `/.well-known/origin-svcb` から JSON を fetch したら、DN
 #### `/.well-known/origin-svcb` の freshness と DNS の TTL
 
 サーバー管理者が`/.well-known/origin-svcb`に配置する JSON を、例えば `cache-control: max-age=3600` で配布しているとする。これは ECH の設定が最短 1h で更新されうることを意味する。そのため、zone facttory はこの JSON の freshness time を考慮して十分短い時間で DNS の resource record の TTL を設定する必要がある。
+
+<figure>
+  <img src=/assets/images/well-known-uri-ech/https-record-and-well-known-uri.png alt="HTTPS record と zone factory を組み合わせた ECH のイメージ図" >
+  <figcaption>fig.2: HTTPS record と zone factory を組み合わせて ECH を設定するときのイメージ図</figcaption>
+</figure>
 
 ## 参考資料
 

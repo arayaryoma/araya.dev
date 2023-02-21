@@ -7,6 +7,8 @@ date: "2023-02-17 23:23:23 +0900"
 description: IETF でdraftとして議論が進められている A well-known URI for publishing ECHConfigList values. のメモ
 ---
 
+import Figure from "../../components/figure.astro";
+
 ## Encrypted Client Hello (ECH) の設定の課題
 
 現状 Chrome などで実装が進んでいる[ECH](https://chromestatus.com/feature/6196703843581952)は、サーバーが生成した ECH 用の公開鍵を DNS の`HTTPS` resource record の値の ECHConfigList に設定していることが前提になっている。
@@ -17,16 +19,16 @@ description: IETF でdraftとして議論が進められている A well-known U
 
 という課題があった。
 
-<figure>
-  <img
-    src="/assets/images/well-known-uri-ech/https-record.png"
-    alt="HTTPS record のみでの ECH のイメージ図"
-  />
-  <figcaption>
-    fig.1: HTTPS record のみで ECH を設定するときのイメージ図
-  </figcaption>
-</figure>
+import httpsRecordImage from "../../assets/images/well-known-uri-ech/https-record.png";
 
+<Figure
+  src={httpsRecordImage}
+  widths={[400, 800]}
+  sizes="(max-width: 800px) 100vw, 50vw"
+  aspectRatio="3:2"
+  alt="HTTPS record のみでの ECH のイメージ図"
+  caption="fig.1: HTTPS record のみで ECH を設定するときのイメージ図"
+/>
 ## well-known URI と zone factory
 
 このような背景があり提案された draft が [A well-known URI for publishing ECHConfigList values.](https://datatracker.ietf.org/doc/draft-ietf-tls-wkech/) だ。
@@ -104,16 +106,16 @@ zone factory は `/.well-known/origin-svcb` から JSON を fetch したら、DN
 
 サーバー管理者が`/.well-known/origin-svcb`に配置する JSON を、例えば `cache-control: max-age=3600` で配布しているとする。これは ECH の設定が最短 1h で更新されうることを意味する。そのため、zone facttory はこの JSON の freshness time を考慮して十分短い時間で DNS の resource record の TTL を設定する必要がある。
 
-<figure>
-  <img
-    src="/assets/images/well-known-uri-ech/https-record-and-well-known-uri.png"
-    alt="HTTPS record と zone factory を組み合わせた ECH のイメージ図"
-  />
-  <figcaption>
-    fig.2: HTTPS record と zone factory を組み合わせて ECH
-    を設定するときのイメージ図
-  </figcaption>
-</figure>
+import wellKnownUriImage from "../../assets/images/well-known-uri-ech/https-record-and-well-known-uri.png";
+
+<Figure
+  src={wellKnownUriImage}
+  widths={[400, 800]}
+  sizes="(max-width: 800px) 100vw, 50vw"
+  aspectRatio="3:2"
+  alt="HTTPS record と zone factory を組み合わせた ECH のイメージ図"
+  caption="fig.2: HTTPS record と zone factory を組み合わせて ECH を設定するときのイメージ図"
+/>
 
 ## 参考資料
 

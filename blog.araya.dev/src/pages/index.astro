@@ -148,7 +148,7 @@ const nonDraftPosts = ENABLED_SERVE_DRAFTS ? posts : posts.filter(p => {
       "date"
       "title"
       "description";
-    row-gap: 12px;
+    row-gap: 1em;
     padding: 32px 16px;
   }
 
@@ -182,7 +182,7 @@ const nonDraftPosts = ENABLED_SERVE_DRAFTS ? posts : posts.filter(p => {
         "date"
         "title"
         "description";
-      grid-template-rows: 1.5em 8px auto;
+      grid-template-rows: 1.5em  auto auto;
       column-gap: var(--grid-column-gap);
       row-gap: 12px;
       grid-template-columns: 1fr;
@@ -193,7 +193,7 @@ const nonDraftPosts = ENABLED_SERVE_DRAFTS ? posts : posts.filter(p => {
     }
     .posts-list-item__title {
       grid-area: title;
-      font-size: var(--font-size-md);
+      font-size: var(--font-size-l);
       line-height: 2em;
     }
   }

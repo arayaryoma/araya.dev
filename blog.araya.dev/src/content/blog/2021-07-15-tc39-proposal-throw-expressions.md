@@ -4,7 +4,7 @@ tags:
   - JavaScript
   - ECMA262
   - TC39
-date: "2021-07-15 20:00:00 +0900"
+date: "2021-07-15"
 ---
 
 [tc39_study](https://web-study.connpass.com/event/213676/)のための準備。

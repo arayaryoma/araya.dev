@@ -1,6 +1,6 @@
 ---
 title: "React Nativeの一部のライブラリが原因でAndroidのビルドが失敗する件について"
-date: "2018-03-22 10:00:00 +0900"
+date: "2018-03-22"
 tags:
   - React Native
 ---

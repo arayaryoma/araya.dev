@@ -1,5 +1,6 @@
 ---
 title: CSSのSelectors Level 4で策定が進んでいる Logical Combinationsについて
+date: "2020-05-26"
 tags:
   - browser
   - css

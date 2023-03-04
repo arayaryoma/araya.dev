@@ -1,5 +1,6 @@
 ---
 title: Safari Technology Preview 93
+date: "2019-10-03"
 tags:
   - browser
   - safari

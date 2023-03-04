@@ -1,5 +1,6 @@
 ---
 title: Node.jsでのrecursive readdir
+date: "2019-05-09"
 tags:
   - Node.js
   - JavaScript

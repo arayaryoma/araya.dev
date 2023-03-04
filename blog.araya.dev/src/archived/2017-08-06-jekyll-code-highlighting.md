@@ -1,14 +1,14 @@
 ---
 title: "jekyll code highlighting"
-date: "2017-08-06 21:49:42 +0900"
+date: "2017-08-06"
 tags:
   - jekyll
 ---
 
-jekyllでブログ書いてると、[code highlighting](https://jekyllrb.com/docs/templates/#code-snippet-highlighting)を確実に使うことになるが、
-対応してる言語やsyntaxがよくわかんなかったので調べた。
+jekyll でブログ書いてると、[code highlighting](https://jekyllrb.com/docs/templates/#code-snippet-highlighting)を確実に使うことになるが、
+対応してる言語や syntax がよくわかんなかったので調べた。
 
-jekyllはcode highlightingに[Rouge](http://rouge.jneen.net/)を使用していて、Rougeは[Pygments](http://pygments.org/)と完全互換らしいので、
-Pygmentsで使えるcode highlightはjekyll上でも使うことができる。
+jekyll は code highlighting に[Rouge](http://rouge.jneen.net/)を使用していて、Rouge は[Pygments](http://pygments.org/)と完全互換らしいので、
+Pygments で使える code highlight は jekyll 上でも使うことができる。
 
-[ここ](http://pygments.org/languages/)に載ってる言語はhighlightingが利用できるはず。
+[ここ](http://pygments.org/languages/)に載ってる言語は highlighting が利用できるはず。

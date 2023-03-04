@@ -3,7 +3,7 @@ title:
 tags:
   - browser
   - ShadowDOM
-date: "2021-02-16 00:53:00 +0900"
+date: "2021-02-16"
 ---
 
 WebComponents におけるカプセル化のための技術として、ShadowDOM がある。

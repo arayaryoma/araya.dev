@@ -1,6 +1,6 @@
 ---
 title: "package.jsonに指定するdependencies, devDependenciesなどの使い方"
-date: "2017-07-03 11:09:31 +0900"
+date: "2017-07-03"
 ---
 
 ## dependencies

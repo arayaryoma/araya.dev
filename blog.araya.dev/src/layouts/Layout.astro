@@ -3,7 +3,7 @@ import SitePreference from "../components/site-preference.astro";
 export interface Props {
   title: string;
 }
-import CCBy from "../assets/images/cc-by.svg";
+import Footer from "../components/footer.astro";
 
 const { title } = Astro.props;
 import { BLOG_TITLE } from "../constants";
@@ -52,17 +52,7 @@ import { BLOG_TITLE } from "../constants";
     <div class="content">
       <slot />
     </div>
-    <footer class="footer">
-      <div class="container">
-        <div class="footer--contents">
-          <p>
-            当サイト内の意見・感想等は全てaraya個人によるものであり特定の組織との一切の関わりを持ちません
-          </p>
-          <img src={CCBy} alt="License is CC-BY" class="footer--license" />
-          <span class="footer--copy-right">&copy; araya</span>
-        </div>
-      </div>
-    </footer>
+    <Footer />
   </body>
 </html>
 <style is:global>
@@ -135,29 +125,5 @@ import { BLOG_TITLE } from "../constants";
   }
   .page-title {
     font-size: var(--font-size-xxxl);
-  }
-
-  .footer {
-    height: var(--footer-height);
-    font-size: 1.6em;
-    background-color: var(--global-nav-bg);
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    color: var(--text-face-color);
-  }
-
-  .footer--contents {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .footer--license {
-    width: 5em;
-  }
-
-  .footer--copy-right {
-    padding: 1em 0;
   }
 </style>

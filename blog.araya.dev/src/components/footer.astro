@@ -1,0 +1,43 @@
+---
+import { Image } from "@astrojs/image/components";
+import CCBy from "../assets/images/cc-by.svg";
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="contents">
+      <p>
+        当サイト内の意見・感想等は全てaraya個人によるものであり特定の組織との一切の関わりを持ちません
+      </p>
+      <Image
+        src={CCBy}
+        alt="License is CC-BY"
+        class="license"
+        width={120}
+        height={42}
+      />
+      <span class="copy-right">&copy; araya</span>
+    </div>
+  </div>
+</footer>
+<style>
+  .footer {
+    height: var(--footer-height);
+    font-size: 1em;
+    background-color: var(--global-nav-bg);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    color: var(--text-face-color);
+  }
+
+  .contents {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .copy-right {
+    padding: 1em 0;
+  }
+</style>

@@ -1,6 +1,7 @@
 ---
 title: "package.jsonに指定するdependencies, devDependenciesなどの使い方"
 date: "2017-07-03"
+draft: true
 ---
 
 ## dependencies

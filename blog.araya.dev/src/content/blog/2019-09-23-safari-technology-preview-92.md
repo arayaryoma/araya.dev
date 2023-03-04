@@ -1,6 +1,7 @@
 ---
 title: Safari Technology Preview 92
 date: "2019-09-23"
+draft: true
 tags:
   - browser
   - safari

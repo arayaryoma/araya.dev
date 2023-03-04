@@ -1,6 +1,7 @@
 ---
 title: 2019年10月のTC39 meetingでStageが変更されたproposals
 date: "2019-10-09"
+draft: true
 tags:
   - ECMAScript
   - JavaScript

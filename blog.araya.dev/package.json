@@ -13,11 +13,13 @@
   },
   "packageManager": "pnpm@7.0.1",
   "devDependencies": {
+    "@astrojs/image": "^0.15.1",
     "@astrojs/mdx": "^0.17.2",
     "@types/node": "^18.14.5",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@types/rimraf": "^4.0.5",
+    "astro": "^2.0.17",
     "chokidar": "^3.5.3",
     "feed": "^4.2.2",
     "puppeteer": "^19.7.2",
@@ -34,8 +36,5 @@
     "yaml": "^2.2.1",
     "zx": "^7.2.0"
   },
-  "dependencies": {
-    "@astrojs/image": "^0.15.1",
-    "astro": "^2.0.17"
-  }
+  "dependencies": {}
 }

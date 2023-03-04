@@ -85,12 +85,14 @@
   margin: 0 0.2em;
 }
 
+.markdown pre {
+  padding: 0.5em;
+}
+
 .markdown pre code {
   font-family: "Source Code Pro", "Lucida Console", Courier, monospace;
   width: 100%;
   margin: 0;
-  padding: 0 0.2em;
-  padding: 1em;
 }
 
 .markdown table {

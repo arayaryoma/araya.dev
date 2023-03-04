@@ -30,12 +30,6 @@ const nonDraftPosts = ENABLED_SERVE_DRAFTS ? posts : posts.filter(p => {
               <li class="posts-list__item">
                 <a href={`/posts/${post.slug}/`}>
                   <article class="posts-list-item__content">
-                    <img
-                      src={defaultThumbnailImage}
-                      alt="thumbnail"
-                      class="posts-list-item__thumbnail"
-                      loading="lazy"
-                    />
                     <time
                       class="posts-list-item__date"
                       datetime={post.data.date}
@@ -151,7 +145,6 @@ const nonDraftPosts = ENABLED_SERVE_DRAFTS ? posts : posts.filter(p => {
     display: grid;
     font-size: var(--font-size-sm);
     grid-template-areas:
-      "img"
       "date"
       "title"
       "description";
@@ -186,13 +179,13 @@ const nonDraftPosts = ENABLED_SERVE_DRAFTS ? posts : posts.filter(p => {
       display: grid;
       font-size: var(--font-size-sm);
       grid-template-areas:
-        "img date"
-        "img title"
-        "img description";
+        "date"
+        "title"
+        "description";
       grid-template-rows: 1.5em 8px auto;
       column-gap: var(--grid-column-gap);
       row-gap: 12px;
-      grid-template-columns: 40% 1fr;
+      grid-template-columns: 1fr;
       padding: 32px;
     }
     .posts-list-item__thumbnail {

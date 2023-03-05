@@ -51,12 +51,12 @@ import "../../styles/markdown.css";
               log &&
                 log.map((history) => (
                   <p>
-                    <a href={`${repo}/commit/${history.hash}`}>
+                    <a href={`${repo}/commit/${history.hash}`} target="_blank">
                       <code>{history?.hash?.slice(0, 8)}</code>
+                      <span class="post__changelog-message">
+                        {history.subject}
+                      </span>
                     </a>
-                    <span class="post__changelog-message">
-                      {history.subject}
-                    </span>
                   </p>
                 ))
             }

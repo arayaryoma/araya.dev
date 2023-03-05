@@ -1,4 +1,13 @@
 import "zx/globals";
+import path from "node:path";
+
+$.log = (entry) => {
+  switch (entry.kind) {
+    default: {
+      // Do nothing
+    }
+  }
+};
 
 export async function getChangelog(filename: string): Promise<
   Array<{

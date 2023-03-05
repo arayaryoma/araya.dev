@@ -1,14 +1,15 @@
-import type { AstroIntegration } from "astro";
+import "zx/globals";
 
-function changelogIntegration(): AstroIntegration {
-  return {
-    name: "astro-changelog",
-    hooks: {
-      "astro:config:setup": async ({ config }) => {
-        console.log("hello, this is a changelog integration!");
-      },
-    },
-  };
+export async function getChangelog(filename: string): Promise<
+  Array<{
+    hash: string;
+    subject: string;
+  }>
+> {
+  const CWD = process.cwd();
+  const filepath = path.resolve(CWD, "src", "content", "blog", filename);
+  const result =
+    await $`git log --pretty='format:{"hash": "%H", "subject": "%s"}' ${filepath}`;
+  const logs = result.stdout.split("\n").map((item) => JSON.parse(item));
+  return logs;
 }
-
-export default changelogIntegration;

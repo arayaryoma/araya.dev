@@ -1,15 +1,24 @@
 ---
 import { getCollection } from "astro:content";
+import { getChangelog } from "../../../build/changelog";
 import Layout from "../../layouts/Layout.astro";
 
 export async function getStaticPaths() {
   const blogEntries = await getCollection("blog");
-  return blogEntries.map((entry) => ({
-    params: { slug: entry.slug },
-    props: { entry },
-  }));
+  const entries = blogEntries.map((entry) => {
+    return {
+      params: { slug: entry.slug },
+      props: { entry },
+    };
+  });
+  const promises = entries.map(async (item) => {
+    const log = await getChangelog(item.props.entry.id);
+    return { ...item, props: { ...item.props, log } };
+  });
+  return await Promise.all(promises);
 }
-const { entry } = Astro.props;
+
+const { entry, log } = Astro.props;
 
 const { Content } = await entry.render();
 
@@ -39,14 +48,14 @@ import "../../styles/markdown.css";
           <details class="post__changelog">
             <summary>変更履歴</summary>
             {
-              entry.data.changeLogs &&
-                entry.data.changeLogs.map((history) => (
+              log &&
+                log.map((history) => (
                   <p>
                     <a href={`${repo}/commit/${history.hash}`}>
-                      <code>{history.hash.slice(0, 8)}</code>
+                      <code>{history?.hash?.slice(0, 8)}</code>
                     </a>
                     <span class="post__changelog-message">
-                      {history.message}
+                      {history.subject}
                     </span>
                   </p>
                 ))

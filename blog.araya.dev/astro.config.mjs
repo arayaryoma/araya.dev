@@ -5,7 +5,10 @@ import mdx from '@astrojs/mdx';
 import image from "@astrojs/image";
 
 // https://astro.build/config
+import react from "@astrojs/react";
+
+// https://astro.build/config
 export default defineConfig({
   trailingSlash: 'always',
-  integrations: [mdx(), image()]
+  integrations: [mdx(), image(), react()]
 });

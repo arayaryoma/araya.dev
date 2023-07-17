@@ -2,10 +2,11 @@
 import SitePreference from "../components/site-preference.astro";
 export interface Props {
   title: string;
+  ogImageUrl?: string;
 }
 import Footer from "../components/footer.astro";
 
-const { title } = Astro.props;
+const { title, ogImageUrl } = Astro.props;
 import { BLOG_TITLE } from "../constants";
 ---
 
@@ -18,6 +19,7 @@ import { BLOG_TITLE } from "../constants";
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
+    <meta property="og:image" content={ogImageUrl} />
     <title>{title} - {BLOG_TITLE}</title>
     <script
       async

@@ -32,7 +32,5 @@ export async function generateOgImage({
     embedFont: true,
   });
 
-  console.log(svg);
-
   return sharp(Buffer.from(svg)).png().toBuffer();
 }

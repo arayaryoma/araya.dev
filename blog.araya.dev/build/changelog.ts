@@ -12,6 +12,11 @@ export async function getChangelog(filename: string): Promise<
   const cmd = `git log --pretty='format:{"hash": "%H", "subject": "%s"}' ${filepath}`;
   const result = execSync(cmd).toString();
 
-  const logs = result.split("\n").map((item) => JSON.parse(item));
+  const logs = result
+    .split("\n")
+    .filter((item) => item.length > 0)
+    .map((item) => {
+      return JSON.parse(item);
+    });
   return logs;
 }

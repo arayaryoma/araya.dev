@@ -22,19 +22,25 @@ apt install -y \
 	mercurial
 
 mkdir -p /var/logs
-mkdir -p /etc/nginx
 
 # Build Nginx with BoringSSL
+
+## Get nginx source
+cd /etc
+wget -O nginx.tar.gz https://github.com/nginx/nginx/archive/refs/tags/release-1.25.1.tar.gz
+mkdir -p /etc/nginx
+tar -xzf nginx.tar.gz -C nginx --strip-components 1
+
 cd /etc/nginx
 
-hg clone -b quic https://hg.nginx.org/nginx-quic
+# hg clone -b quic https://hg.nginx.org/nginx-quic
 git clone --depth 1 https://github.com/openresty/headers-more-nginx-module.git
 git clone --depth 1 https://github.com/flano-yuki/ngx_http_early_hints.git
 git clone --depth 1 https://github.com/google/ngx_brotli.git
 cd ngx_brotli
 git submodule update --init
 
-cd /etc/nginx/nginx-quic
+cd /etc/nginx
 
 ./auto/configure --prefix=/etc/nginx \
 --conf-path=/etc/nginx/nginx.conf \
@@ -45,14 +51,11 @@ cd /etc/nginx/nginx-quic
 --with-http_v2_module \
 --with-debug \
 --with-http_v3_module \
+--with-compat \
 --with-cc-opt="-I../boringssl/include" \
 --with-ld-opt="-L../boringssl/build/ssl \
 -L../boringssl/build/crypto"
-
-cp objs/*.so /etc/nginx/modules/
-
-make && make install
-
-# echo "export PATH=/etc/nginx/sbin:$PATH" >> .zshrc
-# source ~/.zshrc
-cp /etc/nginx/sbin/nginx /usr/local/sbin
+ 
+ make && make install
+ 
+ cp /etc/nginx/sbin/nginx /usr/local/sbin

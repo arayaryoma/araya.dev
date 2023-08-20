@@ -1,13 +1,5 @@
-import "zx/globals";
-import path from "node:path";
-
-$.log = (entry) => {
-  switch (entry.kind) {
-    default: {
-      // Do nothing
-    }
-  }
-};
+import { execSync } from "node:child_process";
+import { resolve } from "node:path";
 
 export async function getChangelog(filename: string): Promise<
   Array<{
@@ -16,9 +8,9 @@ export async function getChangelog(filename: string): Promise<
   }>
 > {
   const CWD = process.cwd();
-  const filepath = path.resolve(CWD, "src", "content", "blog", filename);
-  const result =
-    await $`git log --pretty='format:{"hash": "%H", "subject": "%s"}' ${filepath}`;
-  const logs = result.stdout.split("\n").map((item) => JSON.parse(item));
+  const filepath = resolve(CWD, "src", "content", "blog", filename);
+  const cmd = `git log --pretty='format:{"hash": "%H", "subject": "%s"}' ${filepath}`;
+  const result = execSync(cmd, { encoding: "utf-8" });
+  const logs = result.split("\n").map((item) => JSON.parse(item));
   return logs;
 }

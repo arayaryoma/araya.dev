@@ -19,7 +19,10 @@ export async function generateOgImage({
       {
         name: "ZenMaruGothic",
         data: fs.readFileSync(
-          path.resolve(__dirname, "../../assets/fonts/ZenMaruGothic-Bold.ttf")
+          path.resolve(
+            __dirname,
+            "../../../public/assets/fonts/ZenMaruGothic-Bold.ttf"
+          )
         ),
         weight: 700,
         style: "normal",

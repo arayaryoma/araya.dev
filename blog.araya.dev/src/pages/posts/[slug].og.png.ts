@@ -7,13 +7,16 @@ export async function getStaticPaths() {
   return blogEntries.map((entry) => {
     return {
       params: { slug: entry.slug },
+      props: {
+        title: entry.data.title,
+      },
     };
   });
 }
 
-export const get: APIRoute = async ({ params, request }) => {
+export const get: APIRoute = async ({ params, props }) => {
   const buffer = await generateOgImage({
-    title: params.slug ?? "",
+    title: props.title ?? "",
   });
   return {
     body: buffer,

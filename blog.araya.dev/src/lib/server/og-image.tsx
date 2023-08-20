@@ -12,7 +12,7 @@ type OgImageParams = {
 export async function generateOgImage({
   title,
 }: OgImageParams): Promise<Buffer> {
-  const svg = await satori(<div>{title}</div>, {
+  const svg = await satori(<h1 style={{ fontSize: "44px" }}>{title}</h1>, {
     width: 800,
     height: 400,
     fonts: [

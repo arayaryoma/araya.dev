@@ -16,14 +16,25 @@ export async function generateOgImage({
     <div
       style={{
         display: "flex",
-        backgroundColor: "#f8f8f8",
-        color: "#6450a1",
+        backgroundColor: "#1c1b3c",
+        color: "#dedede",
         height: "100%",
         flexDirection: "column",
+        position: "relative",
       }}
     >
-      <h1 style={{ fontSize: "44px" }}>{title}</h1>
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+      <div style={{ display: "flex", marginLeft: "32px", marginRight: "32px" }}>
+        <h1 style={{ fontSize: "44px" }}>{title}</h1>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          position: "absolute",
+          bottom: "32px",
+          right: "32px",
+        }}
+      >
         <span>blog.araya.dev</span>
       </div>
     </div>,

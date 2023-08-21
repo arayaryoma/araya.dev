@@ -28,10 +28,7 @@ const repo = "https://github.com/arayaryoma/araya.dev";
 import "../../styles/markdown.css";
 ---
 
-<Layout
-  title={entry.data.title}
-  ogImageUrl={new URL(`/posts/${slug}.og.png`, Astro.url.origin).toString()}
->
+<Layout title={entry.data.title} ogImageUrl={`/posts/${slug}.og.png`}>
   <div>
     <nav class="container">
       <ul class="post__breadcrumb">

@@ -7,7 +7,6 @@ date: "2023-02-17"
 description: IETF でdraftとして議論が進められている A well-known URI for publishing ECHConfigList values. のメモ
 ---
 
-import Figure from "../../components/figure.astro";
 
 ## Encrypted Client Hello (ECH) の設定の課題
 
@@ -20,8 +19,9 @@ import Figure from "../../components/figure.astro";
 という課題があった。
 
 import httpsRecordImage from "../../assets/images/well-known-uri-ech/https-record.png";
+import {Image} from 'astro:assets';
 
-<Figure
+<Image
   src={httpsRecordImage}
   widths={[400, 800]}
   sizes="(max-width: 800px) 100vw, 50vw"
@@ -108,7 +108,7 @@ zone factory は `/.well-known/origin-svcb` から JSON を fetch したら、DN
 
 import wellKnownUriImage from "../../assets/images/well-known-uri-ech/https-record-and-well-known-uri.png";
 
-<Figure
+<Image
   src={wellKnownUriImage}
   widths={[400, 800]}
   sizes="(max-width: 800px) 100vw, 50vw"

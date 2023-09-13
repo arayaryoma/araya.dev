@@ -19,15 +19,19 @@ export async function getStaticPaths() {
 }
 
 const { entry, log } = Astro.props;
+const { slug } = Astro.params;
 
 const { Content } = await entry.render();
 
 const repo = "https://github.com/arayaryoma/araya.dev";
 
+const siteUrl = Astro.site ?? Astro.url;
+const siteOrigin = siteUrl.origin;
+
 import "../../styles/markdown.css";
 ---
 
-<Layout title={entry.data.title}>
+<Layout title={entry.data.title} ogImageUrl={`${siteOrigin}/posts/${slug}.og.png`}>
   <div>
     <nav class="container">
       <ul class="post__breadcrumb">

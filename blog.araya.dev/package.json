@@ -7,8 +7,8 @@
     "node": "20.x"
   },
   "scripts": {
-    "build": "astro build",
-    "build:watch": "node build/watch.js",
+    "build:prod": "SITE_ORIGIN=https://blog.araya.dev astro build",
+    "build:local_docker": "SITE_ORIGIN=https://blog.local.araya.dev:8443 node build/watch.js",
     "dev": "DRAFTS=1 astro dev"
   },
   "packageManager": "pnpm@8.6.12",

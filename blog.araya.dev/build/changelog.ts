@@ -1,5 +1,5 @@
+import path from "node:path";
 import { execSync } from "node:child_process";
-import { resolve } from "node:path";
 
 export async function getChangelog(filename: string): Promise<
   Array<{
@@ -8,9 +8,15 @@ export async function getChangelog(filename: string): Promise<
   }>
 > {
   const CWD = process.cwd();
-  const filepath = resolve(CWD, "src", "content", "blog", filename);
+  const filepath = path.resolve(CWD, "src", "content", "blog", filename);
   const cmd = `git log --pretty='format:{"hash": "%H", "subject": "%s"}' ${filepath}`;
-  const result = execSync(cmd, { encoding: "utf-8" });
-  const logs = result.split("\n").map((item) => JSON.parse(item));
+  const result = execSync(cmd).toString();
+
+  const logs = result
+    .split("\n")
+    .filter((item) => item.length > 0)
+    .map((item) => {
+      return JSON.parse(item);
+    });
   return logs;
 }

@@ -31,7 +31,10 @@ const siteOrigin = siteUrl.origin;
 import "../../styles/markdown.css";
 ---
 
-<Layout title={entry.data.title} ogImageUrl={`${siteOrigin}/posts/${slug}.og.png`}>
+<Layout
+  title={entry.data.title}
+  ogImageUrl={`${siteOrigin}/posts/${slug}.og.png`}
+>
   <div>
     <nav class="container">
       <ul class="post__breadcrumb">
@@ -44,7 +47,9 @@ import "../../styles/markdown.css";
     <article class="container post__container">
       <header class="post-header">
         <time class="post-header--datetime">{entry.data.date}</time>
-        <h1 class="post-header--title">{entry.data.title}</h1>
+        <h1 class="post-header--title">
+          {entry.data.title}
+        </h1>
       </header>
       <main class="post--main">
         <div class="post--content markdown">

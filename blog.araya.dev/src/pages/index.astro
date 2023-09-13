@@ -1,14 +1,16 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import type { MarkdownInstance } from "astro";
-import defaultThumbnailImage from '../assets/images/default-thumbnail.svg'
+import defaultThumbnailImage from "../assets/images/default-thumbnail.svg";
 import { ENABLED_SERVE_DRAFTS } from "../constants";
 
-import { getCollection } from 'astro:content';
-const posts = await getCollection('blog');
-const nonDraftPosts = ENABLED_SERVE_DRAFTS ? posts : posts.filter(p => {
-  return !p.data.draft
-});
+import { getCollection } from "astro:content";
+const posts = await getCollection("blog");
+const nonDraftPosts = ENABLED_SERVE_DRAFTS
+  ? posts
+  : posts.filter((p) => {
+      return !p.data.draft;
+    });
 ---
 
 <Layout title="Posts">
@@ -20,7 +22,7 @@ const nonDraftPosts = ENABLED_SERVE_DRAFTS ? posts : posts.filter(p => {
           // Sort in descending order by datetime
           nonDraftPosts
             .sort((a, b) => {
-              return new Date(a.data.date?? 0).getTime() -
+              return new Date(a.data.date ?? 0).getTime() -
                 new Date(b.data.date ?? 0).getTime() <
                 0
                 ? 1
@@ -36,9 +38,7 @@ const nonDraftPosts = ENABLED_SERVE_DRAFTS ? posts : posts.filter(p => {
                     >
                       {post.data.date}
                     </time>
-                    <h2 class="posts-list-item__title">
-                      {post.data.title}
-                    </h2>
+                    <h2 class="posts-list-item__title">{post.data.title}</h2>
                     <p class="posts-list-item__description">
                       {post.data.description}
                     </p>
@@ -50,14 +50,16 @@ const nonDraftPosts = ENABLED_SERVE_DRAFTS ? posts : posts.filter(p => {
       </ul>
     </div>
   </main>
-  <script type="speculationrules">{
-	prefetch_with_subresources: [
-	  {
-	    source: "list",
-	    urls: ["/posts/2021-07-25/speculation-rules.html"],
-	  },
-	],
-      }</script>
+  <script type="speculationrules">
+    {
+      "prefetch_with_subresources": [
+        {
+          "source": "list",
+          "urls": ["/posts/2021-07-25/speculation-rules.html"]
+        }
+      ]
+    }
+  </script>
 </Layout>
 
 <style>
@@ -182,7 +184,7 @@ const nonDraftPosts = ENABLED_SERVE_DRAFTS ? posts : posts.filter(p => {
         "date"
         "title"
         "description";
-      grid-template-rows: 1.5em  auto auto;
+      grid-template-rows: 1.5em auto auto;
       column-gap: var(--grid-column-gap);
       row-gap: 12px;
       grid-template-columns: 1fr;

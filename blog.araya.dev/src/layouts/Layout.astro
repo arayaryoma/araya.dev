@@ -1,4 +1,5 @@
 ---
+import { ViewTransitions } from "astro:transitions";
 import SitePreference from "../components/site-preference.astro";
 export interface Props {
   title: string;
@@ -10,7 +11,7 @@ const { title, ogImageUrl } = Astro.props;
 import { BLOG_TITLE } from "../constants";
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -23,8 +24,7 @@ import { BLOG_TITLE } from "../constants";
     <title>{title} - {BLOG_TITLE}</title>
     <script
       async
-      src="https://www.googletagmanager.com/gtag/js?id=UA-104175258-3"
-    ></script>
+      src="https://www.googletagmanager.com/gtag/js?id=UA-104175258-3"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -34,9 +34,10 @@ import { BLOG_TITLE } from "../constants";
       gtag("config", "UA-104175258-3");
     </script>
     <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <ViewTransitions />
   </head>
   <body>
-    <nav class="global-nav">
+    <nav class="global-nav" transition:name="global_nav">
       <div class="container global-nav-content">
         <a href="/" class="top-header-link">
           <img
@@ -55,77 +56,77 @@ import { BLOG_TITLE } from "../constants";
       <slot />
     </div>
     <Footer />
+    <style is:global>
+      @import "../styles/main.css";
+    </style>
+    <style>
+      .heading__lined {
+        position: relative;
+      }
+
+      .heading__lined::before {
+        content: "";
+        display: flex;
+        height: 100%;
+        width: 5px;
+        position: absolute;
+        top: 0;
+        left: -24px;
+        background-color: var(--violet);
+      }
+
+      .global-nav {
+        height: var(--global-nav-height);
+        background: var(--global-nav-bg);
+        color: var(--gray-light-4);
+      }
+
+      .global-nav-content {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .content {
+        padding-bottom: calc(var(--footer-height) + 80px);
+      }
+
+      .top-header-link {
+        display: flex;
+        align-items: center;
+        padding: 1em;
+        height: 100%;
+      }
+
+      .header-icon {
+        height: 100%;
+      }
+
+      .header-title {
+        display: inline-flex;
+        height: 100%;
+        align-items: flex-end;
+        margin-left: 16px;
+        font-family: var(--default-font-family);
+        font-weight: 500;
+      }
+      .header-title-main {
+        font-size: var(--font-size-xxl);
+        line-height: 1;
+      }
+      .header-title-sub {
+        margin-inline-start: 8px;
+      }
+
+      @media screen and (max-width: 767px) {
+        .header-title {
+          font-size: var(--font-size-md);
+        }
+      }
+      .page-title {
+        font-size: var(--font-size-xxxl);
+      }
+    </style>
   </body>
 </html>
-<style is:global>
-  @import "../styles/main.css";
-</style>
-<style>
-  .heading__lined {
-    position: relative;
-  }
-
-  .heading__lined::before {
-    content: "";
-    display: flex;
-    height: 100%;
-    width: 5px;
-    position: absolute;
-    top: 0;
-    left: -24px;
-    background-color: var(--violet);
-  }
-
-  .global-nav {
-    height: var(--global-nav-height);
-    background: var(--global-nav-bg);
-    color: var(--gray-light-4);
-  }
-
-  .global-nav-content {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .content {
-    padding-bottom: calc(var(--footer-height) + 80px);
-  }
-
-  .top-header-link {
-    display: flex;
-    align-items: center;
-    padding: 1em;
-    height: 100%;
-  }
-
-  .header-icon {
-    height: 100%;
-  }
-
-  .header-title {
-    display: inline-flex;
-    height: 100%;
-    align-items: flex-end;
-    margin-left: 16px;
-    font-family: var(--default-font-family);
-    font-weight: 500;
-  }
-  .header-title-main {
-    font-size: var(--font-size-xxl);
-    line-height: 1;
-  }
-  .header-title-sub {
-    margin-inline-start: 8px;
-  }
-
-  @media screen and (max-width: 767px) {
-    .header-title {
-      font-size: var(--font-size-md);
-    }
-  }
-  .page-title {
-    font-size: var(--font-size-xxxl);
-  }
-</style>

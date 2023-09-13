@@ -1,17 +1,41 @@
-const observer = new ComputePressureObserver(
-  (update) => {
-    console.log(update);
+const observer = new PressureObserver(
+  (records) => {
+    const lastRecord = records.at(-1);
+    console.log(`Current pressure:`, lastRecord);
   },
-  {
-    cpuUtilizationThresholds: [0.0001, 0.001, 0.01, 0.25, 0.5, 0.9],
-    cpuSpeedThresholds: [0.1, 0.25, 0.5, 0.9],
-  }
+  { sampleRate: 1 },
 );
 
-observer.observe();
+observer.observe("cpu");
 
-setInterval(() => {
-  document.getElementById("foobar").innerText = Math.sqrt(
-    Math.random() * Math.random()
-  );
-}, 10);
+let loadTestRunning = false;
+let interval;
+
+function cpuIntensiveTask() {
+  let x = 0;
+  for (let i = 0; i < 1e6; ++i) {
+    x += Math.sqrt(i);
+  }
+  return x;
+}
+
+const calcResultEl = document.querySelector("#calcResult");
+
+document.querySelector("#toggleBtn").addEventListener("click", function () {
+  loadTestRunning = !loadTestRunning;
+
+  if (loadTestRunning) {
+    this.textContent = "Stop CPU Load Test";
+
+    // JavaScript CPU Load
+    interval = setInterval(() => {
+      const result = cpuIntensiveTask();
+      const el = document.createElement("p");
+      el.textContent = result;
+      calcResultEl.appendChild(el);
+    }, 100);
+  } else {
+    this.textContent = "Start CPU Load Test";
+    clearInterval(interval);
+  }
+});

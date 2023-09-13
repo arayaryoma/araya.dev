@@ -23,7 +23,7 @@ jobs:
         working-directory: ./blog.araya.dev
         run: |
           pnpm install 
-          pnpm build
+          pnpm build:prod
       - name: Setup SSH keys
         run: |
           mkdir -p ~/.ssh

@@ -20,7 +20,7 @@ Google Developers Group の Amanda さんのセッション。Amanda さんが�
 コミュニティに参加して色んな人に質問するべきとか、デベロッパースピリッツ的な話があってよかった。
 英語で話していたけど綺麗な英語でゆっくり話してくれてたのでめちゃくちゃ聞き取りやすかった。
 
-![]({{site.url}}/images/gcp-global-meetup/img1.JPG)
+![](../../assets/images/gcp-global-meetup/img1.JPG)
 
 大学でコンピュータ・サイエンス学んでるときに「残念ながら君には向いてない」て言われたけど、
 ある教員に「それは彼が勝手にそう思ってるだけであって君には関係ない」と言われ、努力でどうにでもなると気づいた(意訳、資料が公開されたら見てみてください)
@@ -34,7 +34,7 @@ Google Developers Group の Amanda さんのセッション。Amanda さんが�
 
 メルカリさんの提供で軽食。豪華〜！！
 
-![]({{site.url}}/images/gcp-global-meetup/img2.JPG)
+![](../../assets/images/gcp-global-meetup/img2.JPG)
 
 メルカリさん、こういうミートアップイベントにここまで力入れられるの本当にすごい。美味しかったです 🙏
 
@@ -57,10 +57,10 @@ Cloud Vision API の主な特徴としては
 - (人の)感情分析・ランドマークの認識・顔認識などができる
 
 といったところ。Cloud Vision の Web サイトでテストできるので試してみると面白い。ちなみに gif もいけた。
-![]({{site.url}}/images/gcp-global-meetup/img5.jpg)
+![](../../assets/images/gcp-global-meetup/img5.jpg)
 動く Michelle の gif を入れてみた。感情分析された結果がでてるけど、どれも Very Unlikely になってるので、この Michelle は機械的にはすごく難しい表情をしている。
 
-![]({{site.url}}/images/gcp-global-meetup/img6.jpg)
+![](../../assets/images/gcp-global-meetup/img6.jpg)
 ぽのか先輩は CloudVision 的には馬です 🐴
 
 画像認識 API が手軽に使えるのはいいなと思った。

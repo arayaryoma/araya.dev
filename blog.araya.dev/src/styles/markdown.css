@@ -117,6 +117,7 @@ td {
 
 .markdown img {
   max-width: 100%;
+  height: auto;
 }
 
 .markdown .small {

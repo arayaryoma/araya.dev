@@ -19,11 +19,13 @@
   margin: 0.5em 0;
   overflow-wrap: break-word;
   line-height: 2em;
+  word-break: auto-phrase;
 }
 
 .markdown a {
   overflow-wrap: break-word;
   color: var(--butterfly-blue);
+  word-break: auto-phrase;
 }
 
 .markdown a:hover {
@@ -32,22 +34,28 @@
 
 .markdown h1 {
   font-size: 2em;
+  word-break: auto-phrase;
 }
 .markdown h2 {
   font-size: 1.75em;
+  word-break: auto-phrase;
 }
 .markdown h3 {
   font-size: 1.6em;
+  word-break: auto-phrase;
 }
 
 .markdown h4 {
   font-size: 1.5em;
+  word-break: auto-phrase;
 }
 .markdown h5 {
   font-size: 1.25em;
+  word-break: auto-phrase;
 }
 .markdown h6 {
   font-size: 1.1em;
+  word-break: auto-phrase;
 }
 
 .markdown h2 {

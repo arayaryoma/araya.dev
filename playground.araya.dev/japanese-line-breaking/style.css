@@ -1,0 +1,16 @@
+.without-breaking {
+  word-break: initial;
+}
+
+.with-breaking p {
+  word-break: auto-phrase;
+}
+
+main {
+  display: flex;
+}
+
+main > div {
+  flex: 1;
+  padding: 4em;
+}

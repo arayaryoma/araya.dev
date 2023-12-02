@@ -24,8 +24,8 @@ RateLimit-Policy: 10;w=1, 100;w=3600
 保証されているものと認識してはならないとdraft内には記載がある。
 
 
-#### RateLimit
-RateLimit headerの外観はこのように単純なkeyとvalueのpairを持つSFVの形式になっている。
+#### RateLimit header
+RateLimit headerの外観はこのように単純なkeyとvalueのpairを持つStructured-Field-Value(SFV)の形式になっている。
 ```
 limit=100, remaining=50, reset=5
 ```
@@ -40,3 +40,10 @@ remainingもそのkey名の通り、一定時間内に可能なAPIコール数�
 
 #### reset
 受けっとたリクエスト数をカウントしてremainingを減らしていく実装をサーバーでしているはずだが、そのカウントがリセットされるまでの秒数
+
+#### RateLimit-Policy header
+RateLimit-Policyではサーバーがどの時間内にどれだけのリクエストを受け付けるかというポリシー(quota policy)を
+SFVのリスト形式で記述できる。
+
+```
+

@@ -44,6 +44,19 @@ remainingもそのkey名の通り、一定時間内に可能なAPIコール数�
 #### RateLimit-Policy header
 RateLimit-Policyではサーバーがどの時間内にどれだけのリクエストを受け付けるかというポリシー(quota policy)を
 SFVのリスト形式で記述できる。
-
+quota policyの記述方法例は
 ```
+10;w=1
+```
+となり、これは1秒間に10回のリクエストを受け付けることを示している。
+wで指定しているのがwindowであり異なるwindowでのlimitをリストで指定できる。
+```
+RateLimit-Policy: 10;w=1, 100;w=3600
+```
+
+### クライアントに求められる挙動
+draftではクライアント実装に求められる要件や注意点がいくつか書かれている。
+- RateLimit headerのremainingが1以上だからといって次のリクエストが必ず受け入れられると期待してはならない
+- 
+
 

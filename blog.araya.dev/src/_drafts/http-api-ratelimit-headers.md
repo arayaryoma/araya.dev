@@ -2,8 +2,8 @@ IETFのHTTP API Working Groupで[RateLimit header fields for HTTP](https://www.i
 
 HTTP経由でデータを取得するいわゆるWebAPIの実装では、クライアントに対しリクエストのコール数を制限(rate limiting)することがある。
 このdraftはそのrate limitをサーバーがクライアントに伝える際のレスポンスフォーマットを標準化しようというものだ。
-レスポンスフォーマットを標準化することで、まったく別のライブラリに起因するWebAPIフレームワークとクライアントのデータフェッチライブラリで、
-標準に則った仕様で実装することができる。
+レスポンスフォーマットを標準化することで、まったく別のライブラリに起因するWebAPIフレームワークとクライアントのデータフェッチライブラリの
+相互運用性が向上することが期待できる。
 
 ### response header fields
 このdraftでは`RateLimit`, `RateLimit-Policy`という2つのresponse header fields (以降は単にheaderと呼ぶ)が提案されている。
@@ -57,6 +57,7 @@ RateLimit-Policy: 10;w=1, 100;w=3600
 ### クライアントに求められる挙動
 draftではクライアント実装に求められる要件や注意点がいくつか書かれている。
 - RateLimit headerのremainingが1以上だからといって次のリクエストが必ず受け入れられると期待してはならない
+- 違反しているRateLimit headerを受け取ったら無視しなければならない
 - 
 
 

@@ -58,6 +58,5 @@ RateLimit-Policy: 10;w=1, 100;w=3600
 draftではクライアント実装に求められる要件や注意点がいくつか書かれている。
 - RateLimit headerのremainingが1以上だからといって次のリクエストが必ず受け入れられると期待してはならない
 - 違反しているRateLimit headerを受け取ったら無視しなければならない
-- 
 
 

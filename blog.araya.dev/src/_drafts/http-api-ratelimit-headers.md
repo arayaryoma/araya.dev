@@ -1,7 +1,7 @@
-IETF の HTTP API Working Group で[RateLimit header fields for HTTP](https://www.ietf.org/archive/id/draft-ietf-httpapi-ratelimit-headers-07.html)という仕様の策定が進められている。
+IETF の HTTP API Working Group で[RateLimit header fields for HTTP](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/)という仕様の策定が進められている。
 
-HTTP 経由でデータを取得するいわゆる WebAPI の実装では、クライアントに対しリクエストのコール数を制限(rate limiting)することがある。
-この draft はその rate limit をサーバーがクライアントに伝える際のレスポンスフォーマットを標準化しようというものだ。
+HTTP 経由でデータを取得するいわゆる WebAPI の実装では、クライアントに対しAPIの呼び出し数を制限(rate limiting)することがある。
+この draft はその rate limit をサーバーがクライアントに伝える際のレスポンスフォーマットを標準化しようというもの。
 レスポンスフォーマットを標準化することで、まったく別のライブラリに起因する WebAPI フレームワークとクライアントのデータフェッチライブラリの
 相互運用性が向上することが期待できる。
 
@@ -24,7 +24,7 @@ RateLimit-Policy: 10;w=1, 100;w=3600
 
 ことを示している。
 
-なお、これらはあくまでクライアント実装へのヒントであり、クライアントはサーバーが送ってくるこれらの値が
+なお、これらはあくまで**クライアント実装へのヒント**であり、クライアントはサーバーが送ってくるこれらの値が
 保証されているものと認識してはならないと draft 内には記載がある。
 
 #### RateLimit header
@@ -54,6 +54,14 @@ remaining もその key 名の通り、一定時間内に可能な API コール
 
 RateLimit-Policy ではサーバーがどの時間内にどれだけのリクエストを受け付けるかというポリシー(quota policy)を
 SFV のリスト形式で記述できる。
+
+パラメーターは
+
+- `q`: [必須] このポリシーで割り当てられたクォータ数を示す
+- `qu`: [任意] クォータの単位を示す。デフォルトは "requests"
+- `w`: [任意] 時間枠(window)を示す
+- `pk`: [任意] リクエストに関連付けられたパーティションキーを示す
+
 quota policy の記述方法例は
 
 ```

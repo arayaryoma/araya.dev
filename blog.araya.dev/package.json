@@ -19,7 +19,7 @@
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "@types/rimraf": "^4.0.5",
-    "astro": "^3.0.12",
+    "astro": "^4.16.18",
     "chokidar": "^3.5.3",
     "feed": "^4.2.2",
     "puppeteer": "^21.1.1",

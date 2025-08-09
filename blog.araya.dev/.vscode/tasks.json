@@ -1,0 +1,25 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Create New Draft",
+      "detail": "Create a new Markdown draft file with frontmatter template",
+      "type": "shell",
+      "command": "node",
+      "args": ["${workspaceFolder}/.vscode/tools/create-draft.js"],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new",
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}

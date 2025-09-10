@@ -1,11 +1,11 @@
 ---
 title: "memo: HTTPで99以下のstatusは500として扱われるべきだがhyperではそれができない"
-tags: 
+tags:
   - memo
   - rust
   - http
 date: "2025-09-06"
-description: 
+description:
 ---
 
 「HTTPで有効なStatus Codeはなにか」
@@ -17,29 +17,30 @@ https://www.rfc-editor.org/rfc/rfc9110.html#section-15-1
 
 > All valid status codes are within the range of 100 to 599, inclusive.
 
-では以下のようなresponseを受け取ったclientはresponseをどう扱うべきか。 
+では以下のようなHTTP/1.1のresponseを受け取ったclientはresponseをどう扱うべきか。
 
-ResA
+_ResA_
+
 ```
 HTTP/1.1 F00 NotANumber \r\n
 ```
 
-ResB
+_ResB_
+
 ```
 HTTP/1.1 600 Over599 \r\n
 ```
 
-ResC
+_ResC_
+
 ```
 HTTP/1.1 99 Under100 \r\n
 ```
 
+_ResA_ の扱いは実装にもよるが、statusのparse自体ができないためnetwork errorとして扱うことが多い。
 
-ResAの扱いは実装にもよるが、statusのparse自体ができないためnetwork errorとして扱うことが多い。
-
-ResBのような「3桁の整数」ではあるが範囲が600を超えるstatusは、interfaceに露出しない内部処理で扱われることがある。
-例えばFastly VCLでは、subroutineの一連の処理の途中で`vcl_error`に大域脱出するために  `error 600;` のように一時的に6xxのstatusをセットするtipsがFastlyのdocumentでも紹介されている。
-
+_ResB_ のような「3桁の整数」ではあるが範囲が600を超えるstatusは、interfaceに露出しない内部処理で扱われることがある。
+例えばFastly VCLでは、subroutineの一連の処理の途中で`vcl_error`に大域脱出するために `error 600;` のように一時的に6xxのstatusをセットするtipsがFastlyのdocumentでも紹介されている。
 
 https://www.fastly.com/documentation/reference/vcl/subroutines/error/
 
@@ -52,36 +53,35 @@ https://www.fastly.com/documentation/reference/vcl/subroutines/error/
 https://www.rfc-editor.org/rfc/rfc9110.html#section-15-6
 
 > Values outside the range 100..599 are invalid.
-(中略)
+> (中略)
 > A client that receives a response with an invalid status code SHOULD process the response as if it had a 5xx (Server Error) status code.
 
-つまり、上記の例でnetwork errorとして扱うべきはResAのみであり、statusが数値ではあるが100-599の範囲外であるResB, ResCについては5xx errorとして扱うべきだ。
-
-
-// TODO: 4桁の扱い
-
+つまり、上記の例でnetwork errorとして扱うべきは _ResA_ のみであり、statusが数値ではあるが100-599の範囲外である _ResB_ , _ResC_ については5xx errorとして扱うべきだ。
 
 ## hyper での扱い
+
 [hyper](https://github.com/hyperium/hyper)はRustで最も使われているhttp libraryであり、server/client 向けの薄い実装を提供している。
 
-hyperを使って上述のResA, ResB, ResCのresponseを返すserverに対してrequestを送ってみる。
+hyperを使って上述の _ResA_ , _ResB_ , _ResC_ のresponseを返すserverに対してrequestを送ってみる。
 サンプル実装: https://github.com/araya-playground/hyper-client/blob/main/src/main.rs
 
 この実装は
+
 ```
  "http://web-platform.test:8000/fetch/h1-parsing/resources/status-code.py?input=F00%20NotANumber",
  "http://web-platform.test:8000/fetch/h1-parsing/resources/status-code.py?input=600%20Over599",
  "http://web-platform.test:8000/fetch/h1-parsing/resources/status-code.py?input=99%20Under100",
- ```
- の3つのurlに対してHTTP requestを送り、responseを表示しているだけ。
- `http://web-platform.test:8000` は [WPT](https://github.com/web-platform-tests/wpt) をlocalで起動しており、 `status-code.py` は `input` paramで送られてきた値をそのままstatusとreason phraseとしてresponseする。
+```
 
- https://github.com/web-platform-tests/wpt/blob/f554aeda938df2e5aa90f2b81cb2215a2b78f051/fetch/h1-parsing/resources/status-code.py
+の3つのurlに対してHTTP requestを送り、responseを表示しているだけ。
+`http://web-platform.test:8000` は [WPT](https://github.com/web-platform-tests/wpt) をlocalで起動していて、 `status-code.py` は `input` paramで送られてきた値をそのままstatusとreason phraseとしてresponseする。
+
+https://github.com/web-platform-tests/wpt/blob/f554aeda938df2e5aa90f2b81cb2215a2b78f051/fetch/h1-parsing/resources/status-code.py
 
 これを実行した結果は
 
 ```
-// ResA
+//  ResA
 ============================================================
 Testing URL: http://web-platform.test:8000/fetch/h1-parsing/resources/status-code.py?input=F00%20NotANumber
 ============================================================
@@ -89,7 +89,7 @@ Connecting to: web-platform.test:8000
 ❌ Error occurred: invalid HTTP status-code parsed
 Error details: hyper::Error(Parse(Status))
 
-// ResB
+//  ResB
 ============================================================
 Testing URL: http://web-platform.test:8000/fetch/h1-parsing/resources/status-code.py?input=600%20Over599
 ============================================================
@@ -101,7 +101,7 @@ Headers: {
 }
 Response body:
 
-// ResC
+//  ResC
 ============================================================
 Testing URL: http://web-platform.test:8000/fetch/h1-parsing/resources/status-code.py?input=99%20Under100
 ============================================================
@@ -110,8 +110,8 @@ Connecting to: web-platform.test:8000
 Error details: hyper::Error(Parse(Status))
 ```
 
-となる。 ResC(2桁の数値がstatusに指定されている)を受け取ったときにErrorとなっていることがわかる。
-注目すべきはこのError種別で、 ResAとResCが同じ `Status` enumが使われている。
+となる。 _ResC_ (2桁の数値がstatusに指定されている)を受け取ったときにErrorとなっていることがわかる。
+注目すべきはこのError種別で、 _ResA_ と _ResC_ が同じ `Status` enumが使われている。
 つまり、「status-lineそのものが壊れていてparseできない 」ことと「無効なstatusであること」が区別できない。
 
 ただ、これはhyperを用いるほとんどのアプリケーションにとっては問題にならないだろう。受け取ったstatusが仕様違反であることには変わりないのだから、Errorさえ返ってきてくれればerror logに出力して例外をハンドルすることができる。
@@ -123,9 +123,9 @@ Fetch の Living Standardの[Statuses](https://fetch.spec.whatwg.org/#statuses)�
 > A status is an integer in the range 0 to 999, inclusive.
 
 という記載がある。
-つまり、ResCについてはブラウザはfetchそのものが失敗したのではなく、statusがinvalidだという扱いをしなければいけない。
+つまり、 _ResC_ についてはbrowserはfetchそのものが失敗したのではなく、statusがinvalidだという扱いをしなければいけない。なお、status codeが4桁の場合はparseそのものが失敗すべきだということがここからわかる。
 
-実際Web Platform Tests(WPT)にもこのtest項目があり、これについてはすべてのモダンブラウザがpassしている。
+実際Web Platform Tests(WPT)にもこのtest項目があり、これについてはすべてのモダンbrowserがpassしている。
 https://wpt.fyi/results/fetch/h1-parsing/status-code.window.html?label=experimental&label=master&aligned
 
 そして hyperをhttp client libraryとして用いているServoはpassできていない。
@@ -133,10 +133,12 @@ https://wpt.fyi/results/fetch/h1-parsing/status-code.window.html?label=experimen
 https://wpt.fyi/results/fetch/h1-parsing/status-code.window.html?product=servo
 
 ## この問題を解消する難しさ
-Servoなど、アプリケーションが直接呼び出すインターフェースとなるため「hyperのインターフェースでは例外のハンドリングができない」ような書き方をしていたが、hyper自体HTTP/1.1のmessageをparseしているわけではない。
 
-hyperはmessageのparseを[httparse](https://github.com/seanmonstar/httparse)という別のcrateに依存している。 
+hyper自体がHTTP/1.1のmessageをparseしているわけではない。
+
+hyperはmessageのparseを[httparse](https://github.com/seanmonstar/httparse)という別のcrateに依存している。
 httparseのstautsのparse実装は下記。
+
 ```rust
 fn parse_code(bytes: &mut Bytes<'_>) -> Result<u16> {
     let hundreds = expect!(bytes.next() == b'0'..=b'9' => Err(Error::Status));
@@ -198,7 +200,6 @@ pub struct ParserConfig {
 httparseはすでにv1がreleaseされているから、 breaking changesをいれるよりはここにflagを追加するのがいいだろう。
 
 ただ、httparseはメンテナンスがあまりアクティブではなくここ半年ほどPRも取り込まれていない。
-httparseの作者はhyperium orgのmemberであるため、hyperiumにrepositoryを移してコミュニティベースの管理にするのがいいと思うが、これを外から口出すのは心象も良くないだろうからあまり期待していない。 
+httparseの作者はhyperium orgのmemberであるため、hyperiumにrepositoryを移してコミュニティベースの管理にするのがいいと思うが、これを外から口出すのは心象も良くないだろうからあまり期待していない。
 
 そもそもhttparseやhyperはbrowserのようなWHATWG fetch standardに従わなきゃいけないようなアプリケーションをスコープに考えていないだろうから、どちらかというとServoがhyper/httparse相当を実装すべきだろうと考えている。
-

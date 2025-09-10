@@ -1,11 +1,11 @@
 ---
-title: "memo: HTTPで99以下のstatusは500として扱われるべきだがhyperではそれができない"
+title: "memo: 99以下のstatus codeはどこでエラーとするのか"
 tags:
   - memo
   - rust
   - http
 date: "2025-09-10"
-description:
+description: 99以下のHTTP status codeをhyperはサポートしていない。これによる不都合と、hyperがサポートすべきかについてまとめる
 ---
 
 「HTTPで有効なStatus Codeはなにか」

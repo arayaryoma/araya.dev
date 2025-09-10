@@ -4,7 +4,7 @@ tags:
   - memo
   - rust
   - http
-date: "2025-09-06"
+date: "2025-09-10"
 description:
 ---
 

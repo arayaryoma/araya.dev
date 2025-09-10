@@ -53,8 +53,9 @@
   --font-size-xxs: calc(10 / 16 * 1rem);
 
   --font-size-body: var(--font-size-md);
-  --default-font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN",
-    "Hiragino Sans", Meiryo, sans-serif;
+  --default-font-family:
+    "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans",
+    Meiryo, sans-serif;
   --global-nav-bg: var(--black);
   --global-nav-height: 5.125rem;
 }

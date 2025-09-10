@@ -128,10 +128,10 @@ import ColorSchemeToggle from "./color-scheme-toggle.astro";
         throw new Error(`${this} should have a shadow root`);
       }
       this.#toggleButton = this.shadowRoot.querySelector(
-        "[data-toggle-button]"
+        "[data-toggle-button]",
       );
       this.#dropdownMenuDialog = this.shadowRoot.querySelector(
-        "[data-dropdown-menu]"
+        "[data-dropdown-menu]",
       );
       this.#toggleButton?.addEventListener("click", (e) => {
         e.preventDefault();

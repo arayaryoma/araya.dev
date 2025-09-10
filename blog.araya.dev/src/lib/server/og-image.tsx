@@ -47,8 +47,8 @@ export async function generateOgImage({
           data: fs.readFileSync(
             path.resolve(
               __dirname,
-              "../../../public/assets/fonts/ZenMaruGothic-Bold.ttf"
-            )
+              "../../../public/assets/fonts/ZenMaruGothic-Bold.ttf",
+            ),
           ),
           weight: 700,
           style: "normal",
@@ -56,7 +56,7 @@ export async function generateOgImage({
         },
       ],
       embedFont: true,
-    }
+    },
   );
 
   return sharp(Buffer.from(svg)).png().toBuffer();

@@ -117,7 +117,7 @@ const RGBOps = Operators(
         b: a.b * b,
       };
     },
-  }
+  },
 );
 ```
 

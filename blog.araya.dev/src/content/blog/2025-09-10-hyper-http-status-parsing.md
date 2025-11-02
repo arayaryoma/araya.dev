@@ -5,7 +5,7 @@ tags:
   - rust
   - http
 date: "2025-09-10"
-description:
+description: "RFC9110では100-599の範囲外のHTTPステータスコードは5xxとして扱うべきとされているが、RustのHTTPライブラリhyperではそれができない理由と背景について"
 ---
 
 「HTTPで有効なStatus Codeはなにか」

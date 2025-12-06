@@ -4,14 +4,15 @@ tags:
   - http
   - advent calendar 2025
 date: "2025-12-01"
-description:
+description: ""
+draft: true
 ---
 
 HTTP Advent Calendar 2025 Day 1
 
 ---
 
-IETFには様々なWorking Group(WG, わーじー)がある。
+IETFには様々なWorking Group(WG)がある。
 
 https://datatracker.ietf.org/wg/
 

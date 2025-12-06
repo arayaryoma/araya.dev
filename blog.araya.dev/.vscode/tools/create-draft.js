@@ -58,7 +58,7 @@ async function createDraft() {
     : `${dateString}-new-draft-${timestamp}.md`;
 
   // Draft directory path
-  const draftsDir = path.join(__dirname, "../../src/_drafts");
+  const draftsDir = path.join(__dirname, "../../src/content/blog");
   const filePath = path.join(draftsDir, filename);
 
   // Markdown file frontmatter template
@@ -66,7 +66,8 @@ async function createDraft() {
 title: ${title}
 tags:
 date: "${dateString}"
-description: 
+description: ""
+draft: true
 ---
 
 `;

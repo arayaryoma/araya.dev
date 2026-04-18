@@ -1,82 +1,105 @@
-SERVER_IP=52.69.164.172
-SSH_KEY_PATH?=/tmp/araya_dev_id_ed25519
-OP_PRIVATE_KEY_REF?=op://Private/default/private key
+SHELL := /bin/bash
+
+SERVER_IP ?= 52.69.164.172
+SSH_USER ?= ubuntu
+SSH_KEY_PATH ?= /tmp/araya_dev_id_ed25519
+OP_PRIVATE_KEY_REF ?= op://Private/default/private key
+
+REMOTE_ROOT ?= /var/www/araya.dev
+LOCAL_ROOT ?= .
+RSYNC_FLAGS ?= --delete -r
+RSYNC_COMMON := rsync ${RSYNC_FLAGS} -e "ssh -i ${SSH_KEY_PATH}"
+
+LOG_DIR ?= ./logs/prod
+
+.DEFAULT_GOAL := help
+
+.PHONY: help
+help:
+	@printf "\nUsage: make <target> [VAR=value]\n\n"
+	@printf "Common variables:\n"
+	@printf "  SERVER_IP=%s\n" "${SERVER_IP}"
+	@printf "  SSH_USER=%s\n" "${SSH_USER}"
+	@printf "  SSH_KEY_PATH=%s\n\n" "${SSH_KEY_PATH}"
+	@printf "Targets:\n"
+	@awk 'BEGIN {FS = ":.*## "}; /^[a-zA-Z0-9_.-]+:.*## / {printf "  %-20s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 .PHONY: ssh
-ssh: sshkey
-	ssh -i ${SSH_KEY_PATH} ubuntu@${SERVER_IP}
+ssh: sshkey ## Connect to the production server via SSH
+	ssh -i ${SSH_KEY_PATH} ${SSH_USER}@${SERVER_IP}
 
 .PHONY: sshkey
-sshkey:
+sshkey: ## Load the private key from 1Password into a temporary file
 	@command -v op >/dev/null || (echo "1Password CLI (op) is required." && exit 1)
 	@test -n "${OP_PRIVATE_KEY_REF}" || (echo "Set OP_PRIVATE_KEY_REF=op://<vault>/<item>/<field>" && exit 1)
 	@op read "${OP_PRIVATE_KEY_REF}" > ${SSH_KEY_PATH}
 	@chmod 600 ${SSH_KEY_PATH}
 
 .PHONY: download-access-log
-download-access-log: sshkey
-	scp -r -i ${SSH_KEY_PATH} ubuntu@${SERVER_IP}:/logs/access-log ./logs/prod/
+download-access-log: sshkey ## Download access logs to ./logs/prod
+	mkdir -p ${LOG_DIR}
+	scp -r -i ${SSH_KEY_PATH} ${SSH_USER}@${SERVER_IP}:/logs/access-log ${LOG_DIR}/
 
 .PHONY: upload-nginxconf
-upload-nginxconf: sshkey
-	scp -r -i ${SSH_KEY_PATH} ./conf/nginx/nginx.conf ubuntu@${SERVER_IP}:/etc/nginx/nginx.conf
-	scp -r -i ${SSH_KEY_PATH} ./conf/nginx/share ubuntu@${SERVER_IP}:/etc/nginx/
+upload-nginxconf: sshkey ## Upload nginx.conf and include files to the server
+	scp -r -i ${SSH_KEY_PATH} ./conf/nginx/nginx.conf ${SSH_USER}@${SERVER_IP}:/etc/nginx/nginx.conf
+	scp -r -i ${SSH_KEY_PATH} ./conf/nginx/share ${SSH_USER}@${SERVER_IP}:/etc/nginx/
 
 .PHONY: upload-scripts
-upload-scripts: sshkey
-	scp -r -i ${SSH_KEY_PATH} ./scripts/* ubuntu@${SERVER_IP}:/scripts
+upload-scripts: sshkey ## Upload scripts directory contents to /scripts
+	scp -r -i ${SSH_KEY_PATH} ./scripts/* ${SSH_USER}@${SERVER_IP}:/scripts
 
 .PHONY: upload-makefile
-upload-makefile: sshkey
-	scp -r -i ${SSH_KEY_PATH} ./Makefile ubuntu@${SERVER_IP}:/var/www/araya.dev/
+upload-makefile: sshkey ## Upload Makefile to the server repository
+	scp -r -i ${SSH_KEY_PATH} ./Makefile ${SSH_USER}@${SERVER_IP}:${REMOTE_ROOT}/
 
 .PHONY: deploy-all
-deploy-all: sshkey
-	rsync --exclude "**/node_modules" --delete -r -e "ssh -i ${SSH_KEY_PATH}" ./ ubuntu@${SERVER_IP}:/var/www/araya.dev/
+deploy-all: sshkey ## Deploy the full repository (excluding node_modules)
+	${RSYNC_COMMON} --exclude "**/node_modules" ${LOCAL_ROOT}/ ${SSH_USER}@${SERVER_IP}:${REMOTE_ROOT}/
 
 .PHONY: deploy-www
-deploy-www: sshkey
-	rsync --delete -r -e "ssh -i ${SSH_KEY_PATH}" ./www.araya.dev/ ubuntu@${SERVER_IP}:/var/www/araya.dev/www.araya.dev/
+deploy-www: sshkey ## Deploy www.araya.dev
+	${RSYNC_COMMON} ./www.araya.dev/ ${SSH_USER}@${SERVER_IP}:${REMOTE_ROOT}/www.araya.dev/
 
 .PHONY: deploy-pg
-deploy-pg: sshkey
-	rsync --delete -r -e "ssh -i ${SSH_KEY_PATH}" ./playground.araya.dev/ ubuntu@${SERVER_IP}:/var/www/araya.dev/playground.araya.dev/
+deploy-pg: sshkey ## Deploy playground.araya.dev
+	${RSYNC_COMMON} ./playground.araya.dev/ ${SSH_USER}@${SERVER_IP}:${REMOTE_ROOT}/playground.araya.dev/
 
 .PHONY: deploy-myip
-deploy-myip: sshkey
-	rsync --delete -r -e "ssh -i ${SSH_KEY_PATH}" ./myip.araya.dev/myip-araya-dev ubuntu@${SERVER_IP}:/var/www/araya.dev/myip.araya.dev/
+deploy-myip: sshkey ## Deploy myip.araya.dev
+	${RSYNC_COMMON} ./myip.araya.dev/myip-araya-dev ${SSH_USER}@${SERVER_IP}:${REMOTE_ROOT}/myip.araya.dev/
 
-.PHONY: dev-blog
-blog-dev:
+.PHONY: blog-dev
+blog-dev: ## Start the blog watch server
 	cd blog.araya.dev && yarn run watch &
 	sudo h2o -c conf/h2o/local/blog.conf
 
-.PHONY: build-blog
-blog-build:
+.PHONY: blog-build
+blog-build: ## Build blog content
 	cd blog.araya.dev && yarn run build && cd ..
 
 .PHONY: deploy-blog
-deploy-blog: sshkey
-	rsync --delete -r -e "ssh -i ${SSH_KEY_PATH}" ./blog.araya.dev/dist/ ubuntu@${SERVER_IP}:/var/www/araya.dev/blog.araya.dev/dist
+deploy-blog: sshkey ## Deploy blog dist output
+	${RSYNC_COMMON} ./blog.araya.dev/dist/ ${SSH_USER}@${SERVER_IP}:${REMOTE_ROOT}/blog.araya.dev/dist
 
 .PHONY: deploy-nevertls
-deploy-nevertls: sshkey
-	rsync --delete -r -e "ssh -i ${SSH_KEY_PATH}" ./nevertls.araya.dev/ ubuntu@${SERVER_IP}:/var/www/araya.dev/nevertls.araya.dev/
+deploy-nevertls: sshkey ## Deploy nevertls.araya.dev
+	${RSYNC_COMMON} ./nevertls.araya.dev/ ${SSH_USER}@${SERVER_IP}:${REMOTE_ROOT}/nevertls.araya.dev/
 
 .PHONY: start-dev
-start-dev:
+start-dev: ## Start development Docker containers
 	docker-compose build && docker-compose up -d
 
 .PHONY: start-prod
-start-prod:
+start-prod: ## Start production nginx
 	sudo nginx
 
 .PHONY: restart-prod
-restart-prod:
+restart-prod: ## Reload production nginx
 	sudo nginx -s reload
 
 .PHONY: certificate
-certificate:
+certificate: ## Issue/renew araya.dev certificates with certbot
 	sudo certbot certonly \
 	--expand \
 	--webroot \
@@ -89,6 +112,6 @@ certificate:
 	--cert-name araya.dev
 
 .PHONY: build-boringssl
-build-boringssl:
+build-boringssl: ## Build BoringSSL artifacts via Docker image
 	docker build -f Dockerfile.boringssl -t boringssl-builder .
 	docker run --rm -v ${PWD}/lib/boringssl:/etc/boringssl boringssl-builder /scripts/build-boringssl

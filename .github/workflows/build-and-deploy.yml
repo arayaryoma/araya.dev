@@ -10,19 +10,25 @@ jobs:
     env:
       SSH_KEY: ${{ secrets.SSH_KEY }}
       SERVER_IP: 52.69.164.172
+      SSH_USER: ubuntu
+      REMOTE_ROOT: /var/www/araya.dev
     steps:
-      - uses: actions/checkout@v2
-      - uses: pnpm/action-setup@v2
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
         with:
-          version: 7.0.1
+          version: 10.15.1
       - name: Setup Node.js env
-        uses: actions/setup-node@v2.4.0
+        uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
+          cache: pnpm
+          cache-dependency-path: |
+            pnpm-lock.yaml
+            blog.araya.dev/pnpm-lock.yaml
       - name: Build blog
         working-directory: ./blog.araya.dev
         run: |
-          pnpm install 
+          pnpm install --frozen-lockfile
           pnpm build:prod
       - name: Setup SSH keys
         run: |
@@ -32,4 +38,4 @@ jobs:
           chmod 600 ~/.ssh/key
       - name: Deploy all
         run: |
-          rsync --exclude "**/node_modules" --delete -r -e "ssh -i ~/.ssh/key" ./ ubuntu@${SERVER_IP}:/var/www/araya.dev/
+          rsync --exclude "**/node_modules" --delete -r -e "ssh -i ~/.ssh/key" ./ ${SSH_USER}@${SERVER_IP}:${REMOTE_ROOT}/

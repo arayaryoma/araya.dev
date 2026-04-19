@@ -13,12 +13,9 @@ jobs:
       SSH_USER: ubuntu
       REMOTE_ROOT: /var/www/araya.dev
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.15.1
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Setup Node.js env
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version-file: .nvmrc
           cache: pnpm
@@ -28,6 +25,8 @@ jobs:
       - name: Build blog
         working-directory: ./blog.araya.dev
         run: |
+          corepack enable
+          corepack prepare pnpm@10.15.1 --activate
           pnpm install --frozen-lockfile
           pnpm build:prod
       - name: Setup SSH keys

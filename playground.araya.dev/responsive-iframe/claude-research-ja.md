@@ -1,5 +1,8 @@
 # Responsively-sized iframe と子ドキュメントの meta タグ
 
+> [!NOTE]
+> このドキュメントは Claude によるリサーチ結果のまとめ(日本語)。「なぜ responsively-sized iframe は子ウィンドウに meta タグを必要とするのか」という質問に対する調査を、blog.araya.dev の記事の文体でまとめたもの。
+
 CSS の `frame-sizing` プロパティ([CSS Box Sizing Module Level 4 §5.3](https://drafts.csswg.org/css-sizing-4/#responsive-iframes) / [Chrome Platform Status](https://chromestatus.com/feature/5108373464547328))を使うと、`<iframe>` 要素を埋め込んだドキュメントのコンテンツの固有サイズに合わせてサイズさせることができる。iframe 内にスクロールバーが出なくなり、埋め込みコンテンツが親ページとシームレスに繋がって見える。
 
 ```html

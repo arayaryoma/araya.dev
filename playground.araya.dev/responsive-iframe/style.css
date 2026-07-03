@@ -12,18 +12,19 @@ iframe {
 }
 
 /*
- * レスポンシブ iframe:
- * frame-sizing: content で iframe 要素を埋め込みドキュメントの
- * レイアウト内在サイズに合わせる。高さは auto にしておくことで、
- * 内容の高さに追従してスクロールバーが出ないようにする。
+ * Responsive iframe:
+ * frame-sizing: content-height sizes the iframe's block size to the embedded
+ * document's layout intrinsic size. Keeping height auto lets it follow the
+ * content height so no scrollbar appears. The embedded document must also opt
+ * in with <meta name="responsive-embedded-sizing"> (see frame.html).
  */
 iframe.responsive {
-  frame-sizing: content;
+  frame-sizing: content-height;
   height: auto;
   border-color: #2e7d32;
 }
 
-/* 比較用の従来 iframe は固定高さ */
+/* The traditional comparison iframe keeps a fixed height */
 iframe.fixed {
   height: 150px;
   border-color: #c62828;
@@ -51,13 +52,13 @@ code {
   border-radius: 4px;
 }
 
-/* --- legacy ハックのデモ用 --- */
+/* --- for the legacy hack demos --- */
 .log {
   font-family: ui-monospace, monospace;
   color: #555;
 }
 
-/* アスペクト比固定の padding ハック（16:9） */
+/* Fixed aspect-ratio padding hack (16:9) */
 .aspect-wrapper {
   position: relative;
   width: min(100%, 480px);

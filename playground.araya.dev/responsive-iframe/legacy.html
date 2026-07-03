@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Legacy iframe auto-height hacks | araya's playground</title>
+    <link rel="stylesheet" href="/main.css" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <h1>iframe 自動リサイズの従来ハック</h1>
+
+    <p>
+      <code>frame-sizing: content</code>
+      が使えなかった時代に、iframe の高さを中身に合わせるために
+      広く使われてきた回避策を実演します。
+      <a href="./">→ frame-sizing を使ったモダンな実装はこちら</a>
+    </p>
+
+    <section>
+      <h2>1. postMessage + ResizeObserver（クロスオリジン対応）</h2>
+      <p>
+        最も一般的なハック。子ドキュメント側で
+        <code>ResizeObserver</code> により自身の高さを監視し、変化するたびに
+        <code>parent.postMessage()</code> で高さを親へ通知します。親は
+        <code>message</code> イベントで受け取った値を
+        <code>iframe.style.height</code>
+        に反映します。クロスオリジンでも動作するのが利点ですが、双方に
+        スクリプトが必要です。
+      </p>
+      <iframe
+        id="postMessageFrame"
+        src="./legacy-frame.html"
+        title="postMessage auto-height demo"
+        scrolling="no"
+      ></iframe>
+      <p class="log" id="postMessageLog">受信した高さ: —</p>
+    </section>
+
+    <section>
+      <h2>2. same-origin での直接計測</h2>
+      <p>
+        同一オリジンなら親から
+        <code>iframe.contentDocument.body.scrollHeight</code>
+        を直接読めます。子側のスクリプトは不要ですが、クロスオリジンでは
+        セキュリティ制約で参照できません。ここでは
+        <code>load</code> 後と、ポーリング（<code>setInterval</code>）で
+        高さの変化に追従しています。
+      </p>
+      <iframe
+        id="sameOriginFrame"
+        src="./legacy-frame.html?silent=1"
+        title="same-origin auto-height demo"
+        scrolling="no"
+      ></iframe>
+      <p class="log" id="sameOriginLog">計測した高さ: —</p>
+    </section>
+
+    <section>
+      <h2>3. アスペクト比固定の padding ハック（参考）</h2>
+      <p>
+        動画埋め込みなど「中身の高さ」ではなく「縦横比」を保ちたいケースの
+        古典的手法。ラッパーに <code>padding-top: 56.25%</code>（16:9）を与え、
+        iframe を絶対配置で敷き詰めます。今は
+        <code>aspect-ratio</code> で書けますが、当時はこの padding
+        ハックが定番でした。
+      </p>
+      <div class="aspect-wrapper">
+        <iframe
+          class="aspect-frame"
+          src="./legacy-frame.html?silent=1"
+          title="aspect ratio hack demo"
+        ></iframe>
+      </div>
+    </section>
+
+    <script src="./legacy.js" defer></script>
+  </body>
+</html>

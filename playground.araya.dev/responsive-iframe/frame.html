@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>embedded document</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 1rem;
+        font-family: system-ui, sans-serif;
+        background: #f5f7ff;
+        box-sizing: border-box;
+      }
+
+      button {
+        margin-block: 0.5rem;
+        padding: 0.4rem 0.8rem;
+        cursor: pointer;
+      }
+
+      .item {
+        margin: 0.4rem 0;
+        padding: 0.6rem;
+        background: #fff;
+        border: 1px solid #ccd;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>埋め込みドキュメント</h2>
+    <p>これは iframe 内で表示されている別ドキュメントです。</p>
+
+    <div>
+      <button id="add" type="button">項目を追加</button>
+      <button id="remove" type="button">項目を削除</button>
+    </div>
+
+    <div id="list"></div>
+
+    <script>
+      const list = document.getElementById("list");
+      let count = 0;
+
+      // 内容の高さが変わったら、親の iframe に再計測を要求する。
+      // frame-sizing: content が効いている場合、requestResize() の呼び出しで
+      // 親側の iframe 要素の高さが更新される。
+      function requestResize() {
+        if (typeof window.requestResize === "function") {
+          window.requestResize();
+        }
+      }
+
+      function addItem() {
+        count += 1;
+        const el = document.createElement("div");
+        el.className = "item";
+        el.textContent = `項目 #${count}`;
+        list.appendChild(el);
+        requestResize();
+      }
+
+      function removeItem() {
+        const last = list.lastElementChild;
+        if (last) {
+          last.remove();
+          requestResize();
+        }
+      }
+
+      document.getElementById("add").addEventListener("click", addItem);
+      document.getElementById("remove").addEventListener("click", removeItem);
+
+      // 初期表示用にいくつか追加しておく
+      for (let i = 0; i < 3; i += 1) {
+        addItem();
+      }
+    </script>
+  </body>
+</html>

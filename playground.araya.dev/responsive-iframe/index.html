@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Responsively-sized iframe | araya's playground</title>
+    <link rel="stylesheet" href="/main.css" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <h1>Responsively-sized <code>&lt;iframe&gt;</code></h1>
+
+    <p>
+      CSS の <code>frame-sizing: content</code> プロパティを使うと、
+      <code>&lt;iframe&gt;</code> 要素のサイズを埋め込み先ドキュメントの
+      レイアウト内在サイズ（layout intrinsic size）に合わせられます。
+      これによって iframe 内のスクロールバーを出さずに、親ページと
+      シームレスに見えるように埋め込めます。
+    </p>
+    <p>
+      仕様:
+      <a
+        href="https://drafts.csswg.org/css-sizing-4/#responsive-iframes"
+        target="_blank"
+        rel="noopener"
+        >CSS Box Sizing Module Level 4 §5.3</a
+      >
+      / Chrome Platform Status:
+      <a
+        href="https://chromestatus.com/feature/5108373464547328"
+        target="_blank"
+        rel="noopener"
+        >Responsively-sized &lt;iframe&gt;</a
+      >
+    </p>
+
+    <p id="support" class="notice" role="status"></p>
+
+    <p>
+      <a href="./legacy.html"
+        >→ この機能がなかった時代の従来ハック（postMessage など）はこちら</a
+      >
+    </p>
+
+    <section>
+      <h2>1. <code>frame-sizing: content</code>（レスポンシブ）</h2>
+      <p>
+        高さは <code>auto</code> のまま、埋め込みドキュメントの内容に応じて
+        iframe
+        の高さが自動で決まります。内側でボタンを押して内容を増減させると、
+        子ドキュメントが <code>window.requestResize()</code> を呼び出して
+        高さが再計算されます。
+      </p>
+      <iframe
+        class="responsive"
+        src="./frame.html?mode=responsive"
+        title="responsive iframe demo"
+      ></iframe>
+    </section>
+
+    <section>
+      <h2>2. 従来の <code>&lt;iframe&gt;</code>（比較用）</h2>
+      <p>
+        同じ内容でも
+        <code>frame-sizing</code> を指定しない場合は固定高さのままで、
+        内容がはみ出すとスクロールバーが表示されます。
+      </p>
+      <iframe
+        class="fixed"
+        src="./frame.html?mode=fixed"
+        title="fixed iframe demo"
+      ></iframe>
+    </section>
+
+    <script src="./main.js" defer></script>
+  </body>
+</html>

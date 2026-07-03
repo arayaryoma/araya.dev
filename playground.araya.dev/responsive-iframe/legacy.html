@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta
@@ -12,25 +12,23 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <h1>iframe 自動リサイズの従来ハック</h1>
+    <h1>Legacy iframe auto-resize hacks</h1>
 
     <p>
-      <code>frame-sizing: content</code>
-      が使えなかった時代に、iframe の高さを中身に合わせるために
-      広く使われてきた回避策を実演します。
-      <a href="./">→ frame-sizing を使ったモダンな実装はこちら</a>
+      Workarounds that were widely used to fit an iframe's height to its content
+      before the <code>frame-sizing</code> property existed.
+      <a href="./">→ See the modern implementation using frame-sizing</a>
     </p>
 
     <section>
-      <h2>1. postMessage + ResizeObserver（クロスオリジン対応）</h2>
+      <h2>1. postMessage + ResizeObserver (works cross-origin)</h2>
       <p>
-        最も一般的なハック。子ドキュメント側で
-        <code>ResizeObserver</code> により自身の高さを監視し、変化するたびに
-        <code>parent.postMessage()</code> で高さを親へ通知します。親は
-        <code>message</code> イベントで受け取った値を
-        <code>iframe.style.height</code>
-        に反映します。クロスオリジンでも動作するのが利点ですが、双方に
-        スクリプトが必要です。
+        The most common hack. The embedded document watches its own height with
+        <code>ResizeObserver</code> and, whenever it changes, reports the height
+        to the parent via <code>parent.postMessage()</code>. The parent applies
+        the received value to <code>iframe.style.height</code> in a
+        <code>message</code> event handler. It works cross-origin, but requires
+        scripts on both sides.
       </p>
       <iframe
         id="postMessageFrame"
@@ -38,18 +36,17 @@
         title="postMessage auto-height demo"
         scrolling="no"
       ></iframe>
-      <p class="log" id="postMessageLog">受信した高さ: —</p>
+      <p class="log" id="postMessageLog">Received height: —</p>
     </section>
 
     <section>
-      <h2>2. same-origin での直接計測</h2>
+      <h2>2. Same-origin direct measurement</h2>
       <p>
-        同一オリジンなら親から
-        <code>iframe.contentDocument.body.scrollHeight</code>
-        を直接読めます。子側のスクリプトは不要ですが、クロスオリジンでは
-        セキュリティ制約で参照できません。ここでは
-        <code>load</code> 後と、ポーリング（<code>setInterval</code>）で
-        高さの変化に追従しています。
+        For same-origin documents the parent can read
+        <code>iframe.contentDocument.body.scrollHeight</code> directly. No
+        script is needed on the child side, but cross-origin access is blocked
+        by security restrictions. Here it follows height changes after
+        <code>load</code> and via polling (<code>setInterval</code>).
       </p>
       <iframe
         id="sameOriginFrame"
@@ -57,17 +54,18 @@
         title="same-origin auto-height demo"
         scrolling="no"
       ></iframe>
-      <p class="log" id="sameOriginLog">計測した高さ: —</p>
+      <p class="log" id="sameOriginLog">Measured height: —</p>
     </section>
 
     <section>
-      <h2>3. アスペクト比固定の padding ハック（参考）</h2>
+      <h2>3. Fixed aspect-ratio padding hack (for reference)</h2>
       <p>
-        動画埋め込みなど「中身の高さ」ではなく「縦横比」を保ちたいケースの
-        古典的手法。ラッパーに <code>padding-top: 56.25%</code>（16:9）を与え、
-        iframe を絶対配置で敷き詰めます。今は
-        <code>aspect-ratio</code> で書けますが、当時はこの padding
-        ハックが定番でした。
+        A classic technique for cases that need to keep an aspect ratio rather
+        than the content height, such as video embeds. Give the wrapper
+        <code>padding-top: 56.25%</code> (16:9) and position the iframe
+        absolutely to fill it. Today this is written with
+        <code>aspect-ratio</code>, but the padding hack was the standard
+        approach back then.
       </p>
       <div class="aspect-wrapper">
         <iframe

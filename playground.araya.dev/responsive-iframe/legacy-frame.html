@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>legacy embedded document</title>
@@ -29,18 +29,20 @@
     </style>
   </head>
   <body>
-    <h2>埋め込みドキュメント（legacy）</h2>
-    <p>高さは postMessage / 直接計測で親へ伝えます。</p>
+    <h2>Embedded document (legacy)</h2>
+    <p>
+      Reports its height to the parent via postMessage / direct measurement.
+    </p>
 
     <div>
-      <button id="add" type="button">項目を追加</button>
-      <button id="remove" type="button">項目を削除</button>
+      <button id="add" type="button">Add item</button>
+      <button id="remove" type="button">Remove item</button>
     </div>
     <div id="list"></div>
 
     <script>
       const params = new URLSearchParams(location.search);
-      // silent=1 のときは高さ通知をしない（same-origin / aspect デモ用）
+      // With silent=1, do not report height (for the same-origin / aspect demos).
       const silent = params.get("silent") === "1";
 
       const list = document.getElementById("list");
@@ -52,7 +54,7 @@
         }
         const height =
           document.documentElement.scrollHeight || document.body.scrollHeight;
-        // 本来は postMessage の第2引数に親のオリジンを指定すること
+        // In production, pass the parent's origin as the second postMessage arg.
         parent.postMessage({ type: "iframe-height", height }, "*");
       }
 
@@ -60,7 +62,7 @@
         count += 1;
         const el = document.createElement("div");
         el.className = "item";
-        el.textContent = `項目 #${count}`;
+        el.textContent = `Item #${count}`;
         list.appendChild(el);
       }
 
@@ -74,7 +76,7 @@
       document.getElementById("add").addEventListener("click", addItem);
       document.getElementById("remove").addEventListener("click", removeItem);
 
-      // 高さ変化を監視して自動で親へ通知（ハックの肝）
+      // Watch height changes and report them automatically (the core of the hack).
       if (!silent && "ResizeObserver" in window) {
         const ro = new ResizeObserver(() => notifyHeight());
         ro.observe(document.documentElement);
@@ -83,7 +85,7 @@
       for (let i = 0; i < 3; i += 1) {
         addItem();
       }
-      // 初期ロード時にも通知
+      // Also report on initial load.
       window.addEventListener("load", notifyHeight);
     </script>
   </body>

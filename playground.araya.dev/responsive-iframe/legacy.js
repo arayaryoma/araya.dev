@@ -1,21 +1,21 @@
 // ---------------------------------------------------------------------------
-// ハック1: postMessage で子から通知された高さを iframe に反映する
+// Hack 1: apply the height reported by the child via postMessage
 // ---------------------------------------------------------------------------
 const postMessageFrame = document.getElementById("postMessageFrame");
 const postMessageLog = document.getElementById("postMessageLog");
 
 window.addEventListener("message", (event) => {
-  // 本来は event.origin を検証すること（デモでは同一オリジン前提）
+  // In production, validate event.origin (same-origin assumed in this demo).
   const data = event.data;
   if (!data || data.type !== "iframe-height") {
     return;
   }
   postMessageFrame.style.height = `${data.height}px`;
-  postMessageLog.textContent = `受信した高さ: ${data.height}px`;
+  postMessageLog.textContent = `Received height: ${data.height}px`;
 });
 
 // ---------------------------------------------------------------------------
-// ハック2: same-origin なら contentDocument から直接高さを測る
+// Hack 2: measure directly from contentDocument when same-origin
 // ---------------------------------------------------------------------------
 const sameOriginFrame = document.getElementById("sameOriginFrame");
 const sameOriginLog = document.getElementById("sameOriginLog");
@@ -28,16 +28,16 @@ function measureSameOrigin() {
     }
     const height = doc.documentElement.scrollHeight || doc.body.scrollHeight;
     sameOriginFrame.style.height = `${height}px`;
-    sameOriginLog.textContent = `計測した高さ: ${height}px`;
+    sameOriginLog.textContent = `Measured height: ${height}px`;
   } catch (e) {
-    // クロスオリジンだとここで SecurityError になる
+    // Cross-origin access throws a SecurityError here.
     sameOriginLog.textContent =
-      "計測失敗（クロスオリジンでは contentDocument を参照できません）";
+      "Measurement failed (contentDocument is not accessible cross-origin)";
   }
 }
 
 sameOriginFrame.addEventListener("load", () => {
   measureSameOrigin();
-  // 中身が後から変化するケースに追従するためポーリング（当時の定番）
+  // Poll to follow later content changes (the classic approach back then).
   setInterval(measureSameOrigin, 500);
 });

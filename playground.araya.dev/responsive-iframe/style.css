@@ -52,6 +52,22 @@ code {
   border-radius: 4px;
 }
 
+pre {
+  background: #1e1e2e;
+  color: #e4e4ef;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  font-family: ui-monospace, monospace;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+
 /* --- for the legacy hack demos --- */
 .log {
   font-family: ui-monospace, monospace;

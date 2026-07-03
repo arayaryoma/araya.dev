@@ -75,6 +75,52 @@
       ></iframe>
     </section>
 
+    <section>
+      <h2>How it works</h2>
+
+      <h3>Embedding page (parent)</h3>
+      <p>
+        Set <code>frame-sizing</code> on the <code>&lt;iframe&gt;</code> and let
+        its block size be <code>auto</code> so it follows the content.
+      </p>
+      <pre><code>&lt;iframe src="frame.html"&gt;&lt;/iframe&gt;
+
+&lt;style&gt;
+  iframe {
+    frame-sizing: content-height;
+    height: auto;
+  }
+&lt;/style&gt;</code></pre>
+
+      <h3>Embedded document (child)</h3>
+      <p>
+        Opt in with a <code>&lt;meta&gt;</code> element in the
+        <code>&lt;head&gt;</code>. It must appear before the
+        <code>&lt;body&gt;</code> opens.
+      </p>
+      <pre><code>&lt;!doctype html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta name="responsive-embedded-sizing"&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;!-- content --&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+      <h3>Re-measuring after dynamic changes</h3>
+      <p>
+        The intrinsic size is captured on load. When the embedded document
+        changes its own content later, it asks the parent to re-measure by
+        calling <code>window.requestResize()</code>.
+      </p>
+      <pre><code>// inside the embedded document
+function onContentChanged() {
+  // ...update the DOM...
+  window.requestResize();
+}</code></pre>
+    </section>
+
     <script src="./main.js" defer></script>
   </body>
 </html>

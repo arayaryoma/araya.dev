@@ -5,7 +5,6 @@ const postMessageFrame = document.getElementById("postMessageFrame");
 const postMessageLog = document.getElementById("postMessageLog");
 
 window.addEventListener("message", (event) => {
-  // In production, validate event.origin (same-origin assumed in this demo).
   const data = event.data;
   if (!data || data.type !== "iframe-height") {
     return;

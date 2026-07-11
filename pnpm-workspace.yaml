@@ -1,0 +1,32 @@
+# Supply-chain hardening for the repo-root tooling project (husky / lint-staged /
+# prettier). blog.araya.dev and cf-worker declare their own workspace roots and
+# are intentionally not part of this workspace.
+
+# 7 days rather than pnpm 11's 1-day default: this project has no urgency that
+# justifies installing releases before the ecosystem has had time to flag a
+# compromised one.
+minimumReleaseAge: 10080
+minimumReleaseAgeExclude: []
+# The pnpm 11 default (true) would let a registry that omits publish timestamps
+# bypass the age check entirely.
+minimumReleaseAgeIgnoreMissingTime: false
+
+# Empty on purpose: nothing here needs a build script. Approve additions via
+# `pnpm approve-builds` only after reading the package's install scripts.
+allowBuilds: {}
+
+# These match pnpm 11 defaults but are written out so the policy doesn't
+# silently change with a pnpm major bump.
+strictDepBuilds: true
+blockExoticSubdeps: true
+
+# CI should override with PNPM_CONFIG_VERIFY_DEPS_BEFORE_RUN=error so drift
+# fails the run instead of being auto-synced.
+verifyDepsBeforeRun: install
+
+strictPeerDependencies: true
+
+auditConfig:
+  # Add GHSA codes only with a justification comment and an expiry date.
+  ignoreGhsas: []
+auditLevel: moderate

@@ -1,0 +1,35 @@
+# blog.araya.dev is a standalone pnpm project; this file also stops pnpm from
+# treating the repo root as this project's workspace root.
+
+# 7 days rather than pnpm 11's 1-day default: this project has no urgency that
+# justifies installing releases before the ecosystem has had time to flag a
+# compromised one.
+minimumReleaseAge: 10080
+minimumReleaseAgeExclude: []
+# The pnpm 11 default (true) would let a registry that omits publish timestamps
+# bypass the age check entirely.
+minimumReleaseAgeIgnoreMissingTime: false
+
+# Pinned to false because the site builds fine without these build scripts —
+# they were already being skipped under the pnpm 10 default before hardening.
+# Flip one via `pnpm approve-builds` only after reading its install scripts.
+allowBuilds:
+  esbuild: false
+  puppeteer: false
+  sharp: false
+
+# These match pnpm 11 defaults but are written out so the policy doesn't
+# silently change with a pnpm major bump.
+strictDepBuilds: true
+blockExoticSubdeps: true
+
+# CI should override with PNPM_CONFIG_VERIFY_DEPS_BEFORE_RUN=error so drift
+# fails the run instead of being auto-synced.
+verifyDepsBeforeRun: install
+
+strictPeerDependencies: true
+
+auditConfig:
+  # Add GHSA codes only with a justification comment and an expiry date.
+  ignoreGhsas: []
+auditLevel: moderate

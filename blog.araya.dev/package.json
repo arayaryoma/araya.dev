@@ -11,7 +11,7 @@
     "build:local_docker": "SITE_ORIGIN=https://blog.local.araya.dev:8443 node build/watch.js",
     "dev": "DRAFTS=1 astro dev"
   },
-  "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184",
+  "packageManager": "pnpm@11.11.0+sha512.4463f65fd80ed80d69bc1d4bf163ee94f605c7380fc318bb5b2ebe15f8cd12d49c51a4d59e951b401e764d3b6ca751cbf51bc50ed7001a6bcb4935e684c34882",
   "devDependencies": {
     "@astrojs/mdx": "^4.3.0",
     "@astrojs/react": "^4.3.0",

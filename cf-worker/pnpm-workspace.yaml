@@ -1,0 +1,3 @@
+# Marks cf-worker as its own pnpm root so it does not inherit the repo-root
+# pnpm-workspace.yaml. This project is stale (pnpm 7-era lockfile); harden or
+# archive it before reviving.

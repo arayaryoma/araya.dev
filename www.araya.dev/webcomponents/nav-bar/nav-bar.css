@@ -32,6 +32,11 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
+  transition: opacity 0.25s ease;
+}
+
+.nav:has(.menu.open) .nav-list {
+  opacity: 0.2;
 }
 
 @media screen and (min-width: 768px) {
@@ -65,11 +70,29 @@ a {
   }
 }
 
-.icon {
+.menu {
   --hex-width: 80px;
   --hex-height: calc(1.732 / 2 * var(--hex-width));
   --border-radius: 8px / 4%;
+  position: relative;
+  margin-inline-end: calc(var(--hex-width) / 4);
+}
+
+@media screen and (min-width: 768px) {
+  .menu {
+    --hex-width: 200px;
+    --hex-height: calc(1.732 / 2 * var(--hex-width));
+    --border-radius: 16px / 4%;
+    justify-self: end;
+    place-self: end;
+  }
+}
+
+.icon {
   grid-area: icon;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
   border-radius: var(--border-radius);
   background: var(--primary-color);
   width: calc(var(--hex-width) / 2);
@@ -77,17 +100,6 @@ a {
   position: relative;
   display: grid;
   place-content: center;
-  margin-inline-end: calc(var(--hex-width) / 4);
-}
-
-@media screen and (min-width: 768px) {
-  .icon {
-    --hex-width: 200px;
-    --hex-height: calc(1.732 / 2 * var(--hex-width));
-    --border-radius: 16px / 4%;
-    justify-self: end;
-    place-self: end;
-  }
 }
 
 .icon::before {
@@ -118,4 +130,111 @@ a {
 
 .icon img {
   width: calc(var(--hex-width) / 2);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.menu.open .icon img {
+  transform: scale(1.1) rotate(-8deg);
+}
+
+.menu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  bottom: calc(100% + 16px);
+  left: 50%;
+  translate: -50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  pointer-events: none;
+}
+
+.menu.open .menu-list {
+  pointer-events: auto;
+}
+
+.menu-item {
+  --delay: 0s;
+  opacity: 0;
+  visibility: hidden;
+  filter: drop-shadow(0 4px 12px var(--shadow-black));
+  transform: translateY(24px) scale(0.4);
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.2s ease,
+    visibility 0s linear 0.4s;
+}
+
+.menu.open .menu-item {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) var(--delay),
+    opacity 0.2s ease var(--delay),
+    visibility 0s;
+}
+
+/* The item closest to the hexagon pops first */
+.menu-item:nth-child(1) {
+  --delay: 0.07s;
+}
+
+.menu-item:nth-child(2) {
+  --delay: 0s;
+}
+
+.menu-link {
+  --link-hex-width: 120px;
+  --link-hex-height: calc(1.732 / 2 * var(--link-hex-width));
+  --link-border-radius: 8px / 4%;
+  position: relative;
+  display: grid;
+  place-content: center;
+  width: calc(var(--link-hex-width) / 2);
+  height: var(--link-hex-height);
+  background: var(--primary-color);
+  border-radius: var(--link-border-radius);
+  font-size: var(--font-size-16);
+  font-weight: bold;
+  white-space: nowrap;
+  transition: transform 0.2s ease;
+}
+
+.menu-link:hover,
+.menu-link:focus-visible {
+  transform: scale(1.08);
+}
+
+.menu-link::before,
+.menu-link::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  background: var(--primary-color);
+  width: calc(var(--link-hex-width) / 2);
+  height: var(--link-hex-height);
+  border-radius: var(--link-border-radius);
+}
+
+.menu-link::before {
+  transform: rotate(60deg);
+}
+
+.menu-link::after {
+  transform: rotate(-60deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon img,
+  .menu-item,
+  .menu-link {
+    transition-duration: 0.01s;
+    transition-delay: 0s;
+  }
 }

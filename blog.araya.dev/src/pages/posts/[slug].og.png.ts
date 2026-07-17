@@ -8,7 +8,7 @@ export async function getStaticPaths() {
   const blogEntries = await getCollection("blog");
   return blogEntries.map((entry) => {
     return {
-      params: { slug: entry.slug },
+      params: { slug: entry.id },
       props: {
         title: entry.data.title,
         thumbnail: entry.data.thumbnail,
@@ -17,7 +17,7 @@ export async function getStaticPaths() {
   });
 }
 
-export const get: APIRoute = async ({ params, props }) => {
+export const GET: APIRoute = async ({ props }) => {
   const thumbnailImage =
     props.thumbnail && fs.readFileSync(path.resolve("src", props.thumbnail));
   const buffer =
@@ -25,8 +25,7 @@ export const get: APIRoute = async ({ params, props }) => {
     (await generateOgImage({
       title: props.title ?? "",
     }));
-  return {
-    body: buffer,
-    encoding: "binary",
-  };
+  return new Response(new Uint8Array(buffer), {
+    headers: { "Content-Type": "image/png" },
+  });
 };

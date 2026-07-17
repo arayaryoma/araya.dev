@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import { getChangelog } from "../../../build/changelog";
 import Layout from "../../layouts/Layout.astro";
 
@@ -7,12 +7,12 @@ export async function getStaticPaths() {
   const blogEntries = await getCollection("blog");
   const entries = blogEntries.map((entry) => {
     return {
-      params: { slug: entry.slug },
+      params: { slug: entry.id },
       props: { entry },
     };
   });
   const promises = entries.map(async (item) => {
-    const log = await getChangelog(item.props.entry.id);
+    const log = await getChangelog(item.props.entry.filePath);
     return { ...item, props: { ...item.props, log } };
   });
   return await Promise.all(promises);
@@ -21,7 +21,7 @@ export async function getStaticPaths() {
 const { entry, log } = Astro.props;
 const { slug } = Astro.params;
 
-const { Content } = await entry.render();
+const { Content } = await render(entry);
 
 const repo = "https://github.com/arayaryoma/araya.dev";
 

@@ -7,7 +7,10 @@ const SITE_ORIGIN = process.env.SITE_ORIGIN || undefined;
 
 // https://astro.build/config
 export default defineConfig({
-  trailingSlash: "always",
+  // A prerendered dynamic image endpoint ([slug].og.png.ts) breaks under
+  // "always" because Astro appends a trailing slash to file-extension
+  // endpoints and then fails their param reverse-lookup during prerender.
+  trailingSlash: "ignore",
   integrations: [mdx(), react()],
   site: SITE_ORIGIN,
 });

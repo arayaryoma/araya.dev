@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 import SitePreference from "../components/site-preference.astro";
 export interface Props {
   title: string;
@@ -34,7 +34,7 @@ import { BLOG_TITLE } from "../constants";
       gtag("config", "UA-104175258-3");
     </script>
     <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <ViewTransitions />
+    <ClientRouter />
   </head>
   <body>
     <nav class="global-nav" transition:name="global_nav">

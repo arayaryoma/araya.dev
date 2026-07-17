@@ -30,7 +30,7 @@ const nonDraftPosts = ENABLED_SERVE_DRAFTS
             })
             .map((post) => (
               <li class="posts-list__item">
-                <a href={`/posts/${post.slug}/`}>
+                <a href={`/posts/${post.id}/`}>
                   <article class="posts-list-item__content">
                     <time
                       class="posts-list-item__date"

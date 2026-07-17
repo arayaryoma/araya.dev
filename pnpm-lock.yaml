@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      node:
-        specifier: runtime:v24
-        version: runtime:24.18.0
     devDependencies:
       husky:
         specifier: ^8.0.3
@@ -18,6 +14,9 @@ importers:
       lint-staged:
         specifier: ^14.0.1
         version: 14.0.1
+      node:
+        specifier: runtime:v25
+        version: runtime:25.9.0
       prettier:
         specifier: ^3.0.3
         version: 3.6.2
@@ -163,7 +162,7 @@ packages:
   ms@2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
 
-  node@runtime:24.18.0:
+  node@runtime:25.9.0:
     resolution:
       type: variations
       variants:
@@ -171,9 +170,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-ZGOiNzn2sjAOvsXM1gJ14TjjhY/Br8bo+bxOT2pLdvo=
+            integrity: sha256-9+EZgxIJ6cAB3B+/eY0j5xzFr1QOBphOnnbC0Px7X+M=
             type: binary
-            url: https://nodejs.org/download/release/v24.18.0/node-v24.18.0-aix-ppc64.tar.gz
+            url: https://nodejs.org/download/release/v25.9.0/node-v25.9.0-aix-ppc64.tar.gz
           targets:
             - cpu: ppc64
               os: aix
@@ -181,9 +180,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-4al+FMmcgD6WxzOUAyguoFpJnDL42D3v6e9exm+XntE=
+            integrity: sha256-5HnzxGnT2TA6RPAKjqN6N4g5XRcbuAWcSKS7vS43G1k=
             type: binary
-            url: https://nodejs.org/download/release/v24.18.0/node-v24.18.0-darwin-arm64.tar.gz
+            url: https://nodejs.org/download/release/v25.9.0/node-v25.9.0-darwin-arm64.tar.gz
           targets:
             - cpu: arm64
               os: darwin
@@ -191,9 +190,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-39Db0+chUDQ033tyBecZ9hs6OjGyvPlym4uR/qJA8IA=
+            integrity: sha256-fXN7U84ZEUK/ocF8+lsHDZboTuv3a43QbYSYHL3D9+M=
             type: binary
-            url: https://nodejs.org/download/release/v24.18.0/node-v24.18.0-darwin-x64.tar.gz
+            url: https://nodejs.org/download/release/v25.9.0/node-v25.9.0-darwin-x64.tar.gz
           targets:
             - cpu: x64
               os: darwin
@@ -201,9 +200,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-a0SEwhkCdBdd+aqPKOLXWKgZyxwf5qtIHi+VtGOrhQg=
+            integrity: sha256-j7QoMwG4xyD8nxi///D2WecswU0M8geju0EYCKqnOlc=
             type: binary
-            url: https://nodejs.org/download/release/v24.18.0/node-v24.18.0-linux-arm64.tar.gz
+            url: https://nodejs.org/download/release/v25.9.0/node-v25.9.0-linux-arm64.tar.gz
           targets:
             - cpu: arm64
               os: linux
@@ -211,9 +210,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-/hM4ly95KDxrwh5h2/RXa76MBa3tKZnUHIZDrTAmUUI=
+            integrity: sha256-5ydhESmuBwPwzSso2NS9/xUHI1gSgFcPZrxUrFsJLbo=
             type: binary
-            url: https://nodejs.org/download/release/v24.18.0/node-v24.18.0-linux-ppc64le.tar.gz
+            url: https://nodejs.org/download/release/v25.9.0/node-v25.9.0-linux-ppc64le.tar.gz
           targets:
             - cpu: ppc64le
               os: linux
@@ -221,9 +220,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-Nx68E5RfwWlJPnUvLdr6+rbs2My0Ubz/RuCfacXdjHo=
+            integrity: sha256-etLcBFxruomsPQrJ3X1IGL8Lv+RnXk5Ce/Hc6U6q6R4=
             type: binary
-            url: https://nodejs.org/download/release/v24.18.0/node-v24.18.0-linux-s390x.tar.gz
+            url: https://nodejs.org/download/release/v25.9.0/node-v25.9.0-linux-s390x.tar.gz
           targets:
             - cpu: s390x
               os: linux
@@ -231,9 +230,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-eDEwmElj23upy9AQierywu+wVcfBaTyUMXS5Z7MFDLg=
+            integrity: sha256-E05VskCESKIZdg/gTcRNaFH53op5VJAh/9hw6Qgtnns=
             type: binary
-            url: https://nodejs.org/download/release/v24.18.0/node-v24.18.0-linux-x64.tar.gz
+            url: https://nodejs.org/download/release/v25.9.0/node-v25.9.0-linux-x64.tar.gz
           targets:
             - cpu: x64
               os: linux
@@ -241,10 +240,10 @@ packages:
             archive: zip
             bin:
               node: node.exe
-            integrity: sha256-8nRmmtuTsf0Pv48h/QeGCencyEMz1PJxjS3eP5oWGgE=
-            prefix: node-v24.18.0-win-arm64
+            integrity: sha256-a0mbyvFshv4amMjih0/RmAsjtckOpBKYPbQ5LX4Iw2s=
+            prefix: node-v25.9.0-win-arm64
             type: binary
-            url: https://nodejs.org/download/release/v24.18.0/node-v24.18.0-win-arm64.zip
+            url: https://nodejs.org/download/release/v25.9.0/node-v25.9.0-win-arm64.zip
           targets:
             - cpu: arm64
               os: win32
@@ -252,10 +251,10 @@ packages:
             archive: zip
             bin:
               node: node.exe
-            integrity: sha256-CuaEBrQtdyVmHal5sUA+yZJtogXGdwgn8zqsnY8m6CE=
-            prefix: node-v24.18.0-win-x64
+            integrity: sha256-kpVSuDBe/6yEO6e0JwxDeu+3Avw/vXP80b/9NdSsKE4=
+            prefix: node-v25.9.0-win-x64
             type: binary
-            url: https://nodejs.org/download/release/v24.18.0/node-v24.18.0-win-x64.zip
+            url: https://nodejs.org/download/release/v25.9.0/node-v25.9.0-win-x64.zip
           targets:
             - cpu: x64
               os: win32
@@ -263,9 +262,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-scbC3DG0bdj7IyL0/nWwfndcUSC8NyUd7uoo9SnUVns=
+            integrity: sha256-l/b+El+qUfhKe7YA0M1678+qoOdaX0mnxhw9+R0S1TU=
             type: binary
-            url: https://unofficial-builds.nodejs.org/download/release/v24.18.0/node-v24.18.0-linux-arm64-musl.tar.gz
+            url: https://unofficial-builds.nodejs.org/download/release/v25.9.0/node-v25.9.0-linux-arm64-musl.tar.gz
           targets:
             - cpu: arm64
               os: linux
@@ -274,14 +273,14 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-6lhAmRHhQexrGdkXjvotkYWhMpUAWxy/VSGzFX7tHZU=
+            integrity: sha256-GsRK8BK+a8F/Hjcj7b8SiXwLrq5dHcdbn5fXFBPkyPU=
             type: binary
-            url: https://unofficial-builds.nodejs.org/download/release/v24.18.0/node-v24.18.0-linux-x64-musl.tar.gz
+            url: https://unofficial-builds.nodejs.org/download/release/v25.9.0/node-v25.9.0-linux-x64-musl.tar.gz
           targets:
             - cpu: x64
               os: linux
               libc: musl
-    version: 24.18.0
+    version: 25.9.0
     hasBin: true
 
   npm-run-path@5.3.0:
@@ -515,7 +514,7 @@ snapshots:
 
   ms@2.1.2: {}
 
-  node@runtime:24.18.0: {}
+  node@runtime:25.9.0: {}
 
   npm-run-path@5.3.0:
     dependencies:

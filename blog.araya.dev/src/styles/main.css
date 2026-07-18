@@ -1,33 +1,65 @@
 :root {
+  /* Homura Akemi palette (raw colors) — dark mode */
+  --homura-black: #16121f; /* 黒髪・夜 */
+  --homura-black-deep: #100d18;
+  --homura-ink: #221b31; /* dark surface */
+  --homura-ink-2: #2b2340;
+  --homura-violet: #6b3fb3; /* ソウルジェム */
+  --homura-violet-deep: #4c2b85;
+  --homura-lavender: #b9a3ee;
+  --homura-lavender-bright: #d4c5f8;
+  --homura-silver: #f4f2f9; /* 盾の銀 */
+  --homura-white: #fdfcff;
+  --homura-ribbon: #c73e5e; /* リボン・彼岸花 */
+
+  /* Madoka Kaname palette (raw colors) — light mode */
+  --madoka-pink: #f6a8c3; /* 髪 */
+  --madoka-rose: #e2578c; /* ソウルジェム */
+  --madoka-deep-rose: #b02a60;
+  --madoka-magenta-deep: #822045;
+  --madoka-gold: #eeb054; /* 衣装の金 */
+  --madoka-cream: #fdf4f7; /* 桜色がかった白 */
+  --madoka-white: #fffbfd;
+  --madoka-plum: #3b1c2c; /* nav・footer 用の深い紅梅 */
+
+  /* Legacy colors still referenced by shadow-DOM components */
   --black: #13111d;
-  --navy: #1c1b3c;
   --mat-black: #333333;
   --gray-dark-3: #272627;
   --gray-dark-2: #4f4f4f;
   --gray-dark-1: #828282;
   --gray-light-1: #bdbdbd;
   --gray-light-2: #dedede;
-  --gray-light-3: #e0e0e0;
   --gray-light-4: #f2f2f2;
   --gray-light-5: #f8f8f8;
-  --dark-grayish-purple: #282638;
-  --mat-red: #eb5757;
-  --orange: #f2994a;
-  --canary-yellow: #f2c94c;
-  --forest-green: #219653;
-  --lime-green: #27ae60;
-  --emeral-green: #6fcf97;
-  --eyes-blue: #2f80ed;
-  --butterfly-blue: #2d9cdb;
-  --sky-blue: #56ccf2;
-  --violet: #9b51e0;
-  --amethyst-purple: #bb6bd9;
-  --araya-purple: #6450a1;
   --dracula-bg: #282a36;
-  --box-shadow-gray: rgba(0, 0, 0, 0.2);
-  --lavendar-purple: #9d8ec7;
-  --background-color: var(--gray-light-2);
-  --text-face-color: var(--black);
+
+  /* Semantic tokens: light = Madoka mode (no-preference default) */
+  --color-bg: var(--madoka-cream);
+  --color-surface: var(--madoka-white);
+  --color-text: #33202b;
+  --color-text-muted: #7a5c6b;
+  --color-accent: var(--madoka-deep-rose);
+  --color-accent-strong: var(--madoka-magenta-deep);
+  --color-border: #f0d8e2;
+  --color-inline-code-bg: #f9e4ee;
+  --color-selection-bg: var(--madoka-deep-rose);
+  --color-selection-text: var(--madoka-white);
+  --accent-gradient-from: var(--madoka-rose);
+  --accent-gradient-to: var(--madoka-gold);
+  /* Nav and footer stay dark in both themes */
+  --color-on-nav: #e9d3dd;
+  --color-nav-text: #fdf3f8;
+  --global-nav-bg: var(--madoka-plum);
+  --toggle-track: #f0c3d6;
+  --toggle-thumb: var(--madoka-white);
+  /* Mode-switch labels must stay readable on the current surface color */
+  --mode-label-madoka: var(--madoka-deep-rose);
+  --mode-label-homura: var(--homura-violet);
+
+  --background-color: var(--color-bg);
+  --text-face-color: var(--color-text);
+
   --xs-max: 425px;
   --sm-min: 426px;
   --sm-max: 767px;
@@ -56,19 +88,65 @@
   --default-font-family:
     "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans",
     Meiryo, sans-serif;
-  --global-nav-bg: var(--black);
   --global-nav-height: 5.125rem;
+
+  /* Let the browser theme scrollbars and form controls to match */
+  color-scheme: light dark;
+  accent-color: var(--color-accent);
 }
 
+/* Dark (= Homura mode) tokens are defined once; applied for both the system
+   preference and the manual toggle (html[data-color-scheme]). */
 @media screen and (prefers-color-scheme: dark) {
   :root:not([data-color-scheme="light"]) {
-    --background-color: var(--dark-grayish-purple);
-    --text-face-color: var(--gray-light-4);
+    --color-bg: var(--homura-black);
+    --color-surface: var(--homura-ink);
+    --color-text: #e9e5f2;
+    --color-text-muted: #a79fbd;
+    --color-accent: var(--homura-lavender);
+    --color-accent-strong: var(--homura-lavender-bright);
+    --color-border: #3a3050;
+    --color-inline-code-bg: var(--homura-ink-2);
+    --color-selection-bg: var(--homura-lavender);
+    --color-selection-text: var(--homura-black);
+    --accent-gradient-from: var(--homura-violet);
+    --accent-gradient-to: var(--homura-lavender);
+    --color-on-nav: #cfc8de;
+    --color-nav-text: var(--homura-silver);
+    --global-nav-bg: var(--homura-black-deep);
+    --toggle-track: #3a3050;
+    --toggle-thumb: var(--homura-lavender);
+    --mode-label-madoka: var(--madoka-pink);
+    --mode-label-homura: var(--homura-lavender);
   }
 }
-html[data-color-scheme="dark"]:root {
-  --background-color: var(--dark-grayish-purple);
-  --text-face-color: var(--gray-light-4);
+:root[data-color-scheme="dark"] {
+  --color-bg: var(--homura-black);
+  --color-surface: var(--homura-ink);
+  --color-text: #e9e5f2;
+  --color-text-muted: #a79fbd;
+  --color-accent: var(--homura-lavender);
+  --color-accent-strong: var(--homura-lavender-bright);
+  --color-border: #3a3050;
+  --color-inline-code-bg: var(--homura-ink-2);
+  --color-selection-bg: var(--homura-lavender);
+  --color-selection-text: var(--homura-black);
+  --accent-gradient-from: var(--homura-violet);
+  --accent-gradient-to: var(--homura-lavender);
+  --color-on-nav: #cfc8de;
+  --color-nav-text: var(--homura-silver);
+  --global-nav-bg: var(--homura-black-deep);
+  --toggle-track: #3a3050;
+  --toggle-thumb: var(--homura-lavender);
+  --mode-label-madoka: var(--madoka-pink);
+  --mode-label-homura: var(--homura-lavender);
+}
+
+:root[data-color-scheme="light"] {
+  color-scheme: light;
+}
+:root[data-color-scheme="dark"] {
+  color-scheme: dark;
 }
 
 @media screen and (min-width: 1441px) {
@@ -114,6 +192,11 @@ body {
   color: var(--text-face-color);
   min-height: 100vh;
   position: relative;
+}
+
+::selection {
+  background-color: var(--color-selection-bg);
+  color: var(--color-selection-text);
 }
 
 a {

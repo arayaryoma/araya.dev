@@ -15,9 +15,9 @@ import ColorSchemeToggle from "./color-scheme-toggle.astro";
       <dialog data-dropdown-menu class="dropdown-menu" inert>
         <ul>
           <li class="dropdown-menu-item">
-            <span>Light</span>
+            <span class="mode-label mode-label--madoka">Light</span>
             <ColorSchemeToggle />
-            <span>Dark</span>
+            <span class="mode-label mode-label--homura">Dark</span>
           </li>
         </ul>
       </dialog>
@@ -70,8 +70,8 @@ import ColorSchemeToggle from "./color-scheme-toggle.astro";
       .dropdown-menu {
         display: flex;
         width: var(--dropdown-menu-width);
-        background: var(--gray-light-5);
-        color: var(--mat-black);
+        background: var(--color-surface);
+        color: var(--color-text);
         flex-direction: column;
         box-shadow: 0 0 10px 0 var(--black);
         position: absolute;
@@ -79,19 +79,23 @@ import ColorSchemeToggle from "./color-scheme-toggle.astro";
         right: 0;
         left: calc(-1 * var(--dropdown-menu-width));
         font-size: var(--font-size-body);
-        border: none;
-      }
-
-      [data-dropdown-menu][data-color-scheme="dark"] {
-        background: var(--mat-black);
-        color: var(--gray-light-5);
+        border: 1px solid var(--color-border);
       }
 
       .dropdown-menu-item {
         height: 100px;
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 16px;
+      }
+
+      .mode-label--madoka {
+        color: var(--mode-label-madoka);
+      }
+
+      .mode-label--homura {
+        color: var(--mode-label-homura);
       }
     </style>
   </template>

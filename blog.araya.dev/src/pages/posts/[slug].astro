@@ -78,6 +78,10 @@ import "../../styles/markdown.css";
 </Layout>
 
 <style>
+  .post__container {
+    --post-measure: 42rem;
+  }
+
   .post__breadcrumb {
     margin: 62px 0;
     list-style: none;
@@ -87,7 +91,7 @@ import "../../styles/markdown.css";
   }
 
   .post__breadcrumb-item a {
-    color: var(--butterfly-blue);
+    color: var(--color-accent);
   }
 
   .post__breadcrumb-item:not(:first-child)::before {
@@ -110,17 +114,24 @@ import "../../styles/markdown.css";
 
   .post-header--datetime {
     font-size: var(--font-size-s);
+    color: var(--color-text-muted);
     grid-column: 2 / 12;
     height: auto;
     line-height: 1.5em;
     display: flex;
     align-items: flex-end;
+    max-width: var(--post-measure);
+    width: 100%;
+    margin-inline: auto;
   }
 
   .post-header--title {
     font-size: inherit;
     grid-column: 2 / 12;
     margin: 0;
+    max-width: var(--post-measure);
+    width: 100%;
+    margin-inline: auto;
   }
 
   .post--main {
@@ -130,30 +141,25 @@ import "../../styles/markdown.css";
     padding: 30px 0;
   }
 
-  @media screen and (prefers-color-scheme: dark) {
-    :root:not([data-color-scheme="light"]) .post--main,
-    :root:not([data-color-scheme="light"]) .post-header {
-      color: var(--gray-light-4);
-    }
-  }
-
-  :root[data-color-scheme="dark"] .post--main,
-  :root[data-color-scheme="dark"] .post-header {
-    color: var(--gray-light-4);
-  }
-
   .post--content {
     grid-column: 2 / 12;
-    font-size: var(--font-size-sm);
-    line-height: 1.5em;
+    /* 長文の可読性: 行長を約40字に抑えて中央寄せ */
+    max-width: var(--post-measure);
+    width: 100%;
+    margin-inline: auto;
+    font-size: calc(17 / 16 * 1rem);
     overflow: auto;
   }
 
   .post__changelog {
+    margin-block-start: 4em;
+    padding-block-start: 1em;
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text-muted);
   }
 
   .post__changelog a {
-    color: var(--eyes-blue);
+    color: var(--color-accent);
   }
 
   .post__changelog-message {

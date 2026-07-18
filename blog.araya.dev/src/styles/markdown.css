@@ -1,77 +1,70 @@
 .markdown {
-  --inline-codeblock-bg: var(--gray-light-2);
-  --table-accent-color: var(--gray-light-4);
-}
-
-@media screen and (prefers-color-scheme: dark) {
-  :root:not([data-color-scheme="light"]) .markdown {
-    --inline-codeblock-bg: var(--black);
-    --table-accent-color: var(--black);
-  }
-}
-
-:root[data-color-scheme="dark"] .markdown {
-  --inline-codeblock-bg: var(--black);
-  --table-accent-color: var(--black);
+  line-height: 1.9;
 }
 
 .markdown p {
-  margin: 0.5em 0;
+  margin-block: 1.25em;
   overflow-wrap: break-word;
-  line-height: 2em;
+  line-height: inherit;
   word-break: auto-phrase;
 }
 
 .markdown a {
   overflow-wrap: break-word;
-  color: var(--butterfly-blue);
+  color: var(--color-accent);
   word-break: auto-phrase;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
 }
 
 .markdown a:hover {
-  color: var(--violet);
+  color: var(--color-accent-strong);
+}
+
+.markdown :is(h1, h2, h3, h4, h5, h6) {
+  line-height: 1.5;
+  word-break: auto-phrase;
+  margin-block: 2.5em 0.75em;
 }
 
 .markdown h1 {
-  font-size: 2em;
-  word-break: auto-phrase;
+  font-size: 1.75em;
 }
 .markdown h2 {
-  font-size: 1.75em;
-  word-break: auto-phrase;
+  font-size: 1.5em;
 }
 .markdown h3 {
-  font-size: 1.6em;
-  word-break: auto-phrase;
-}
-
-.markdown h4 {
-  font-size: 1.5em;
-  word-break: auto-phrase;
-}
-.markdown h5 {
   font-size: 1.25em;
-  word-break: auto-phrase;
 }
-.markdown h6 {
+.markdown h4 {
   font-size: 1.1em;
-  word-break: auto-phrase;
+}
+.markdown :is(h5, h6) {
+  font-size: 1em;
 }
 
 .markdown h2 {
-  margin-top: 3em;
   position: relative;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--color-border);
 }
 
+/* ソウルジェム色のマーカー */
 .markdown h2::before {
   content: "";
   display: flex;
   height: 100%;
-  width: 8px;
+  width: 6px;
+  border-radius: 3px;
   position: absolute;
   top: 0;
-  left: -1em;
-  background-color: var(--violet);
+  left: -0.75em;
+  background: linear-gradient(
+    180deg,
+    var(--accent-gradient-from),
+    var(--accent-gradient-to)
+  );
 }
 
 .markdown h3 {
@@ -80,21 +73,27 @@
 }
 
 .markdown :not(pre) > code {
-  padding: 0.2em 0.5em;
-  margin: 0 0.3em;
-  color: var(--text-face-color);
-  background: var(--inline-codeblock-bg);
+  padding: 0.15em 0.4em;
+  margin: 0 0.2em;
+  border-radius: 4px;
+  font-size: 0.9em;
+  color: var(--color-text);
+  background: var(--color-inline-code-bg);
 }
 
 .markdown code {
   font-family: "Source Code Pro", "Lucida Console", Courier, monospace;
   max-width: 100%;
   overflow-x: auto;
-  margin: 0 0.2em;
 }
 
 .markdown pre {
-  padding: 0.5em;
+  padding: 1em;
+  border-radius: 8px;
+  line-height: 1.6;
+  overflow-x: auto;
+  /* Code blocks keep the dark Dracula theme in both color schemes */
+  color-scheme: dark;
 }
 
 .markdown pre code {
@@ -105,27 +104,40 @@
 
 .markdown table {
   border-collapse: collapse;
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  margin-block: 1.5em;
 }
 
-.markdown th,
-td {
-  border: 1px solid var(--gray-light-1);
-}
-
-.markdown td {
+.markdown :is(th, td) {
+  border: 1px solid var(--color-border);
   padding: 0.4em 1em;
 }
 
-.markdown tbody tr:nth-child(2n) {
-  background-color: var(--table-accent-color);
+.markdown th {
+  background-color: var(--color-inline-code-bg);
 }
-.markdown ul li {
-  line-height: 1.75em;
+
+.markdown tbody tr:nth-child(2n) {
+  background-color: var(--color-surface);
+}
+
+.markdown :is(ul, ol) li {
+  line-height: 1.9;
+  margin-block: 0.25em;
 }
 
 .markdown img {
   max-width: 100%;
   height: auto;
+  border-radius: 4px;
+}
+
+.markdown hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin-block: 3em;
 }
 
 .markdown .small {
@@ -133,10 +145,11 @@ td {
 }
 
 .markdown blockquote {
-  color: var(--gray-dark-1);
+  color: var(--color-text-muted);
   position: relative;
   margin-inline: 0;
-  padding-inline-start: 12px;
+  margin-block: 1.5em;
+  padding-inline-start: 1em;
 }
 
 .markdown blockquote::before {
@@ -146,5 +159,6 @@ td {
   top: 0;
   height: 100%;
   width: 4px;
-  background-color: var(--gray-dark-1);
+  border-radius: 2px;
+  background-color: var(--color-accent);
 }

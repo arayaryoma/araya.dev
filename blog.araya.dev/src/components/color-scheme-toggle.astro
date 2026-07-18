@@ -23,20 +23,10 @@
         display: inline-flex;
         align-items: center;
         cursor: pointer;
-        --toggle-button-bg-color: var(--gray-light-1);
-        --toggle-button-color: var(--gray-light-5);
-      }
-
-      @media screen and (prefers-color-scheme: dark) {
-        .label:not([data-color-scheme="light"]) {
-          --toggle-button-bg-color: var(--gray-dark-3);
-          --toggle-button-color: var(--mat-black);
-        }
-      }
-
-      .label[data-color-scheme="dark"] {
-        --toggle-button-bg-color: var(--gray-dark-3);
-        --toggle-button-color: var(--mat-black);
+        /* Theme tokens inherit through the shadow boundary, so the
+           madoka/homura switch needs no per-component dark branching */
+        --toggle-button-bg-color: var(--toggle-track);
+        --toggle-button-color: var(--toggle-thumb);
       }
 
       .label-text {

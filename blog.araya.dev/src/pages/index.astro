@@ -106,20 +106,8 @@ const nonDraftPosts = ENABLED_SERVE_DRAFTS
     padding: 0;
   }
   .posts-list__root {
-    --item-bg: var(--gray-light-4);
-    --item-hovered-shadow: 4px 4px 20px rgba(0, 0, 0, 0.25);
-  }
-
-  @media screen and (prefers-color-scheme: dark) {
-    :root:not([data-color-scheme="light"]) .posts-list__root {
-      --item-bg: var(--mat-black);
-      --item-hovered-shadow: 6px 6px 20px rgba(0, 0, 0, 0.2);
-    }
-  }
-
-  :root[data-color-scheme="dark"] .posts-list__root {
-    --item-bg: var(--mat-black);
-    --item-hovered-shadow: 6px 6px 20px rgba(0, 0, 0, 0.2);
+    --item-bg: var(--color-surface);
+    --item-hovered-shadow: 4px 4px 20px rgba(22, 18, 31, 0.25);
   }
 
   .posts-list__list {
@@ -129,9 +117,12 @@ const nonDraftPosts = ENABLED_SERVE_DRAFTS
 
   .posts-list__item {
     background: var(--item-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
   }
   .posts-list__item:hover {
     box-shadow: var(--item-hovered-shadow);
+    border-color: var(--color-accent);
   }
 
   .posts-list__item > a {
@@ -161,6 +152,7 @@ const nonDraftPosts = ENABLED_SERVE_DRAFTS
 
   .posts-list-item__date {
     grid-area: date;
+    color: var(--color-text-muted);
   }
 
   .posts-list-item__title {

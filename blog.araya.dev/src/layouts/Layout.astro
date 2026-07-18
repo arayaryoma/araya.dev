@@ -21,6 +21,7 @@ import { BLOG_TITLE } from "../constants";
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
     <meta property="og:image" content={ogImageUrl} />
+    <meta name="color-scheme" content="light dark" />
     <title>{title} - {BLOG_TITLE}</title>
     <script is:inline>
       {
@@ -83,16 +84,30 @@ import { BLOG_TITLE } from "../constants";
         display: flex;
         height: 100%;
         width: 5px;
+        border-radius: 3px;
         position: absolute;
         top: 0;
         left: -24px;
-        background-color: var(--violet);
+        background: linear-gradient(
+          180deg,
+          var(--accent-gradient-from),
+          var(--accent-gradient-to)
+        );
       }
 
       .global-nav {
         height: var(--global-nav-height);
         background: var(--global-nav-bg);
-        color: var(--gray-light-4);
+        color: var(--color-nav-text);
+        /* リボンの一筋: ナビ下端のテーマ色グラデーションライン */
+        border-bottom: 2px solid transparent;
+        border-image: linear-gradient(
+            90deg,
+            var(--accent-gradient-from),
+            var(--accent-gradient-to) 45%,
+            transparent 90%
+          )
+          1;
       }
 
       .global-nav-content {

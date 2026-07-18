@@ -14,16 +14,25 @@ export async function generateOgImage({
   title,
 }: OgImageParams): Promise<Buffer> {
   const svg = await satori(
+    // Madoka (light) palette from src/styles/main.css; OG images are static,
+    // so they always use the light theme regardless of the viewer's scheme
     <div
       style={{
         display: "flex",
-        backgroundColor: "#1c1b3c",
-        color: "#dedede",
+        backgroundColor: "#faf8eb",
+        color: "#362a2e",
         height: "100%",
         flexDirection: "column",
         position: "relative",
       }}
     >
+      <div
+        style={{
+          height: "12px",
+          width: "100%",
+          background: "linear-gradient(90deg, #d05b6a, #e7a3aa)",
+        }}
+      />
       <div style={{ display: "flex", marginLeft: "32px", marginRight: "32px" }}>
         <h1 style={{ fontSize: "44px" }}>{title}</h1>
       </div>
@@ -34,6 +43,7 @@ export async function generateOgImage({
           position: "absolute",
           bottom: "32px",
           right: "32px",
+          color: "#b23e4e",
         }}
       >
         <span>blog.araya.dev</span>

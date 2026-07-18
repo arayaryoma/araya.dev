@@ -1,64 +1,69 @@
 :root {
-  /* Homura Akemi palette (raw colors) — dark mode */
-  --homura-black: #16121f; /* 黒髪・夜 */
-  --homura-black-deep: #100d18;
-  --homura-ink: #221b31; /* dark surface */
-  --homura-ink-2: #2b2340;
-  --homura-violet: #6b3fb3; /* ソウルジェム */
-  --homura-violet-deep: #4c2b85;
-  --homura-lavender: #b9a3ee;
-  --homura-lavender-bright: #d4c5f8;
-  --homura-silver: #f4f2f9; /* 盾の銀 */
-  --homura-white: #fdfcff;
-  --homura-ribbon: #c73e5e; /* リボン・彼岸花 */
+  /* Homura palette — dark mode
+     Base: https://www.color-hex.com/color-palette/13589 */
+  --homura-black: #000000;
+  --homura-dusk: #53435c;
+  --homura-purple: #69526d;
+  --homura-gray: #b2b2b2;
+  --homura-silver: #dbdbdb;
+  /* Derived: #69526d fails contrast as link text on near-black,
+     so lightened tints of the same hue carry text-level accents */
+  --homura-night: #0b090e; /* bg: near-black with the dusk hue */
+  --homura-surface: #1d1722;
+  --homura-ink: #241d2a; /* one step above surface, for inline code */
+  --homura-lilac: #a58aad;
+  --homura-lilac-bright: #c9b2d1;
 
-  /* Madoka Kaname palette (raw colors) — light mode */
-  --madoka-pink: #f6a8c3; /* 髪 */
-  --madoka-rose: #e2578c; /* ソウルジェム */
-  --madoka-deep-rose: #b02a60;
-  --madoka-magenta-deep: #822045;
-  --madoka-gold: #eeb054; /* 衣装の金 */
-  --madoka-cream: #fdf4f7; /* 桜色がかった白 */
-  --madoka-white: #fffbfd;
-  --madoka-plum: #3b1c2c; /* nav・footer 用の深い紅梅 */
+  /* Madoka palette — light mode
+     Base: https://www.color-hex.com/color-palette/1059802 (madoka dress) */
+  --madoka-pale-pink: #f9dadf;
+  --madoka-pink: #e7a3aa;
+  --madoka-rose: #d05b6a;
+  --madoka-cream: #faf8eb;
+  --madoka-mauve: #dab0bd;
+  /* Derived: #d05b6a is borderline AA on the cream bg, so darker
+     rose tones carry text-level accents */
+  --madoka-rose-deep: #b23e4e;
+  --madoka-rose-darker: #8f2f3d;
+  --madoka-white: #fffdf6;
 
-  /* Legacy colors still referenced by shadow-DOM components */
-  --black: #13111d;
-  --mat-black: #333333;
-  --gray-dark-3: #272627;
-  --gray-dark-2: #4f4f4f;
-  --gray-dark-1: #828282;
-  --gray-light-1: #bdbdbd;
-  --gray-light-2: #dedede;
-  --gray-light-4: #f2f2f2;
-  --gray-light-5: #f8f8f8;
-  --dracula-bg: #282a36;
-
-  /* Semantic tokens: light = Madoka mode (no-preference default) */
-  --color-bg: var(--madoka-cream);
-  --color-surface: var(--madoka-white);
-  --color-text: #33202b;
-  --color-text-muted: #7a5c6b;
-  --color-accent: var(--madoka-deep-rose);
-  --color-accent-strong: var(--madoka-magenta-deep);
-  --color-border: #f0d8e2;
-  --color-inline-code-bg: #f9e4ee;
-  --color-selection-bg: var(--madoka-deep-rose);
-  --color-selection-text: var(--madoka-white);
-  --accent-gradient-from: var(--madoka-rose);
-  --accent-gradient-to: var(--madoka-gold);
-  /* Nav and footer stay dark in both themes */
-  --color-on-nav: #e9d3dd;
-  --color-nav-text: #fdf3f8;
-  --global-nav-bg: var(--madoka-plum);
-  --toggle-track: #f0c3d6;
-  --toggle-thumb: var(--madoka-white);
+  /* Semantic tokens. light-dark() resolves against the element's
+     color-scheme, so both the system preference and the manual toggle
+     (which only flips color-scheme on :root) switch every token at once. */
+  --color-bg: light-dark(var(--madoka-cream), var(--homura-night));
+  --color-surface: light-dark(var(--madoka-white), var(--homura-surface));
+  --color-text: light-dark(#362a2e, var(--homura-silver));
+  --color-text-muted: light-dark(#7d5f68, var(--homura-gray));
+  --color-accent: light-dark(var(--madoka-rose-deep), var(--homura-lilac));
+  --color-accent-strong: light-dark(
+    var(--madoka-rose-darker),
+    var(--homura-lilac-bright)
+  );
+  --color-border: light-dark(var(--madoka-mauve), var(--homura-dusk));
+  --color-inline-code-bg: light-dark(
+    var(--madoka-pale-pink),
+    var(--homura-ink)
+  );
+  /* --madoka-rose fails AA (3.8:1) under white selection text, so the
+     deeper rose carries the selection surface */
+  --color-selection-bg: light-dark(
+    var(--madoka-rose-deep),
+    var(--homura-lilac)
+  );
+  --color-selection-text: light-dark(var(--madoka-white), var(--homura-night));
+  --color-shadow: light-dark(rgb(66 37 46 / 25%), rgb(0 0 0 / 60%));
+  --accent-gradient-from: light-dark(var(--madoka-rose), var(--homura-purple));
+  --accent-gradient-to: light-dark(var(--madoka-pink), var(--homura-lilac));
+  --toggle-track: light-dark(var(--madoka-pink), var(--homura-dusk));
+  --toggle-thumb: light-dark(var(--madoka-white), var(--homura-lilac));
   /* Mode-switch labels must stay readable on the current surface color */
-  --mode-label-madoka: var(--madoka-deep-rose);
-  --mode-label-homura: var(--homura-violet);
+  --mode-label-madoka: light-dark(var(--madoka-rose-deep), var(--madoka-pink));
+  --mode-label-homura: light-dark(var(--homura-purple), var(--homura-lilac));
 
-  --background-color: var(--color-bg);
-  --text-face-color: var(--color-text);
+  /* Nav and footer share the signature dress pink / Homura dusk so they
+     stand apart from the page bg; their text is the ordinary --color-text
+     (6.7:1 on the pink, 6.5:1 on the dusk) */
+  --global-nav-bg: light-dark(var(--madoka-pink), var(--homura-dusk));
 
   --xs-max: 425px;
   --sm-min: 426px;
@@ -95,53 +100,7 @@
   accent-color: var(--color-accent);
 }
 
-/* Dark (= Homura mode) tokens are defined once; applied for both the system
-   preference and the manual toggle (html[data-color-scheme]). */
-@media screen and (prefers-color-scheme: dark) {
-  :root:not([data-color-scheme="light"]) {
-    --color-bg: var(--homura-black);
-    --color-surface: var(--homura-ink);
-    --color-text: #e9e5f2;
-    --color-text-muted: #a79fbd;
-    --color-accent: var(--homura-lavender);
-    --color-accent-strong: var(--homura-lavender-bright);
-    --color-border: #3a3050;
-    --color-inline-code-bg: var(--homura-ink-2);
-    --color-selection-bg: var(--homura-lavender);
-    --color-selection-text: var(--homura-black);
-    --accent-gradient-from: var(--homura-violet);
-    --accent-gradient-to: var(--homura-lavender);
-    --color-on-nav: #cfc8de;
-    --color-nav-text: var(--homura-silver);
-    --global-nav-bg: var(--homura-black-deep);
-    --toggle-track: #3a3050;
-    --toggle-thumb: var(--homura-lavender);
-    --mode-label-madoka: var(--madoka-pink);
-    --mode-label-homura: var(--homura-lavender);
-  }
-}
-:root[data-color-scheme="dark"] {
-  --color-bg: var(--homura-black);
-  --color-surface: var(--homura-ink);
-  --color-text: #e9e5f2;
-  --color-text-muted: #a79fbd;
-  --color-accent: var(--homura-lavender);
-  --color-accent-strong: var(--homura-lavender-bright);
-  --color-border: #3a3050;
-  --color-inline-code-bg: var(--homura-ink-2);
-  --color-selection-bg: var(--homura-lavender);
-  --color-selection-text: var(--homura-black);
-  --accent-gradient-from: var(--homura-violet);
-  --accent-gradient-to: var(--homura-lavender);
-  --color-on-nav: #cfc8de;
-  --color-nav-text: var(--homura-silver);
-  --global-nav-bg: var(--homura-black-deep);
-  --toggle-track: #3a3050;
-  --toggle-thumb: var(--homura-lavender);
-  --mode-label-madoka: var(--madoka-pink);
-  --mode-label-homura: var(--homura-lavender);
-}
-
+/* The manual toggle drives every light-dark() token through color-scheme */
 :root[data-color-scheme="light"] {
   color-scheme: light;
 }
@@ -188,8 +147,8 @@ body {
 
 body {
   font-family: var(--default-font-family);
-  background-color: var(--background-color);
-  color: var(--text-face-color);
+  background-color: var(--color-bg);
+  color: var(--color-text);
   min-height: 100vh;
   position: relative;
 }

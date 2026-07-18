@@ -5,12 +5,13 @@ import ColorSchemeToggle from "./color-scheme-toggle.astro";
 <site-preference>
   <template shadowrootmode="open">
     <div class="container">
-      <button type="button" data-toggle-button class="toggle-button">
-        <img
-          src="https://araya.dev/assets/gear-white.svg"
-          alt="サイト設定"
-          class="icon"
-        />
+      <button
+        type="button"
+        data-toggle-button
+        class="toggle-button"
+        aria-label="サイト設定"
+      >
+        <span class="icon"></span>
       </button>
       <dialog data-dropdown-menu class="dropdown-menu" inert>
         <ul>
@@ -37,7 +38,17 @@ import ColorSchemeToggle from "./color-scheme-toggle.astro";
         position: relative;
       }
       .icon {
+        display: block;
         width: 32px;
+        height: 32px;
+        /* Masking a gear shape lets the icon follow the nav text color,
+           which is dark on the Madoka pink nav. The svg (a copy of
+           araya.dev/assets/gear-white.svg) is inlined because araya.dev
+           serves it without CORS headers, and mask-image requires a
+           CORS-readable resource */
+        background-color: currentColor;
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 233.23 233.23'%3E%3Cpath d='M227.4,95.17H211.63c-16,0-23.95-19.29-12.67-30.57l11.15-11.15a5.84,5.84,0,0,0,0-8.26L188,23.12a5.83,5.83,0,0,0-8.25,0L168.64,34.27c-11.29,11.29-30.58,3.3-30.58-12.66V5.84A5.84,5.84,0,0,0,132.22,0H101a5.84,5.84,0,0,0-5.84,5.84V21.61c0,16-19.29,24-30.57,12.66L53.45,23.12a5.84,5.84,0,0,0-8.26,0L23.12,45.19a5.84,5.84,0,0,0,0,8.26L34.27,64.6c11.29,11.28,3.3,30.57-12.66,30.57H5.84A5.84,5.84,0,0,0,0,101v31.21a5.84,5.84,0,0,0,5.84,5.84H21.61c16,0,24,19.29,12.66,30.58L23.12,179.79a5.83,5.83,0,0,0,0,8.25l22.07,22.07a5.84,5.84,0,0,0,8.26,0L64.6,199c11.28-11.28,30.57-3.29,30.57,12.67V227.4a5.84,5.84,0,0,0,5.84,5.83h31.21a5.84,5.84,0,0,0,5.84-5.83V211.63c0-16,19.29-23.95,30.58-12.67l11.15,11.15a5.83,5.83,0,0,0,8.25,0L210.11,188a5.83,5.83,0,0,0,0-8.25L199,168.64c-11.28-11.29-3.29-30.58,12.67-30.58H227.4a5.84,5.84,0,0,0,5.83-5.84V101A5.84,5.84,0,0,0,227.4,95.17ZM116.62,163.48a46.87,46.87,0,1,1,46.86-46.86A46.86,46.86,0,0,1,116.62,163.48Z'/%3E%3C/svg%3E")
+          no-repeat center / contain;
       }
 
       button {
@@ -45,6 +56,9 @@ import ColorSchemeToggle from "./color-scheme-toggle.astro";
         background: none;
         cursor: pointer;
         outline: none;
+        /* The UA default is buttontext, which would ignore the nav color
+           the gear mask relies on */
+        color: inherit;
       }
       .dropdown-menu {
         list-style: none;
@@ -73,7 +87,7 @@ import ColorSchemeToggle from "./color-scheme-toggle.astro";
         background: var(--color-surface);
         color: var(--color-text);
         flex-direction: column;
-        box-shadow: 0 0 10px 0 var(--black);
+        box-shadow: 0 0 10px 0 var(--color-shadow);
         position: absolute;
         top: var(--global-nav-height);
         right: 0;

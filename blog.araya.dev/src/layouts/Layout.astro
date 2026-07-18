@@ -22,6 +22,20 @@ import { BLOG_TITLE } from "../constants";
     />
     <meta property="og:image" content={ogImageUrl} />
     <title>{title} - {BLOG_TITLE}</title>
+    <script is:inline>
+      {
+        // Apply the persisted scheme before first paint to avoid a theme flash,
+        // and re-apply it after ClientRouter swaps <html> on navigation
+        const applyStoredColorScheme = () => {
+          const stored = localStorage.getItem("preferred-color-scheme");
+          if (stored === "dark" || stored === "light") {
+            document.documentElement.setAttribute("data-color-scheme", stored);
+          }
+        };
+        applyStoredColorScheme();
+        document.addEventListener("astro:after-swap", applyStoredColorScheme);
+      }
+    </script>
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=UA-104175258-3"></script>

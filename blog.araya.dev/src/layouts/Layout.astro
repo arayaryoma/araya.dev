@@ -55,14 +55,9 @@ import { BLOG_TITLE } from "../constants";
     <nav class="global-nav" transition:name="global_nav">
       <div class="container global-nav-content">
         <a href="/" class="top-header-link">
-          <img
-            src="https://araya.dev/assets/icon.svg"
-            alt="icon image"
-            class="header-icon"
-          />
-          <p class="header-title">
+          <span class="header-title">
             <span class="header-title-main">{BLOG_TITLE}</span>
-          </p>
+          </span>
         </a>
         <SitePreference />
       </div>
@@ -124,19 +119,12 @@ import { BLOG_TITLE } from "../constants";
       .top-header-link {
         display: flex;
         align-items: center;
-        padding: 1em;
-        height: 100%;
-      }
-
-      .header-icon {
-        height: 100%;
       }
 
       .header-title {
         display: inline-flex;
         height: 100%;
         align-items: flex-end;
-        margin-left: 16px;
         font-family: var(--default-font-family);
         font-weight: 500;
       }

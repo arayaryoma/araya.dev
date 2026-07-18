@@ -9,7 +9,7 @@
   "devEngines": {
     "runtime": {
       "name": "node",
-      "version": "v25",
+      "version": "25.9.0",
       "onFail": "download"
     }
   },

@@ -36,7 +36,7 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       node:
-        specifier: runtime:v25
+        specifier: runtime:25.9.0
         version: runtime:25.9.0
       puppeteer:
         specifier: ^25.3.0
@@ -1258,8 +1258,8 @@ packages:
     resolution: {integrity: sha512-3XSA2cR/h/73EzlXXdU6YNycmYI7+kicTxks4eJg2g39biHR84slg2+des+p7iHYhbRg/udIS4TD53WabcOUkw==}
     engines: {node: '>= 0.4'}
 
-  baseline-browser-mapping@2.10.42:
-    resolution: {integrity: sha512-c/jurFrDLyui7o1J86yLkRu4LMsTYcBohveus7/I2Hzdn9KIP2bdJPTue/lR1KH46enoPbD77GKeSYNdyPoD3Q==}
+  baseline-browser-mapping@2.10.43:
+    resolution: {integrity: sha512-AjYpR78kDWAY3Efj+cDTFH9t9SCoL7OoTp1BOb0mQV7S+6CiLwnWM3FyxhJtdPufDFKzmCSFoUncKjWgJEZTCQ==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -3814,7 +3814,7 @@ snapshots:
 
   base64-js@0.0.8: {}
 
-  baseline-browser-mapping@2.10.42: {}
+  baseline-browser-mapping@2.10.43: {}
 
   boolbase@1.0.0: {}
 
@@ -3824,7 +3824,7 @@ snapshots:
 
   browserslist@4.28.5:
     dependencies:
-      baseline-browser-mapping: 2.10.42
+      baseline-browser-mapping: 2.10.43
       caniuse-lite: 1.0.30001803
       electron-to-chromium: 1.5.389
       node-releases: 2.0.51

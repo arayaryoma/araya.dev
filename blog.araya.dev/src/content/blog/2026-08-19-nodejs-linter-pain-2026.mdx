@@ -32,3 +32,93 @@ Bun, Deno, Go, Rust など、ランタイムやプログラミング言語の開
 
 Node.js + TypeScript という、選択肢が多いかつどの選択肢を取ってもライブラリアップデート等のメンテナンスが同程度必要になる環境だと、
 この非常に悩ましい問題に現時点では向き合わなければならない。
+
+## 取りうる選択肢
+
+現時点で取りうる選択肢を並べてみる。
+
+### A. TypeScript 6.0 を lint 専用に併存させる
+
+typescript-eslint は TypeScript 6.0 では従来どおり動く。
+つまり typecheck は TypeScript 7.0 の `tsgo`、lint は TypeScript 6.0 の JS API、と用途ごとに別のコンパイラを使い分ける。
+
+このために Microsoft が `@typescript/typescript6` を公開している。
+
+https://www.npmjs.com/package/@typescript/typescript6
+
+`typescript` に 7.0 を入れたまま、`@typescript/typescript6` を別名で並べて入れられるので、
+`node_modules` の中に2つの TypeScript が同居する構成になる。
+
+この選択肢の良いところは、**今あるlint設定とルールがそのまま動く**ことに尽きる。
+type-aware ruleの資産を捨てなくてよい。
+
+悪いところは、TypeScript を2つ抱えることそのものだ。
+バージョンアップのたびに2つを追随させる必要があるし、`tsgo` と 6.0 で型エラーの差分が出たときに
+「typecheckは通るがlintは落ちる(あるいはその逆)」という状態が起こりうる。
+lintのためだけに旧コンパイラを飼い続けるのは、どう考えても過渡期の措置でしかない。
+
+### B. oxlint + oxlint-tsgolint に移行する
+
+oxlint は type-aware lint を `tsgolint` 経由で提供している。
+こちらは TypeScript 6.0 ではなく **TypeScript 7.0 以降が必須**で、`tsgo` を前提にしている。方向としては A と真逆だ。
+
+https://oxc.rs/docs/guide/usage/linter/type-aware.html
+
+`oxlint-tsgolint` を追加で入れて `oxlint --type-aware` で有効化する。
+ドキュメント上、typescript-eslint の type-aware rule 61個のうち59個が実装済みとされている。
+数字だけ見ればほぼ揃っている。
+
+一方でドキュメントには、大規模なコードベースではメモリ使用量が大きくなること、
+一部の古い `tsconfig` オプションが未対応であること、monorepo では依存パッケージのビルドが先に必要になることが明記されている。
+「速いがまだ慣らし中」という位置づけで読むのが妥当だろう。
+
+### C. Biome に移行する
+
+Biome は `tsc` に依存せず、**自前の型推論エンジン**で type-aware rule を実装している。
+TypeScript のバージョン問題そのものから降りられる、という意味では今回の文脈で最も筋がいい。
+
+https://biomejs.dev/linter/rules/no-floating-promises/
+
+ただし `noFloatingPromises` や `noMisusedPromises` といった type-aware rule は現時点で nursery グループにある。
+自前推論である以上、`tsc` と完全に同じ判断をするわけではなく、検出漏れも残る。
+Formatter も込みで乗り換えられる点は魅力だが、型情報の正確さを lint に求める用途では、まだ全面的には寄りかかれない。
+
+### D. type-aware lint を諦める
+
+`tsc`(`tsgo`)の typecheck を通すことを前提に、lint は型情報を必要としないルールだけに絞る。
+そのうえで oxlint なり Biome なり、好きなものを使う。
+
+冒頭に書いた Bun / Deno / Go / Rust の話は、結局これに近い。
+「そのLinterで出来る範囲でやる」と割り切れるなら、意思決定のコストは一気に下がる。
+
+## 現時点の判断
+
+自分の手元では、既存プロジェクトは A、新規は D で始める、という運用に落ち着きつつある。
+
+既存プロジェクトで type-aware rule に依存した実装が積み上がっている場合、
+それを外した状態で回すのはレビュー負荷の増加として跳ね返ってくる。
+TypeScript を2つ抱える気持ち悪さは、その負荷と比べればまだ安い。
+
+新規で、まだ何も積み上がっていないなら、最初から type-aware lint に依存しない書き方を選んでおくほうが、
+このあと来る移行のどれに対しても身軽でいられる。
+
+## いつまでこれをやるのか
+
+この話の出口は TypeScript 側にある。
+安定した programmatic API が出れば、typescript-eslint も追随できる。
+
+TypeScript 7.1 が次のマイルストーンで、実際 npm の `next` タグにはすでに 7.1 の dev ビルドが流れている。
+
+```
+$ npm view typescript dist-tags
+{ latest: '7.0.2', next: '7.1.0-dev.20260819.1', ... }
+```
+
+Issue #10940 も、記事執筆時点でまだ open のままだ。
+つまり「対応しない」と決まったわけではなく、**待っている**状態にある。
+
+ここで大きな移行を決断しても、半年後には前提が変わっている可能性が高い。
+今やるべきは最適な1つを選ぶことではなく、**どれを選んでも降りられるようにしておくこと**なんだと思う。
+lint設定をアプリケーションコードに染み出させない、type-aware rule への依存を意識的に把握しておく、そのくらいだ。
+
+後で読み返したときに「2026年の夏はそんなだったな」で済んでいてほしい。

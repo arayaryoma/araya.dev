@@ -1,0 +1,34 @@
+---
+title: Node.jsのLinter
+tags:
+  - Node.js
+  - eslint
+  - oxlint
+  - TypeScript
+date: "2026-08-24"
+description: "2026年8月現在、Node.jsのLinterはベストな選択がない。後で、そんなこともあったなあと振り替えれるように日記として残しておく。"
+draft: true
+---
+
+Node.js + TypeScript でのLinter選定が難しい。
+2026年8月現在、各主要packagesの状況はこう。
+
+- TypeScript v7.0
+- eslint v10 + typescript-eslint v8.67
+- oxlint
+- Biome
+
+これまでの安定択はtypescript-eslintだった。しかし、TypeScript7.0でTypeScript Compiler(tsc)がGo実装(tsgo)に変わり、JS APIに破壊的変更が入り、利用が限定的になった。
+
+typescript-eslint は現時点でこれに**対応できない**ことを表明している。
+
+> For now - there is nothing we can do to support tsgo / TSv7. As mentioned in the blog post and highlighted above - there is currently no stable JS API.
+> https://github.com/typescript-eslint/typescript-eslint/issues/10940
+
+とはいえ、アプリケーションコードのtypecheckにはtscを用いたいし、TypeScript 7.0のtsc高速化の恩恵は得たい。
+そうなるとTypeScript6.0とTypeScript7.0を併用する必要がある。
+
+Bun, Deno, Go, Rust など、ランタイムやプログラミング言語の開発環境がofficialでlinterを提供している場合は**そのLinterで出来る範囲**でlintを行う、という決定が取れる。
+
+Node.js + TypeScript という、選択肢が多いかつどの選択肢を取ってもライブラリアップデート等のメンテナンスが同程度必要になる環境だと、
+この非常に悩ましい問題に現時点では向き合わなければならない。

@@ -10,3 +10,44 @@ draft: true
 import ColorSwatch from "../../components/color-swatch.astro";
 
 2026年8月24日の[#color_study](https://web-study.connpass.com/event/403483/) の登壇資料
+
+この四角(背景)は何色でしょうか？
+
+<ColorSwatch background="#ffffff" color="black">
+  #FFFFFF
+</ColorSwatch>
+
+白、と答えると思います。
+ではこれは？
+
+<ColorSwatch background="#ff0000" color="white">
+  #FF0000
+</ColorSwatch>
+
+赤、ですね。
+これはどうでしょう。
+
+<ColorSwatch background="#ff8888" color="black">
+  #FF8888
+</ColorSwatch>
+
+ピンク、ライトピンク、桃色
+と呼ぶのが一般的でないでしょうか。
+
+では、これはどうでしょう。
+
+<ColorSwatch background="#ffd2d2" color="black">
+  #FFD2D2
+</ColorSwatch>
+
+これをWeb上でディスプレイで見ている人は薄いピンクに見えるか、環境や色覚特性によっては白に見えているかもしれません。
+この発表をプロジェクターに投影されたスクリーンで見ている人にはおそらくほぼ白に見えていると思います。
+
+どこまでが赤、どこまでがピンク、どこまでが白でしょうか。
+
+<ColorSwatch
+  background="linear-gradient(to right, #ff0000, #ffffff)"
+  color="black"
+>
+  #FF0000 → #FFFFFF
+</ColorSwatch>

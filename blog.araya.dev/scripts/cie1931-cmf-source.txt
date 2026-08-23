@@ -1,0 +1,228 @@
+== {{int:filedesc}} ==
+{{Information
+|description = {{en|1=CIE 1931 xy color space diagram. Drawn (or rather programmatically generated) from scratch, but the visual design is {{Based|CIExy1931.png|by={{U|PAR|3=w}}}}. Major differences:
+* Colors outside the sRGB triangle are clipped toward the sRGB white point, so they have more accurate hues. The original image (and most other images of this type) clips each sRGB channel independently to zero, which among other things leads to the whole top of the diagram being colored {{mono|#0F0}} (sRGB primary green) when it should be more of a cyan.
+* Luminance inside the triangle was reduced somewhat. Maximum luminance (the {{W|uniform norm|infinity norm}}) creates a three-pointed star artifact (the lines are {{mono|#FF0}}, {{mono|#F0F}} and {{mono|#0FF}}). Constant luminance (1-norm) looks rather dull. An intermediate ''p''-norm makes nice-looking results without the star. This background image uses ''p''=5. Gone with the star is the clearly defined white of the D65 white point, which is also an sRGB artifact.
+* Blurring of the sRGB triangle edges to hide artifacts there. This means the colors near the boundary are slightly less accurate (not maximally saturated). I prefer this to the line artifacts, but it's an issue that could be debated.
+* Labels at uniform 20nm intervals; left out 380nm and 700nm because the locus doesn't really stop there or anywhere, it just fades into nothingness; no grid on the <math>x + y > 1</math> region; random tweaks, etc.}}
+|date = 2009-09-24
+|source = {{Own based|CIExy1931.svg|display=48|by=Sakurambo}}
+|author = {{U|BenRG}}
+|other versions = {{DerivativeVersions|display=48|CIE1931xy ColorChecker.svg|CIE1931xyY Blank-fr.svg}}
+|other fields={{Igen|U|+|!<!--PLEASE CHECK, not generally for all graphic types-->|%|s=d}}
+}}
+
+== {{int:license-header}} ==
+{{PD-self|author = {{U|BenRG}}}}
+
+== Perl code == 
+<syntaxhighlight copy line lang=perl>use strict;
+use Svg;
+use List::Util qw(min);
+
+my @primaries;
+my $whitepoint = '';
+my $filename;
+
+if (1) {
+	$filename = 'CIE1931xy_blank.svg';
+} elsif (0) {
+	$filename = 'CIE1931xy_sRGB.svg';
+	@primaries = ([0.64,0.33],[0.30,0.60],[0.15,0.06]);
+	$whitepoint = [0.3127,0.3290,'D65'];
+} elsif (0) {
+	$filename = 'CIE1931xy_AdobeRGB.svg';
+	@primaries = ([0.64,0.33],[0.21,0.71],[0.15,0.06]);
+	$whitepoint = [0.3127,0.3290,'D65'];
+} elsif (0) {
+	@primaries = ([0.7347,0.2653],[0.2738,0.7174],[0.1666,0.0089]);
+	$whitepoint = [1/3, 1/3, 'E'];
+	$filename = 'CIE1931xy_CIERGB.svg';
+}
+
+# in 5 nm steps from 360 to 830 nm, from http://www-cvrl.ucsd.edu/database/data/cmfs/ciexyz31.txt
+my @xcmf = (
+	0.0001299,0.0002321,0.0004149,0.0007416,0.001368,
+	0.002236,0.004243,0.00765,0.01431,0.02319,
+	0.04351,0.07763,0.13438,0.21477,0.2839,
+	0.3285,0.34828,0.34806,0.3362,0.3187,
+	0.2908,0.2511,0.19536,0.1421,0.09564,
+	0.05795001,0.03201,0.0147,0.0049,0.0024,
+	0.0093,0.0291,0.06327,0.1096,0.1655,
+	0.2257499,0.2904,0.3597,0.4334499,0.5120501,
+	0.5945,0.6784,0.7621,0.8425,0.9163,
+	0.9786,1.0263,1.0567,1.0622,1.0456,
+	1.0026,0.9384,0.8544499,0.7514,0.6424,
+	0.5419,0.4479,0.3608,0.2835,0.2187,
+	0.1649,0.1212,0.0874,0.0636,0.04677,
+	0.0329,0.0227,0.01584,0.01135916,0.008110916,
+	0.005790346,0.004109457,0.002899327,0.00204919,0.001439971,
+	0.0009999493,0.0006900786,0.0004760213,0.0003323011,0.0002348261,
+	0.0001661505,0.000117413,0.00008307527,0.00005870652,0.00004150994,
+	0.00002935326,0.00002067383,0.00001455977,0.00001025398,0.000007221456,
+	0.000005085868,0.000003581652,0.000002522525,0.000001776509,0.000001251141);
+my @ycmf = (
+	0.000003917,0.000006965,0.00001239,0.00002202,0.000039,
+	0.000064,0.00012,0.000217,0.000396,0.00064,
+	0.00121,0.00218,0.004,0.0073,0.0116,
+	0.01684,0.023,0.0298,0.038,0.048,
+	0.06,0.0739,0.09098,0.1126,0.13902,
+	0.1693,0.20802,0.2586,0.323,0.4073,
+	0.503,0.6082,0.71,0.7932,0.862,
+	0.9148501,0.954,0.9803,0.9949501,1,
+	0.995,0.9786,0.952,0.9154,0.87,
+	0.8163,0.757,0.6949,0.631,0.5668,
+	0.503,0.4412,0.381,0.321,0.265,
+	0.217,0.175,0.1382,0.107,0.0816,
+	0.061,0.04458,0.032,0.0232,0.017,
+	0.01192,0.00821,0.005723,0.004102,0.002929,
+	0.002091,0.001484,0.001047,0.00074,0.00052,
+	0.0003611,0.0002492,0.0001719,0.00012,0.0000848,
+	0.00006,0.0000424,0.00003,0.0000212,0.00001499,
+	0.0000106,0.0000074657,0.0000052578,0.0000037029,0.0000026078,
+	0.0000018366,0.0000012934,0.00000091093,0.00000064153,0.00000045181);
+my @zcmf = (
+	0.0006061,0.001086,0.001946,0.003486,0.006450001,
+	0.01054999,0.02005001,0.03621,0.06785001,0.1102,
+	0.2074,0.3713,0.6456,1.0390501,1.3856,
+	1.62296,1.74706,1.7826,1.77211,1.7441,
+	1.6692,1.5281,1.28764,1.0419,0.8129501,
+	0.6162,0.46518,0.3533,0.272,0.2123,
+	0.1582,0.1117,0.07824999,0.05725001,0.04216,
+	0.02984,0.0203,0.0134,0.008749999,0.005749999,
+	0.0039,0.002749999,0.0021,0.0018,0.001650001,
+	0.0014,0.0011,0.001,0.0008,0.0006,
+	0.00034,0.00024,0.00019,0.0001,0.00004999999,
+	0.00003,0.00002,0.00001,0,0,
+	0,0,0,0,0,
+	0,0,0,0,0,
+	0,0,0,0,0,
+	0,0,0,0,0,
+	0,0,0,0,0,
+	0,0,0,0,0,
+	0,0,0,0,0);
+
+my @x = map { $xcmf[$_]/($xcmf[$_]+$ycmf[$_]+$zcmf[$_]) } 0..$#xcmf;
+my @y = map { $ycmf[$_]/($xcmf[$_]+$ycmf[$_]+$zcmf[$_]) } 0..$#xcmf;
+
+sub Normalize {
+	my @a = @_;
+	my $n = 0;
+	for my $i (@a) { $n += $i*$i }
+	$n = 1/sqrt($n); 
+	for my $i (@a) { $i *= $n }
+	@a
+}
+sub Tick {
+	my $i = ($_[0] - 360) / 5;
+	my ($px,$py) = Normalize($x[$i]-$x[$i-1], $y[$i]-$y[$i-1]);
+	my ($qx,$qy) = Normalize($x[$i+1]-$x[$i], $y[$i+1]-$y[$i]);
+	my ($tx,$ty) = Normalize($px+$qx, $py+$qy);
+	return (X($x[$i]), Y($y[$i]), $ty * -$_[1], $tx * -$_[1]);
+}
+
+our $scale = 512;
+our ($padleft,$padtop,$padright,$padbot) = (60,15,25,50);
+our ($maxx, $maxy) = (0.8,0.9);
+our ($origin_x, $origin_y) = ($padleft, $padtop + $maxy * $scale);
+our ($imgwidth, $imgheight) = ($origin_x + $maxx * $scale + $padright, $origin_y + $padbot);
+
+sub X { $origin_x + $scale * $_[0] }
+sub Y { $origin_y - $scale * $_[0] }
+
+my $svg = new Svg(width => $imgwidth, height => $imgheight);
+#$svg->rect(width => $imgwidth, height => $imgheight, fill => 'gray');
+
+# semitransparent grid
+my $grid = new Svg::PathString;
+for my $xx (1..$maxx*20) {
+	my $x = $xx * 0.05;
+	my $y = min($maxy, 1-$x);
+	$grid->M(halfpixel(X($x)), halfpixel(Y(0)))->l(0, -$scale*$y);
+}
+for my $yy (1..$maxy*20) {
+	my $y = $yy * 0.05;
+	my $x = min($maxx, 1-$y);
+	$grid->M(halfpixel(X(0)), halfpixel(Y($y)))->l($scale*$x, 0);
+}
+$grid->M(halfpixel(X(1-$maxy)), halfpixel(Y($maxy)))->L(halfpixel(X($maxx)), halfpixel(Y(1-$maxx)));
+$svg->path(opacity => 1/8, stroke => 'black', 'stroke-width' => 1, fill => 'none', d => $grid->get());
+
+$svg->defs->path(id => 'border', d => MakePath(\@x, \@y, $scale, -$scale, $origin_x, $origin_y, 1));
+$svg->clipPath(id => 'clipborder')->use('border');
+
+# black stroke on the monochromatic locus (the inner half of the stroke gets overwritten by the image)
+$svg->use('border', stroke => 'black', 'stroke-width' => 4, fill => 'none');
+
+# frequency tick marks on the monochromatic locus
+my $ticks = '';
+for (my $i = 410; $i <= 695; $i += 5) {
+	my ($x,$y,$tx,$ty) = Tick($i, $i % 20 ? 6 : 10);
+	$ticks .= 'M' . tenth($x) . ',' . tenth($y) . 'l' . tenth($tx) . ',' . tenth($ty);
+}
+$svg->path(d => $ticks, stroke => 'black', 'stroke-width' => 1);
+
+# color PNG
+my $pnggroup = $svg->group('clip-path' => 'url(#clipborder)');
+$pnggroup->filter(id => 'blur')->feGaussianBlur(stdDeviation => 0.5);
+$pnggroup->image('chromaticity1.png', width => 27, height => 28, filter => 'url(#blur)')->scale(1/32 * $scale)->translate($origin_x - 3/64 * $scale, $origin_y - 27.5/32 * $scale);
+
+# coordinate axes
+my $axes = new Svg::PathString;
+$axes->M(round(X(0)), round(Y($maxy)))->l(0,round($scale*$maxy))->l(round($scale*$maxx),0);
+for my $xx (0..$maxx*20) {
+	$axes->M(round(X($xx*0.05)), round(Y(0)))->l(0,4);
+}
+for my $yy (0..$maxy*20) {
+	$axes->M(round(X(0)), round(Y($yy*0.05)))->l(-4,0);
+}
+$svg->path(stroke => 'black', 'stroke-width' => 2, 'stroke-linecap' => 'square', fill => 'none', d => $axes->get());
+
+my $alltext = $svg->group('font-family' => 'Nimbus Roman No9 L, Times, serif', 'font-size' => 19, stroke => 'none');
+my $halfdigit = 6; # half the height of a digit, since Opera doesn't support dominant-baseline
+
+# labels for frequency tick marks
+my $freqs = $alltext->group(fill => 'blue');
+for (my $i = 460; $i <= 620; $i += 20) {
+	my ($x,$y,$tx,$ty) = Tick($i,12);
+	my $xanchor = $ty < -2*abs($tx) ? 'middle' : $tx > 0 ? 'start' : 'end';
+	my $yshift = $tx < -2*abs($ty) || $ty > 0 ? $halfdigit : 0;
+	$freqs->text(x => tenth($x+$tx), y => tenth($y+$ty+$yshift), 'text-anchor' => $xanchor)->add($i);
+}
+
+# x,y axis labels
+my $coords = $alltext->group(fill => 'black');
+my $xcoords = $coords->group('text-anchor' => 'middle');
+$xcoords->text(x => X($maxx/2), y => $origin_y + 40, 'font-style' => 'italic')->add('x');
+for my $x (0..$maxx*10) {
+	$xcoords->text(x => X($x * 0.1), y => $origin_y + 20)->add("0.$x");
+}
+my $ycoords = $coords->group('text-anchor' => 'end');
+$ycoords->text(x => $origin_x - 40, y => Y($maxy/2)+$halfdigit, 'font-style' => 'italic')->add('y');
+for my $y (0..$maxy*10) {
+	$ycoords->text(x => $origin_x - 8, y => Y($y * 0.1)+$halfdigit)->add("0.$y");
+}
+
+# gamut polygon and whitepoint
+if (@primaries || $whitepoint) {
+	my $primary_polygon = $svg->group(stroke => 'black', 'stroke-width' => 2, fill => 'none');
+	my $primary_polygon_circle_radius = 5;
+	for my $p (0..$#primaries) {
+		my ($a,$b) = @primaries[$p, $p == $#primaries ? 0 : $p+1];
+		$primary_polygon->circle(cx => X($$a[0]), cy => Y($$a[1]), r => $primary_polygon_circle_radius);
+		my ($dx,$dy) = ($scale * ($$a[0]-$$b[0]), -$scale * ($$a[1]-$$b[1]));
+		my $nudge = $primary_polygon_circle_radius / sqrt($dx*$dx + $dy*$dy);
+		my ($nudgex,$nudgey) = ($nudge * $dx, $nudge * $dy);
+		$primary_polygon->line(x1 => round(X($$a[0])-$nudgex), y1 => round(Y($$a[1])-$nudgey), x2 => round(X($$b[0])+$nudgex), y2 => round(Y($$b[1])+$nudgey));
+	}
+	if ($whitepoint) {
+		$primary_polygon->circle(cx => X($$whitepoint[0]), cy => Y($$whitepoint[1]), r => $primary_polygon_circle_radius);
+		if (defined $$whitepoint[2]) {
+			$alltext->text(x => X($$whitepoint[0]) + 8, y => Y($$whitepoint[1]) + 16, fill => 'black')->add($$whitepoint[2]);
+		}
+	}
+}
+
+$svg->write($filename);</syntaxhighlight>
+
+[[Category:CIE 1931 color space chromaticity diagram]]

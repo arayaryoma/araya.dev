@@ -1,0 +1,267 @@
+<meta charset="utf-8" />
+<title>Madoka Light Palette</title>
+<style>
+  /* Fixed light rendering: this sheet mirrors the blog's light mode only,
+     so it must not follow the viewer's dark preference */
+  :root {
+    --bg: #faf8eb;
+    --surface: #fffdf6;
+    --text: #362a2e;
+    --muted: #7d5f68;
+    --accent: #b23e4e;
+    --accent-strong: #8f2f3d;
+    --border: #dab0bd;
+    --nav: #e7a3aa;
+    --pale: #f9dadf;
+  }
+  body {
+    margin: 0;
+    padding: 2.5rem 1.5rem 4rem;
+    background: var(--bg);
+    color: var(--text);
+    font-family:
+      "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans",
+      Meiryo, sans-serif;
+    line-height: 1.6;
+  }
+  .wrap {
+    max-width: 880px;
+    margin: 0 auto;
+  }
+  header {
+    background: var(--nav);
+    margin: -2.5rem -1.5rem 2rem;
+    padding: 1.5rem;
+    text-align: center;
+  }
+  h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    letter-spacing: 0.02em;
+  }
+  .sub {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-top: 0.35rem;
+  }
+  h2 {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-strong);
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 0.4rem;
+    margin: 2.5rem 0 1rem;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  .sw {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .chip {
+    height: 84px;
+  }
+  .meta {
+    padding: 0.7rem 0.85rem;
+  }
+  .role {
+    font-weight: 700;
+    font-size: 0.92rem;
+  }
+  .hex {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 1rem;
+    margin-top: 0.15rem;
+    /* The hex is the value being copied into Keynote, so it reads as the
+       primary datum rather than the label */
+    color: var(--accent-strong);
+    user-select: all;
+  }
+  .rgb {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    user-select: all;
+  }
+  .tok {
+    font-size: 0.74rem;
+    color: var(--muted);
+    margin-top: 0.3rem;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.88rem;
+  }
+  th,
+  td {
+    text-align: left;
+    padding: 0.55rem 0.7rem;
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    color: var(--accent-strong);
+  }
+  td.num {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .scroll {
+    overflow-x: auto;
+  }
+  .pass {
+    color: var(--accent-strong);
+    font-weight: 700;
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Madoka Light — Keynote テーマ配色</h1>
+    <div class="sub">blog.araya.dev のライトモードと同一の値</div>
+  </header>
+
+  <h2>Swatches</h2>
+  <div class="grid">
+    <div class="sw">
+      <div class="chip" style="background: #faf8eb"></div>
+      <div class="meta">
+        <div class="role">スライド背景</div>
+        <div class="hex">#FAF8EB</div>
+        <div class="rgb">250, 248, 235</div>
+        <div class="tok">--color-bg</div>
+      </div>
+    </div>
+
+    <div class="sw">
+      <div class="chip" style="background: #fffdf6"></div>
+      <div class="meta">
+        <div class="role">カード面</div>
+        <div class="hex">#FFFDF6</div>
+        <div class="rgb">255, 253, 246</div>
+        <div class="tok">--color-surface</div>
+      </div>
+    </div>
+
+    <div class="sw">
+      <div class="chip" style="background: #362a2e"></div>
+      <div class="meta">
+        <div class="role">本文テキスト</div>
+        <div class="hex">#362A2E</div>
+        <div class="rgb">54, 42, 46</div>
+        <div class="tok">--color-text</div>
+      </div>
+    </div>
+
+    <div class="sw">
+      <div class="chip" style="background: #7d5f68"></div>
+      <div class="meta">
+        <div class="role">補足テキスト</div>
+        <div class="hex">#7D5F68</div>
+        <div class="rgb">125, 95, 104</div>
+        <div class="tok">--color-text-muted</div>
+      </div>
+    </div>
+
+    <div class="sw">
+      <div class="chip" style="background: #b23e4e"></div>
+      <div class="meta">
+        <div class="role">見出し・強調</div>
+        <div class="hex">#B23E4E</div>
+        <div class="rgb">178, 62, 78</div>
+        <div class="tok">--color-accent</div>
+      </div>
+    </div>
+
+    <div class="sw">
+      <div class="chip" style="background: #8f2f3d"></div>
+      <div class="meta">
+        <div class="role">リンク・強アクセント</div>
+        <div class="hex">#8F2F3D</div>
+        <div class="rgb">143, 47, 61</div>
+        <div class="tok">--color-accent-strong</div>
+      </div>
+    </div>
+
+    <div class="sw">
+      <div class="chip" style="background: #dab0bd"></div>
+      <div class="meta">
+        <div class="role">罫線・区切り</div>
+        <div class="hex">#DAB0BD</div>
+        <div class="rgb">218, 176, 189</div>
+        <div class="tok">--color-border</div>
+      </div>
+    </div>
+
+    <div class="sw">
+      <div class="chip" style="background: #e7a3aa"></div>
+      <div class="meta">
+        <div class="role">帯・アクセント面</div>
+        <div class="hex">#E7A3AA</div>
+        <div class="rgb">231, 163, 170</div>
+        <div class="tok">--global-nav-bg</div>
+      </div>
+    </div>
+
+    <div class="sw">
+      <div class="chip" style="background: #f9dadf"></div>
+      <div class="meta">
+        <div class="role">コード背景</div>
+        <div class="hex">#F9DADF</div>
+        <div class="rgb">249, 218, 223</div>
+        <div class="tok">--madoka-pale-pink</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>コントラスト検証</h2>
+  <div class="scroll">
+    <table>
+      <tr>
+        <th>組み合わせ</th>
+        <th>比率</th>
+        <th>判定</th>
+      </tr>
+      <tr>
+        <td>本文 #362A2E / 背景</td>
+        <td class="num">12.89:1</td>
+        <td class="pass">AA 本文</td>
+      </tr>
+      <tr>
+        <td>補足 #7D5F68 / 背景</td>
+        <td class="num">5.31:1</td>
+        <td class="pass">AA 本文</td>
+      </tr>
+      <tr>
+        <td>強調 #B23E4E / 背景</td>
+        <td class="num">5.33:1</td>
+        <td class="pass">AA 本文</td>
+      </tr>
+      <tr>
+        <td>リンク #8F2F3D / 背景</td>
+        <td class="num">7.45:1</td>
+        <td class="pass">AA 本文</td>
+      </tr>
+      <tr>
+        <td>本文 / カード面</td>
+        <td class="num">13.51:1</td>
+        <td class="pass">AA 本文</td>
+      </tr>
+      <tr>
+        <td>本文 / ピンク帯</td>
+        <td class="num">6.69:1</td>
+        <td class="pass">AA 本文</td>
+      </tr>
+      <tr>
+        <td>白 / 強調面</td>
+        <td class="num">5.69:1</td>
+        <td class="pass">AA 本文</td>
+      </tr>
+    </table>
+  </div>
+</div>

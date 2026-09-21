@@ -1,0 +1,46 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "editor-araya-dev",
+  // Same account as cf-worker. Not a secret; it only names which account to
+  // deploy into, which keeps `wrangler deploy` from having to ask in CI.
+  "account_id": "c58610597d85017856a3eaa95a937958",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-01",
+
+  // The client bundle, built into ./public by scripts/build-client.js. The
+  // runtime serves these before the Worker runs; everything else falls through
+  // to src/index.ts.
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "not_found_handling": "none"
+  },
+
+  "routes": [{ "pattern": "editor.araya.dev", "custom_domain": true }],
+  // The custom domain is the only way in. A workers.dev hostname could not
+  // complete a login anyway (its redirect_uri would not match the OAuth App),
+  // but there is no reason to publish a second door.
+  "workers_dev": false,
+
+  "vars": {
+    // The one GitHub account allowed to sign in. Nothing else grants access.
+    "ADMIN_GITHUB_LOGIN": "arayaryoma",
+
+    "REPO_OWNER": "arayaryoma",
+    "REPO_NAME": "araya.dev",
+    // Committing here is what triggers .github/workflows/build-and-deploy.yml.
+    // New posts are written with draft: true, so a commit does not publish.
+    "REPO_BRANCH": "main",
+
+    "CONTENT_DIR": "blog.araya.dev/src/content/blog",
+    "IMAGE_DIR": "blog.araya.dev/public/assets/images",
+    "IMAGE_URL_PREFIX": "/assets/images",
+    "BLOG_ORIGIN": "https://blog.araya.dev"
+  },
+
+  // Secrets, set with `wrangler secret put <NAME>`:
+  //   GITHUB_CLIENT_ID      OAuth App client id
+  //   GITHUB_CLIENT_SECRET  OAuth App client secret
+  //   SESSION_SECRET        32+ random bytes; rotating it logs the admin out
+  "observability": { "enabled": true }
+}

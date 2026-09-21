@@ -1,0 +1,29 @@
+{
+  "name": "editor.araya.dev",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "25.x"
+  },
+  "scripts": {
+    "build:client": "node scripts/build-client.js",
+    "check": "tsc -p tsconfig.json && tsc -p tsconfig.client.json && tsc -p tsconfig.test.json",
+    "test": "node scripts/run-tests.js",
+    "dev": "pnpm build:client && wrangler dev",
+    "deploy": "pnpm build:client && wrangler deploy"
+  },
+  "packageManager": "pnpm@11.11.0+sha512.4463f65fd80ed80d69bc1d4bf163ee94f605c7380fc318bb5b2ebe15f8cd12d49c51a4d59e951b401e764d3b6ca751cbf51bc50ed7001a6bcb4935e684c34882",
+  "dependencies": {
+    "dompurify": "^3.4.0",
+    "marked": "^18.0.0",
+    "yaml": "^2.9.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.0.0",
+    "@types/node": "^26.1.1",
+    "esbuild": "^0.28.0",
+    "typescript": "^7.0.2",
+    "wrangler": "^4.130.0"
+  }
+}

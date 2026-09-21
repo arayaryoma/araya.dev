@@ -1,0 +1,550 @@
+/*
+ * The preview pane reuses the blog's own stylesheet, so a change to how posts
+ * are rendered shows up here without a second edit.
+ */
+@import "../../blog.araya.dev/src/styles/markdown.css";
+
+:root {
+  /*
+   * Color tokens copied from blog.araya.dev/src/styles/main.css. They are
+   * duplicated rather than imported because main.css also styles <body>, the
+   * global nav and the footer, none of which the editor has. Keep in sync.
+   */
+  --homura-dusk: #53435c;
+  --homura-purple: #69526d;
+  --homura-gray: #b2b2b2;
+  --homura-silver: #dbdbdb;
+  --homura-night: #0b090e;
+  --homura-surface: #1d1722;
+  --homura-ink: #241d2a;
+  --homura-lilac: #a58aad;
+  --homura-lilac-bright: #c9b2d1;
+
+  --madoka-pale-pink: #f9dadf;
+  --madoka-pink: #e7a3aa;
+  --madoka-rose: #d05b6a;
+  --madoka-cream: #faf8eb;
+  --madoka-mauve: #dab0bd;
+  --madoka-rose-deep: #b23e4e;
+  --madoka-rose-darker: #8f2f3d;
+  --madoka-white: #fffdf6;
+
+  --color-bg: light-dark(var(--madoka-cream), var(--homura-night));
+  --color-surface: light-dark(var(--madoka-white), var(--homura-surface));
+  --color-text: light-dark(#362a2e, var(--homura-silver));
+  --color-text-muted: light-dark(#7d5f68, var(--homura-gray));
+  --color-accent: light-dark(var(--madoka-rose-deep), var(--homura-lilac));
+  --color-accent-strong: light-dark(
+    var(--madoka-rose-darker),
+    var(--homura-lilac-bright)
+  );
+  --color-border: light-dark(var(--madoka-mauve), var(--homura-dusk));
+  --color-inline-code-bg: light-dark(
+    var(--madoka-pale-pink),
+    var(--homura-ink)
+  );
+  --color-shadow: light-dark(rgb(66 37 46 / 25%), rgb(0 0 0 / 60%));
+  --accent-gradient-from: light-dark(var(--madoka-rose), var(--homura-purple));
+  --accent-gradient-to: light-dark(var(--madoka-pink), var(--homura-lilac));
+  --global-nav-bg: light-dark(var(--madoka-pink), var(--homura-dusk));
+
+  --default-font-family:
+    "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans",
+    Meiryo, sans-serif;
+  --mono-font-family:
+    "Source Code Pro", ui-monospace, "SF Mono", "Lucida Console", Courier,
+    monospace;
+
+  --appbar-height: 3.25rem;
+  --statusbar-height: 3.5rem;
+
+  color-scheme: light dark;
+  accent-color: var(--color-accent);
+}
+
+:root[data-color-scheme="light"] {
+  color-scheme: light;
+}
+:root[data-color-scheme="dark"] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/*
+ * .field, .view--edit and .pane all set `display`, and a class beats the user
+ * agent's [hidden] rule. Without this the edit view sits on top of the post
+ * list and the slug field shows up for posts that already have a filename.
+ */
+[hidden] {
+  display: none !important;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  font-family: var(--default-font-family);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  /* dvh so the software keyboard does not push the save button off-screen */
+  min-height: 100dvh;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ bits */
+
+.button {
+  font: inherit;
+  font-size: 1rem;
+  padding: 0.6em 1.1em;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  /* Comfortable to hit with a thumb. */
+  min-height: 44px;
+}
+
+.button--primary {
+  border-color: transparent;
+  background: linear-gradient(
+    120deg,
+    var(--accent-gradient-from),
+    var(--accent-gradient-to)
+  );
+  color: light-dark(var(--madoka-white), var(--homura-night));
+  font-weight: 600;
+}
+
+.button:disabled {
+  opacity: 0.55;
+  cursor: progress;
+}
+
+.icon-button {
+  font: inherit;
+  font-size: 1.15rem;
+  line-height: 1;
+  min-width: 44px;
+  min-height: 44px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.icon-button:hover {
+  background: rgb(0 0 0 / 8%);
+}
+
+/* ---------------------------------------------------------------- login */
+
+.login {
+  max-width: 24rem;
+  margin: 18vh auto 0;
+  padding: 0 1.5rem;
+  text-align: center;
+}
+
+.login__title {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.login__lead {
+  color: var(--color-text-muted);
+  margin: 0.5em 0 2.5em;
+}
+
+.login__error {
+  border: 1px solid var(--color-accent);
+  border-radius: 8px;
+  padding: 0.75em 1em;
+  margin-bottom: 1.5em;
+  color: var(--color-accent-strong);
+}
+
+.login__button {
+  display: inline-block;
+  text-decoration: none;
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------------------- appbar */
+
+.appbar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  height: var(--appbar-height);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 max(0.75rem, env(safe-area-inset-left)) 0
+    max(0.5rem, env(safe-area-inset-left));
+  background: var(--global-nav-bg);
+  color: var(--color-text);
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(
+      90deg,
+      var(--accent-gradient-from),
+      var(--accent-gradient-to) 45%,
+      transparent 90%
+    )
+    1;
+}
+
+.appbar__back {
+  font: inherit;
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  min-height: 44px;
+  padding: 0 0.5rem;
+}
+
+.appbar__title {
+  flex: 1;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.appbar__actions {
+  display: flex;
+  align-items: center;
+}
+
+.appbar__logout {
+  margin: 0;
+}
+
+/* ----------------------------------------------------------------- list */
+
+.app {
+  min-height: calc(100dvh - var(--appbar-height));
+}
+
+.view--list {
+  padding: 1.25rem max(1rem, env(safe-area-inset-left))
+    calc(2rem + env(safe-area-inset-bottom));
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.list__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.list__account {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.post-list__button {
+  width: 100%;
+  font: inherit;
+  text-align: start;
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: inherit;
+  cursor: pointer;
+}
+
+.post-list__button:hover {
+  border-color: var(--color-accent);
+  box-shadow: 2px 2px 12px var(--color-shadow);
+}
+
+.post-list__date {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.post-list__name {
+  overflow-wrap: anywhere;
+}
+
+.empty {
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 2rem 0;
+}
+
+/* ----------------------------------------------------------------- meta */
+
+.view--edit {
+  display: flex;
+  flex-direction: column;
+  height: calc(100dvh - var(--appbar-height));
+}
+
+.meta {
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.meta__summary {
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+}
+
+.meta__fields {
+  display: grid;
+  gap: 0.9rem;
+  padding: 0 1rem 1.1rem;
+  max-height: 55dvh;
+  overflow-y: auto;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.field--checkbox {
+  grid-auto-flow: column;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9375rem;
+}
+
+.field__label {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.field__input {
+  font: inherit;
+  /* 16px keeps iOS Safari from zooming in when the field takes focus. */
+  font-size: 1rem;
+  padding: 0.6em 0.7em;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-bg);
+  color: inherit;
+  min-height: 44px;
+  width: 100%;
+}
+
+.field__input--area {
+  min-height: auto;
+  resize: vertical;
+}
+
+.field__input:disabled {
+  color: var(--color-text-muted);
+}
+
+.field__hint {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  font-family: var(--mono-font-family);
+  overflow-wrap: anywhere;
+}
+
+/* -------------------------------------------------------------- toolbar */
+
+.toolbar {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.4rem max(0.5rem, env(safe-area-inset-left));
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.toolbar::-webkit-scrollbar {
+  display: none;
+}
+
+.toolbar__button {
+  font: inherit;
+  flex: 0 0 auto;
+  min-width: 44px;
+  min-height: 40px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.toolbar__button:hover {
+  border-color: var(--color-border);
+}
+
+/* ---------------------------------------------------------------- panes */
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.tabs__tab {
+  font: inherit;
+  flex: 1;
+  min-height: 44px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.tabs__tab[aria-selected="true"] {
+  color: var(--color-text);
+  border-bottom-color: var(--color-accent);
+  font-weight: 600;
+}
+
+.panes {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.pane {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.panes[data-pane="write"] .pane--preview,
+.panes[data-pane="preview"] .pane--write {
+  display: none;
+}
+
+.editor {
+  display: block;
+  width: 100%;
+  height: 100%;
+  resize: none;
+  border: none;
+  outline: none;
+  padding: 1rem max(1rem, env(safe-area-inset-left));
+  font-family: var(--mono-font-family);
+  font-size: 1rem;
+  line-height: 1.75;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.preview {
+  /* The blog's h2 marker sits at left: -0.75em, so the pane needs room for it. */
+  padding: 0.5rem max(1rem, env(safe-area-inset-left)) 3rem
+    max(1.5rem, env(safe-area-inset-left));
+  max-width: 42rem;
+  margin-inline: auto;
+  font-size: calc(17 / 16 * 1rem);
+}
+
+/* Shiki does not run in the preview, so code blocks get the theme's background
+   here rather than from an inline style on <pre>. */
+.preview pre {
+  background: #24292e;
+  color: #e1e4e8;
+}
+
+/* ------------------------------------------------------------ statusbar */
+
+.statusbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: var(--statusbar-height);
+  padding: 0.5rem max(1rem, env(safe-area-inset-left))
+    calc(0.5rem + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.statusbar__message {
+  flex: 1;
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.statusbar__message[data-tone="error"] {
+  color: var(--color-accent-strong);
+}
+
+.statusbar__message[data-tone="ok"] {
+  color: var(--color-text);
+}
+
+.statusbar__message a {
+  color: var(--color-accent);
+  font-family: var(--mono-font-family);
+}
+
+/* ------------------------------------------------------- wide viewports */
+
+@media (min-width: 900px) {
+  .tabs {
+    display: none;
+  }
+
+  .panes {
+    flex-direction: row;
+  }
+
+  /* Matching [data-pane] keeps this at the same specificity as the rule that
+     hides the inactive pane, so the later rule (this one) wins. */
+  .panes[data-pane] .pane--write,
+  .panes[data-pane] .pane--preview {
+    display: block;
+    flex: 1 1 50%;
+    width: 50%;
+  }
+
+  .pane--preview {
+    border-left: 1px solid var(--color-border);
+  }
+}

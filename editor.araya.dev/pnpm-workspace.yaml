@@ -1,0 +1,31 @@
+# editor.araya.dev declares its own workspace root, like blog.araya.dev and
+# cf-worker do. The supply-chain policy mirrors blog.araya.dev/pnpm-workspace.yaml.
+
+# 7 days rather than pnpm 11's 1-day default: nothing here is urgent enough to
+# justify installing releases before the ecosystem has had time to flag a
+# compromised one.
+minimumReleaseAge: 10080
+minimumReleaseAgeExclude: []
+# The pnpm 11 default (true) would let a registry that omits publish timestamps
+# bypass the age check entirely.
+minimumReleaseAgeIgnoreMissingTime: false
+
+# Both install.js scripts were read before being allowed: each only locates the
+# platform package that optionalDependencies already installed and puts its
+# binary in place. Neither downloads anything. workerd's is what `wrangler dev`
+# needs; esbuild works without its own, but blocking one of a pair only makes
+# every install noisy.
+allowBuilds:
+  esbuild: true
+  workerd: true
+
+strictDepBuilds: true
+blockExoticSubdeps: true
+
+verifyDepsBeforeRun: install
+
+strictPeerDependencies: true
+
+auditConfig:
+  ignoreGhsas: []
+auditLevel: moderate

@@ -1,4 +1,5 @@
 import { handleApi } from "./api";
+import { loadSession } from "./auth";
 import type { Env } from "./env";
 import { HttpError, json, securityHeaders } from "./http";
 import { authorizeUrl, exchangeCodeForToken, fetchUser } from "./oauth";
@@ -6,10 +7,9 @@ import { appPage, loginPage } from "./pages";
 import {
   clearCookie,
   createOAuthStateCookie,
-  createSessionCookie,
+  createSession,
   isAdmin,
   OAUTH_COOKIE,
-  readSession,
   SESSION_COOKIE,
   verifyOAuthState,
 } from "./session";
@@ -57,33 +57,40 @@ async function route(request: Request, env: Env): Promise<Response> {
     });
   }
 
-  const session = await readSession(
-    request,
-    env.SESSION_SECRET,
-    env.ADMIN_GITHUB_LOGIN,
-  );
+  const { session, setCookie } = await loadSession(request, env);
 
   if (path.startsWith("/api/")) {
     if (session === null) throw new HttpError(401, "ログインしてください");
-    return handleApi(request, env, session, path);
+    return withCookie(await handleApi(request, env, session, path), setCookie);
   }
 
   if (path === "/login") {
     if (session !== null) return redirect("/");
-    return loginPage(
-      env.BLOG_ORIGIN,
-      url.searchParams.get("error") ?? undefined,
+    return withCookie(
+      loginPage(env.BLOG_ORIGIN, url.searchParams.get("error") ?? undefined),
+      setCookie,
     );
   }
 
   if (path === "/" || path === "/index.html") {
-    if (session === null) return redirect("/login");
-    return appPage(env.BLOG_ORIGIN);
+    if (session === null) return withCookie(redirect("/login"), setCookie);
+    return withCookie(appPage(env.BLOG_ORIGIN), setCookie);
   }
 
   // Static client bundle. Normally the runtime serves these before the Worker
   // runs; this keeps working if that ordering ever changes.
   return env.ASSETS.fetch(request);
+}
+
+function withCookie(response: Response, setCookie?: string): Response {
+  if (setCookie === undefined) return response;
+  const headers = new Headers(response.headers);
+  headers.append("set-cookie", setCookie);
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
 }
 
 async function handleCallback(
@@ -116,22 +123,24 @@ async function handleCallback(
     return redirect("/login?error=state_mismatch", clearState);
   }
 
-  const token = await exchangeCodeForToken(env, code, redirectUri);
-  const user = await fetchUser(token);
+  const tokens = await exchangeCodeForToken(env, code, redirectUri);
+  const user = await fetchUser(tokens.accessToken);
   if (!isAdmin(user.login, env.ADMIN_GITHUB_LOGIN)) {
     // The one authorization decision in the whole app: exactly one login.
     return redirect("/login?error=not_allowed", clearState);
   }
 
-  const sessionCookie = await createSessionCookie(env.SESSION_SECRET, {
+  const { cookie } = await createSession(env.SESSION_SECRET, {
     login: user.login,
     name: user.name,
     avatarUrl: user.avatarUrl,
-    token,
+    token: tokens.accessToken,
+    refreshToken: tokens.refreshToken,
+    tokenExpiresAt: tokens.expiresAt,
   });
   const headers = new Headers({ location: "/", "cache-control": "no-store" });
   headers.append("set-cookie", clearState);
-  headers.append("set-cookie", sessionCookie);
+  headers.append("set-cookie", cookie);
   return new Response(null, { status: 303, headers });
 }
 

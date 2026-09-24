@@ -18,12 +18,14 @@
 
   "routes": [{ "pattern": "editor.araya.dev", "custom_domain": true }],
   // The custom domain is the only way in. A workers.dev hostname could not
-  // complete a login anyway (its redirect_uri would not match the OAuth App),
+  // complete a login anyway (its redirect_uri would not match the GitHub App),
   // but there is no reason to publish a second door.
   "workers_dev": false,
 
   "vars": {
-    // The one GitHub account allowed to sign in. Nothing else grants access.
+    // The one GitHub account allowed to sign in. The GitHub App's installation
+    // already limits which repository the token can touch; this limits who can
+    // get a token in the first place.
     "ADMIN_GITHUB_LOGIN": "arayaryoma",
 
     "REPO_OWNER": "arayaryoma",
@@ -39,8 +41,8 @@
   },
 
   // Secrets, set with `wrangler secret put <NAME>`:
-  //   GITHUB_CLIENT_ID      OAuth App client id
-  //   GITHUB_CLIENT_SECRET  OAuth App client secret
+  //   GITHUB_CLIENT_ID      GitHub App client id (starts with Iv23li...)
+  //   GITHUB_CLIENT_SECRET  GitHub App client secret
   //   SESSION_SECRET        32+ random bytes; rotating it logs the admin out
   "observability": { "enabled": true }
 }

@@ -3,9 +3,15 @@ import { base64UrlToBytes, bytesToBase64Url } from "./encoding";
 /**
  * Sessions are sealed cookies: there is no server-side store, because a Worker
  * has nowhere durable to keep one and a single admin does not need one. The
- * cookie holds the GitHub access token encrypted with AES-GCM under a key
- * derived from SESSION_SECRET, so the browser cannot read or forge it, and
- * rotating SESSION_SECRET invalidates every outstanding session.
+ * cookie holds the GitHub tokens encrypted with AES-GCM under a key derived
+ * from SESSION_SECRET, so the browser cannot read or forge it, and rotating
+ * SESSION_SECRET invalidates every outstanding session.
+ *
+ * A GitHub App's user access token lasts 8 hours, so the refresh token rides
+ * along in the same sealed cookie and the session is renewed in place. That
+ * makes the cookie's own lifetime the thing that decides how often the admin
+ * logs in again, which is why it is long and slides forward on each refresh
+ * rather than being pinned to the access token's 8 hours.
  */
 
 export interface Session {
@@ -13,7 +19,11 @@ export interface Session {
   name: string;
   avatarUrl: string;
   token: string;
-  /** Unix seconds. */
+  /** Absent only if the app has user token expiration turned off. */
+  refreshToken?: string;
+  /** Unix seconds the access token dies at; absent alongside refreshToken. */
+  tokenExpiresAt?: number;
+  /** Unix seconds the session cookie itself dies at. */
   exp: number;
 }
 
@@ -24,8 +34,10 @@ export interface OAuthState {
 
 export const SESSION_COOKIE = "__Host-editor_session";
 export const OAUTH_COOKIE = "__Host-editor_oauth";
-export const SESSION_TTL_SECONDS = 12 * 60 * 60;
+export const SESSION_TTL_SECONDS = 30 * 24 * 60 * 60;
 const OAUTH_TTL_SECONDS = 10 * 60;
+/** Renew a little early, so a save cannot land on a token that just died. */
+const REFRESH_SKEW_SECONDS = 120;
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -130,13 +142,28 @@ export function clearCookie(name: string): string {
   return `${name}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;
 }
 
-export async function createSessionCookie(
+export async function createSession(
   secret: string,
-  session: Omit<Session, "exp">,
-): Promise<string> {
-  const exp = Math.floor(Date.now() / 1000) + SESSION_TTL_SECONDS;
-  const sealed = await seal(secret, "session-v1", { ...session, exp });
-  return cookie(SESSION_COOKIE, sealed, SESSION_TTL_SECONDS);
+  user: Omit<Session, "exp">,
+): Promise<{ session: Session; cookie: string }> {
+  const session: Session = {
+    ...user,
+    exp: Math.floor(Date.now() / 1000) + SESSION_TTL_SECONDS,
+  };
+  const sealed = await seal(secret, "session-v1", session);
+  return {
+    session,
+    cookie: cookie(SESSION_COOKIE, sealed, SESSION_TTL_SECONDS),
+  };
+}
+
+/** True when the access token needs renewing before it can be used again. */
+export function accessTokenExpired(session: Session): boolean {
+  if (session.tokenExpiresAt === undefined) return false;
+  return (
+    session.tokenExpiresAt - REFRESH_SKEW_SECONDS <=
+    Math.floor(Date.now() / 1000)
+  );
 }
 
 export async function readSession(

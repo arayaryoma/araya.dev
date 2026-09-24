@@ -568,10 +568,37 @@ async function boot(): Promise<void> {
   try {
     session = await api.session();
     accountLine.textContent = `${session.login} / ${session.repo.owner}/${session.repo.name}@${session.repo.branch}`;
+    if (!session.repoAccessible) {
+      showNotInstalled(session);
+      return;
+    }
     await loadList();
   } catch (error) {
     listStatus.textContent = errorMessage(error);
   }
+}
+
+/**
+ * Authorizing the GitHub App and installing it on the repository are two
+ * separate steps, and skipping the second one otherwise just looks like a blog
+ * with no posts in it.
+ */
+function showNotInstalled(info: SessionInfo): void {
+  element<HTMLButtonElement>("[data-action='new']").disabled = true;
+  listStatus.hidden = false;
+  listStatus.dataset.tone = "error";
+  listStatus.replaceChildren(
+    document.createTextNode(
+      `GitHub App が ${info.repo.owner}/${info.repo.name} にインストールされていません。`,
+    ),
+    document.createElement("br"),
+  );
+  const link = document.createElement("a");
+  link.href = "https://github.com/settings/installations";
+  link.target = "_blank";
+  link.rel = "noreferrer noopener";
+  link.textContent = "インストール設定を開く";
+  listStatus.append(link);
 }
 
 showList();

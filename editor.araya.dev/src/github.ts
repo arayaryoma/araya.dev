@@ -64,6 +64,29 @@ export class GitHubClient {
     return `/repos/${this.repo.owner}/${this.repo.repo}/contents/${encoded}`;
   }
 
+  /**
+   * Whether this token can see the repository at all.
+   *
+   * A GitHub App's user token only reaches repositories the app is *installed*
+   * on, and installing is a separate step from authorizing. Without this
+   * check, a missed installation looks exactly like an empty blog: the
+   * contents API 404s the directory and the post list comes back empty.
+   */
+  async repoAccessible(): Promise<boolean> {
+    try {
+      const response = await this.request(
+        `/repos/${this.repo.owner}/${this.repo.repo}`,
+      );
+      if (response.status === 404) return false;
+      return response.ok;
+    } catch (error) {
+      // 403 here is "not accessible by integration", i.e. not installed --
+      // distinct from a 401, which means the token itself is finished.
+      if (error instanceof HttpError && error.status === 403) return false;
+      throw error;
+    }
+  }
+
   async listDirectory(repoPath: string): Promise<DirectoryEntry[]> {
     const response = await this.request(
       `${this.contentsPath(repoPath)}?ref=${encodeURIComponent(this.repo.branch)}`,

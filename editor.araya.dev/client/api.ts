@@ -5,6 +5,8 @@ export interface SessionInfo {
   name: string;
   avatarUrl: string;
   repo: { owner: string; name: string; branch: string };
+  /** False when the GitHub App has not been installed on the repository. */
+  repoAccessible: boolean;
   blogOrigin: string;
   imageUrlPrefix: string;
 }

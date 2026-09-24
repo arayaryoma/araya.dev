@@ -308,6 +308,15 @@ body {
   color: var(--color-text-muted);
   text-align: center;
   padding: 2rem 0;
+  line-height: 1.8;
+}
+
+.empty[data-tone="error"] {
+  color: var(--color-text);
+}
+
+.empty a {
+  color: var(--color-accent);
 }
 
 /* ----------------------------------------------------------------- meta */

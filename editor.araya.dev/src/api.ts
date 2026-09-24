@@ -34,6 +34,7 @@ export async function handleApi(
       name: session.name,
       avatarUrl: session.avatarUrl,
       repo: { owner: repo.owner, name: repo.repo, branch: repo.branch },
+      repoAccessible: await github.repoAccessible(),
       blogOrigin: env.BLOG_ORIGIN,
       imageUrlPrefix: repo.imageUrlPrefix,
     });

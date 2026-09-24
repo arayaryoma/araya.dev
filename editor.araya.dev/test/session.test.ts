@@ -10,14 +10,16 @@ import {
 } from "../src/encoding";
 import { assertSameOrigin, HttpError } from "../src/http";
 import {
+  accessTokenExpired,
   clearCookie,
   createOAuthStateCookie,
-  createSessionCookie,
+  createSession,
   isAdmin,
   OAUTH_COOKIE,
   readCookie,
   readSession,
   SESSION_COOKIE,
+  SESSION_TTL_SECONDS,
   verifyOAuthState,
 } from "../src/session";
 
@@ -34,6 +36,19 @@ function requestWithCookie(name: string, value: string): Request {
   });
 }
 
+async function atTime(
+  offsetMs: number,
+  body: () => Promise<void>,
+): Promise<void> {
+  const realNow = Date.now;
+  Date.now = () => realNow() + offsetMs;
+  try {
+    await body();
+  } finally {
+    Date.now = realNow;
+  }
+}
+
 const user = {
   login: ADMIN,
   name: "araya",
@@ -42,7 +57,7 @@ const user = {
 };
 
 test("a sealed session round trips", async () => {
-  const setCookie = await createSessionCookie(SECRET, user);
+  const setCookie = (await createSession(SECRET, user)).cookie;
   assert.match(setCookie, /^__Host-editor_session=/);
   // __Host- is only honored with all three of these.
   assert.match(setCookie, /HttpOnly/);
@@ -60,7 +75,7 @@ test("a sealed session round trips", async () => {
 });
 
 test("the token is not readable from the cookie", async () => {
-  const setCookie = await createSessionCookie(SECRET, user);
+  const setCookie = (await createSession(SECRET, user)).cookie;
   assert.ok(!setCookie.includes(user.token));
   const raw = cookieValue(setCookie);
   assert.ok(
@@ -69,7 +84,7 @@ test("the token is not readable from the cookie", async () => {
 });
 
 test("a tampered or re-keyed cookie is no session at all", async () => {
-  const setCookie = await createSessionCookie(SECRET, user);
+  const setCookie = (await createSession(SECRET, user)).cookie;
   const raw = cookieValue(setCookie);
 
   // Flipping one ciphertext byte must fail the AES-GCM tag.
@@ -95,23 +110,74 @@ test("a tampered or re-keyed cookie is no session at all", async () => {
 });
 
 test("an expired session is rejected", async () => {
-  const setCookie = await createSessionCookie(SECRET, user);
+  const setCookie = (await createSession(SECRET, user)).cookie;
   const request = requestWithCookie(SESSION_COOKIE, cookieValue(setCookie));
 
-  const realNow = Date.now;
-  Date.now = () => realNow() + 13 * 60 * 60 * 1000;
-  try {
+  await atTime((SESSION_TTL_SECONDS + 60) * 1000, async () => {
     assert.equal(await readSession(request, SECRET, ADMIN), null);
-  } finally {
-    Date.now = realNow;
-  }
+  });
+});
+
+test("the refresh token rides along in the sealed cookie", async () => {
+  const { session, cookie } = await createSession(SECRET, {
+    ...user,
+    refreshToken: "ghr_examplerefresh",
+    tokenExpiresAt: Math.floor(Date.now() / 1000) + 8 * 60 * 60,
+  });
+  assert.ok(!cookie.includes("ghr_examplerefresh"));
+
+  const read = await readSession(
+    requestWithCookie(SESSION_COOKIE, cookieValue(cookie)),
+    SECRET,
+    ADMIN,
+  );
+  assert.equal(read?.refreshToken, "ghr_examplerefresh");
+  assert.equal(read?.tokenExpiresAt, session.tokenExpiresAt);
+});
+
+test("the access token is renewed before it actually dies", () => {
+  const now = Math.floor(Date.now() / 1000);
+  const base = { ...user, refreshToken: "r", exp: now + 999 };
+
+  assert.equal(
+    accessTokenExpired({ ...base, tokenExpiresAt: now + 8 * 60 * 60 }),
+    false,
+  );
+  // Inside the safety margin: renew now rather than let a save race the expiry.
+  assert.equal(accessTokenExpired({ ...base, tokenExpiresAt: now + 30 }), true);
+  assert.equal(accessTokenExpired({ ...base, tokenExpiresAt: now - 1 }), true);
+});
+
+test("a non-expiring token is never treated as stale", () => {
+  // An app with user token expiration turned off returns no expires_in at all.
+  const now = Math.floor(Date.now() / 1000);
+  assert.equal(accessTokenExpired({ ...user, exp: now + 999 }), false);
+});
+
+test("a session outlives several access tokens", async () => {
+  // The point of carrying a refresh token: a 30-day cookie, not an 8-hour one.
+  assert.ok(SESSION_TTL_SECONDS > 3 * 8 * 60 * 60);
+  const { cookie } = await createSession(SECRET, {
+    ...user,
+    refreshToken: "r",
+    tokenExpiresAt: Math.floor(Date.now() / 1000) + 8 * 60 * 60,
+  });
+  const request = requestWithCookie(SESSION_COOKIE, cookieValue(cookie));
+
+  await atTime(3 * 24 * 60 * 60 * 1000, async () => {
+    const read = await readSession(request, SECRET, ADMIN);
+    assert.ok(read !== null, "the cookie should still be good three days on");
+    assert.equal(
+      accessTokenExpired(read),
+      true,
+      "but its access token should not be",
+    );
+  });
 });
 
 test("a session for anyone but the admin is rejected on every request", async () => {
-  const setCookie = await createSessionCookie(SECRET, {
-    ...user,
-    login: "someone",
-  });
+  const setCookie = (await createSession(SECRET, { ...user, login: "someone" }))
+    .cookie;
   assert.equal(
     await readSession(
       requestWithCookie(SESSION_COOKIE, cookieValue(setCookie)),
@@ -123,7 +189,7 @@ test("a session for anyone but the admin is rejected on every request", async ()
 
   // Narrowing ADMIN_GITHUB_LOGIN must take effect without waiting for the
   // outstanding session to expire.
-  const valid = await createSessionCookie(SECRET, user);
+  const valid = (await createSession(SECRET, user)).cookie;
   assert.equal(
     await readSession(
       requestWithCookie(SESSION_COOKIE, cookieValue(valid)),

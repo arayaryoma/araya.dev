@@ -5,9 +5,9 @@
  * lives in `vars` in wrangler.jsonc so a config change is reviewable in git.
  */
 export interface Env {
-  /** GitHub OAuth App client id. Not secret, but kept next to the secret. */
+  /** GitHub App client id. Not secret, but kept next to the secret. */
   GITHUB_CLIENT_ID: string;
-  /** secret: GitHub OAuth App client secret. */
+  /** secret: GitHub App client secret. */
   GITHUB_CLIENT_SECRET: string;
   /** secret: 32+ random bytes; seals the session cookie. */
   SESSION_SECRET: string;
@@ -27,8 +27,12 @@ export interface Env {
   /** Origin of the published blog, used to resolve preview image URLs. */
   BLOG_ORIGIN: string;
 
-  /** Static assets (the client bundle). Bound by wrangler's `assets`. */
-  ASSETS: Fetcher;
+  /**
+   * Static assets (the client bundle), bound by wrangler's `assets`. Typed
+   * structurally rather than as workers-types' `Fetcher` so that modules
+   * reaching this file still typecheck outside the Workers project.
+   */
+  ASSETS: { fetch(request: Request): Promise<Response> };
 }
 
 export interface RepoConfig {

@@ -12,55 +12,90 @@ blog.araya.dev の記事エディタ。スマートフォンのブラウザか�
 - Markdown での執筆と、ブログ本体と同じスタイルシートを使ったプレビュー
 - frontmatter（タイトル / 日付 / タグ / 説明 / サムネイル / 下書き）のフォーム編集
 - 画像アップロード（撮った写真はブラウザ側で長辺 1600px に縮小してからコミット）
-- GitHub OAuth によるログイン。許可されるのは `ADMIN_GITHUB_LOGIN` の 1 アカウントのみ
+- GitHub App によるログイン。許可されるのは `ADMIN_GITHUB_LOGIN` の 1 アカウントのみで、
+  書き込めるのは araya.dev 1 リポジトリだけです
 
 新規記事は常に `draft: true` で作られます。ブログは `DRAFTS` が設定されたときしか
 下書きを出力しないので、書きかけをコミットしても公開はされません。
 
 ## 認証の考えかた
 
-ログインは GitHub OAuth の web application flow です。ここで得たアクセストークンが
+ログインは **GitHub App** のユーザー認可フローです。ここで得た user access token が
 そのままコミットに使う資格情報になるので、
 
 - サーバーに長期有効な personal access token を置かずに済む
 - コミットが管理者本人の名前で残る
 - GitHub 側で認可を取り消せば、エディタの書き込み権限も同時に消える
 
-という性質が得られます。トークンは `SESSION_SECRET` から HKDF で導出した鍵で
-AES-GCM 暗号化し、`__Host-` 付きの HttpOnly Cookie に封入します。
-サーバー側のセッションストアはありません。`SESSION_SECRET` を差し替えれば
-発行済みセッションはすべて無効になります。
+という性質が得られます。
+
+GitHub App のトークンは「アプリの permission」「アプリがインストールされた
+リポジトリ」「ログインしたユーザー自身の権限」の**積集合**です。エディタのアプリは
+`Contents: Read and write` だけを持ち、araya.dev 1 つにだけインストールするので、
+このトークンでは他のリポジトリに一切触れません。OAuth App の `public_repo` スコープ
+では「書き込めるすべての public リポジトリ」になってしまい、ここまで絞れません。
+
+トークンは `SESSION_SECRET` から HKDF で導出した鍵で AES-GCM 暗号化し、`__Host-`
+付きの HttpOnly Cookie に封入します。サーバー側のセッションストアはありません。
+`SESSION_SECRET` を差し替えれば発行済みセッションはすべて無効になります。
 
 ログインを許されるアカウントは `ADMIN_GITHUB_LOGIN` と一致する 1 つだけで、
-この判定はログイン時だけでなくリクエストごとに行われます。
+この判定はログイン時だけでなく毎リクエスト行います。
+
+### トークンの更新
+
+GitHub App の user access token は 8 時間で失効し、同時に refresh token
+（6 か月未使用で失効）が発行されます。エディタは refresh token も同じ Cookie に
+封入しておき、失効が近づいたリクエストで自動的に更新して Cookie を貼り直します。
+更新のたびに refresh token も回転するため、古いほうは即座に使えなくなります。
+
+そのためセッション Cookie の寿命はアクセストークンの 8 時間ではなく 30 日で、
+更新のたびに延びます（`SESSION_TTL_SECONDS`）。refresh token が期限切れ・使用済み・
+認可取り消しのいずれかだった場合は Cookie を破棄してログイン画面に戻します。
 
 ## セットアップ
 
-### 1. GitHub OAuth App を作る
+### 1. GitHub App を作る
 
-<https://github.com/settings/developers> で New OAuth App:
+<https://github.com/settings/apps/new> で作成します。
 
-| 項目                       | 値                                       |
-| -------------------------- | ---------------------------------------- |
-| Application name           | 任意（例: `araya.dev blog editor`）      |
-| Homepage URL               | `https://editor.araya.dev`               |
-| Authorization callback URL | `https://editor.araya.dev/auth/callback` |
+| 項目                                    | 値                                         |
+| --------------------------------------- | ------------------------------------------ |
+| GitHub App name                         | 任意（例: `araya.dev blog editor`）        |
+| Homepage URL                            | `https://editor.araya.dev`                 |
+| Callback URL                            | `https://editor.araya.dev/auth/callback`   |
+| Webhook → Active                        | **チェックを外す**（webhook は使いません） |
+| Where can this GitHub App be installed? | **Only on this account**                   |
 
-callback URL は完全一致で照合されるので、1 文字も違えられません。
-client secret は発行直後にしか表示されないので、その場で控えます。
+Callback URL は完全一致で照合されます。GitHub App は callback URL を 10 個まで
+登録できるので、`Add callback URL` で `http://localhost:8787/auth/callback` も
+足しておくと、ローカル開発用に別アプリを作らずに済みます。
 
-必要なスコープは `public_repo` です（`src/oauth.ts` の `OAUTH_SCOPE`）。
-arayaryoma/araya.dev は public なのでこれで足ります。private にする場合は `repo` に
-変更してください。OAuth App には fine-grained な permission の設定はありません。
-それがあるのは GitHub App のほうで、別物です。
+**Repository permissions は 1 つだけです。**
 
-作成後の設定画面にある **Optional features → Expiring user authorization tokens は
-有効にしないでください。** 既定では OAuth App のアクセストークンは失効しませんが、
-これを有効にすると 8 時間で失効し、refresh token での更新が必要になります。
-現在の実装は refresh に対応していないため、有効にした時点から 8 時間後に保存が
-失敗するようになります（対応させること自体は難しくありませんが、未実装です）。
+| permission | 設定               | 理由                                   |
+| ---------- | ------------------ | -------------------------------------- |
+| Contents   | **Read and write** | 記事の読み込みと、記事・画像のコミット |
+| Metadata   | Read-only          | 他の permission を選ぶと自動で付きます |
+| それ以外   | **No access**      | 使いません                             |
 
-### 2. シークレットを登録する
+特に **Workflows は与えないでください**。`.github/workflows/` への書き込み権限で、
+エディタは使いません。与えなければ、万一ワークフローを書き換えようとしても GitHub
+側が拒否します。Organization permissions と Account permissions はすべて不要です
+（`GET /user` が返す `login` / `name` / `avatar_url` に追加権限は要りません）。
+
+### 2. アプリをインストールする
+
+作成しただけでは使えません。アプリの設定ページから **Install App** を開き、
+**Only select repositories → arayaryoma/araya.dev** を選んでインストールします。
+
+インストールを忘れると、記事一覧が「インストールされていません」という表示になります
+（空の一覧と区別がつくようにしてあります）。
+
+### 3. シークレットを登録する
+
+アプリの設定ページで client secret を生成し（表示は 1 回きりです）、client id と
+あわせて登録します。
 
 ```sh
 cd editor.araya.dev
@@ -73,7 +108,7 @@ openssl rand -base64 32 | pnpm exec wrangler secret put SESSION_SECRET
 
 `SESSION_SECRET` は 32 文字以上が必須です（短いと起動時に 500 で弾かれます）。
 
-### 3. デプロイする
+### 4. デプロイする
 
 ```sh
 pnpm run deploy
@@ -91,15 +126,14 @@ araya.dev ゾーンは既に Cloudflare にあるので、DNS の手作業は要
 
 ```sh
 pnpm install
-cp .dev.vars.example .dev.vars   # ローカル用の OAuth App の値を入れる
+cp .dev.vars.example .dev.vars   # GitHub App の client id / secret を入れる
 pnpm dev                         # http://localhost:8787
-pnpm check                       # 型検査（Worker とクライアントを別々に）
+pnpm check                       # 型検査（Worker / クライアント / テスト）
 pnpm test                        # node:test
 ```
 
-ローカルでログインまで試すには、callback URL が `http://localhost:8787/auth/callback`
-の OAuth App をもう 1 つ登録する必要があります。OAuth App は callback URL を
-1 つしか持てないためです。
+ローカルでログインまで試すには、本番と同じ GitHub App の Callback URL に
+`http://localhost:8787/auth/callback` を足しておきます（10 個まで登録できます）。
 
 ## 構成
 

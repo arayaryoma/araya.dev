@@ -2,17 +2,23 @@ import type { Env } from "./env";
 import { HttpError } from "./http";
 
 /**
- * GitHub OAuth web application flow.
+ * GitHub App user authorization ("log in with GitHub").
  *
- * The access token this yields is also the credential used to commit, so the
- * editor never stores a long-lived personal access token anywhere: commits are
- * attributed to the admin, and revoking the OAuth grant on GitHub revokes the
- * editor's write access in one step.
+ * A GitHub App issues a *user access token*, which is the intersection of
+ * three things: the app's configured permissions, the repositories the app is
+ * installed on, and what the signed-in user can already do. The editor's app
+ * is installed on one repository with Contents: Read and write, so the token
+ * it commits with cannot touch anything else — a narrowing an OAuth App's
+ * `public_repo` scope could not express, since that grants write access to
+ * every public repository the user can push to.
  *
- * `public_repo` is enough for arayaryoma/araya.dev, which is public. A private
- * repo would need `repo`.
+ * Two differences from the OAuth App flow, both from GitHub's docs:
+ *   - the authorize URL takes no `scope`; permissions come from the app
+ *     registration and the parameter is ignored
+ *   - the token expires (8 hours by default) and comes with a refresh token
+ *     (good for 6 months of disuse), so `refreshAccessToken` exists
+ * The endpoints themselves are the same ones OAuth Apps use.
  */
-export const OAUTH_SCOPE = "public_repo";
 
 const AUTHORIZE_URL = "https://github.com/login/oauth/authorize";
 const TOKEN_URL = "https://github.com/login/oauth/access_token";
@@ -25,17 +31,60 @@ export function authorizeUrl(
   const url = new URL(AUTHORIZE_URL);
   url.searchParams.set("client_id", env.GITHUB_CLIENT_ID);
   url.searchParams.set("redirect_uri", redirectUri);
-  url.searchParams.set("scope", OAUTH_SCOPE);
   url.searchParams.set("state", state);
-  url.searchParams.set("allow_signup", "false");
   return url.toString();
 }
 
-export async function exchangeCodeForToken(
+export interface TokenSet {
+  accessToken: string;
+  /** Absent when the app has user token expiration turned off. */
+  refreshToken?: string;
+  /** Unix seconds. Absent alongside refreshToken. */
+  expiresAt?: number;
+}
+
+interface TokenResponse {
+  access_token?: string;
+  refresh_token?: string;
+  expires_in?: number;
+  error?: string;
+  error_description?: string;
+}
+
+/**
+ * Split out from the request so the parsing rules are testable: an app with
+ * expiring tokens turned off returns neither `expires_in` nor `refresh_token`,
+ * and the session must cope with both shapes.
+ */
+export function parseTokenResponse(
+  body: TokenResponse,
+  nowSeconds: number,
+): TokenSet {
+  if (typeof body.access_token !== "string" || body.access_token === "") {
+    throw new HttpError(
+      401,
+      body.error_description ??
+        body.error ??
+        "GitHub がトークンを返しませんでした",
+    );
+  }
+  return {
+    accessToken: body.access_token,
+    refreshToken:
+      typeof body.refresh_token === "string" && body.refresh_token !== ""
+        ? body.refresh_token
+        : undefined,
+    expiresAt:
+      typeof body.expires_in === "number" && body.expires_in > 0
+        ? nowSeconds + body.expires_in
+        : undefined,
+  };
+}
+
+async function requestToken(
   env: Env,
-  code: string,
-  redirectUri: string,
-): Promise<string> {
+  params: Record<string, string>,
+): Promise<TokenSet> {
   const response = await fetch(TOKEN_URL, {
     method: "POST",
     headers: {
@@ -45,27 +94,38 @@ export async function exchangeCodeForToken(
     body: new URLSearchParams({
       client_id: env.GITHUB_CLIENT_ID,
       client_secret: env.GITHUB_CLIENT_SECRET,
-      code,
-      redirect_uri: redirectUri,
+      ...params,
     }),
   });
   if (!response.ok) {
-    throw new HttpError(502, `token exchange failed (${response.status})`);
+    throw new HttpError(502, `token request failed (${response.status})`);
   }
-  const body = (await response.json()) as {
-    access_token?: string;
-    error_description?: string;
-    error?: string;
-  };
-  if (typeof body.access_token !== "string") {
-    throw new HttpError(
-      401,
-      body.error_description ??
-        body.error ??
-        "token exchange returned no token",
-    );
-  }
-  return body.access_token;
+  return parseTokenResponse(
+    (await response.json()) as TokenResponse,
+    Math.floor(Date.now() / 1000),
+  );
+}
+
+export function exchangeCodeForToken(
+  env: Env,
+  code: string,
+  redirectUri: string,
+): Promise<TokenSet> {
+  return requestToken(env, { code, redirect_uri: redirectUri });
+}
+
+/**
+ * Both the access token and the refresh token are rotated, so the caller has
+ * to store what comes back; the old pair stops working immediately.
+ */
+export function refreshAccessToken(
+  env: Env,
+  refreshToken: string,
+): Promise<TokenSet> {
+  return requestToken(env, {
+    grant_type: "refresh_token",
+    refresh_token: refreshToken,
+  });
 }
 
 export interface GitHubUser {

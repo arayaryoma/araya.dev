@@ -82,6 +82,10 @@ blog-build: ## Build blog content
 deploy-blog: sshkey ## Deploy blog dist output
 	${RSYNC_COMMON} ./blog.araya.dev/dist/ ${SSH_USER}@${SERVER_IP}:${REMOTE_ROOT}/blog.araya.dev/dist
 
+.PHONY: deploy-editor
+deploy-editor: ## Deploy editor.araya.dev to Cloudflare Workers
+	cd editor.araya.dev && pnpm install --frozen-lockfile && pnpm run deploy
+
 .PHONY: deploy-nevertls
 deploy-nevertls: sshkey ## Deploy nevertls.araya.dev
 	${RSYNC_COMMON} ./nevertls.araya.dev/ ${SSH_USER}@${SERVER_IP}:${REMOTE_ROOT}/nevertls.araya.dev/

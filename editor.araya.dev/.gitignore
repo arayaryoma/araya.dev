@@ -1,0 +1,6 @@
+node_modules
+# Built by scripts/build-client.js; wrangler serves it as static assets.
+public
+.wrangler
+.dev.vars
+.test

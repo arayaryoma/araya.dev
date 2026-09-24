@@ -51,7 +51,14 @@ client secret は発行直後にしか表示されないので、その場で控
 
 必要なスコープは `public_repo` です（`src/oauth.ts` の `OAUTH_SCOPE`）。
 arayaryoma/araya.dev は public なのでこれで足ります。private にする場合は `repo` に
-変更してください。
+変更してください。OAuth App には fine-grained な permission の設定はありません。
+それがあるのは GitHub App のほうで、別物です。
+
+作成後の設定画面にある **Optional features → Expiring user authorization tokens は
+有効にしないでください。** 既定では OAuth App のアクセストークンは失効しませんが、
+これを有効にすると 8 時間で失効し、refresh token での更新が必要になります。
+現在の実装は refresh に対応していないため、有効にした時点から 8 時間後に保存が
+失敗するようになります（対応させること自体は難しくありませんが、未実装です）。
 
 ### 2. シークレットを登録する
 

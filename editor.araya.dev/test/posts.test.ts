@@ -163,6 +163,57 @@ test("values that would break a plain scalar get quoted", () => {
   assert.equal(frontmatter.thumbnail, "yes");
 });
 
+test("publishing removes only the draft line", () => {
+  // The real shape of a draft post in this blog.
+  const source = [
+    "---",
+    "title: http advent calendar day 5",
+    "tags:",
+    'date: "2025-12-05"',
+    'description: ""',
+    "draft: true",
+    "---",
+    "",
+    "本文",
+    "",
+  ].join("\n");
+  const parsed = parsePost(source);
+
+  const published = serializePost(
+    { frontmatter: { ...parsed.frontmatter, draft: false }, body: parsed.body },
+    parsed.entries,
+  );
+  assert.equal(
+    published,
+    [
+      "---",
+      "title: http advent calendar day 5",
+      // Still an empty `tags:` and a quoted empty description: publishing must
+      // not drag the rest of the frontmatter through a reformat.
+      "tags:",
+      'date: "2025-12-05"',
+      'description: ""',
+      "---",
+      "",
+      "本文",
+      "",
+    ].join("\n"),
+  );
+});
+
+test("a published post can be put back into draft", () => {
+  const parsed = parsePost(
+    ["---", "title: t", 'date: "2025-12-05"', "---", "", "本文", ""].join("\n"),
+  );
+  const drafted = serializePost(
+    { frontmatter: { ...parsed.frontmatter, draft: true }, body: parsed.body },
+    parsed.entries,
+  );
+  assert.ok(drafted.includes("draft: true"));
+  // Appended after the keys the file already had, not inserted among them.
+  assert.ok(drafted.indexOf("draft: true") > drafted.indexOf("date:"));
+});
+
 test("draft: false is omitted rather than written out", () => {
   const source = serializePost({
     frontmatter: { title: "t", draft: false },

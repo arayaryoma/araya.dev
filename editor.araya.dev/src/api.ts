@@ -65,6 +65,10 @@ export async function handleApi(
       assertSameOrigin(request);
       return putPost(request, github, repo.contentDir, filename);
     }
+    if (request.method === "DELETE") {
+      assertSameOrigin(request);
+      return deletePost(request, github, repo.contentDir, filename);
+    }
     throw new HttpError(405, "method not allowed");
   }
 
@@ -161,6 +165,43 @@ async function putPost(
     slug: slugFromFilename(filename),
     path: result.path,
     sha: result.sha,
+    commitSha: result.commitSha,
+    commitUrl: result.commitUrl,
+  });
+}
+
+/**
+ * Delete a post.
+ *
+ * Only the markdown file goes. Images under IMAGE_DIR are left alone: the
+ * contents API deletes one file per commit, and an image that turns out to be
+ * referenced by another post is a far worse outcome than a few orphaned
+ * kilobytes. Nothing is really lost either way -- the file stays in the git
+ * history and can be restored from it.
+ */
+async function deletePost(
+  request: Request,
+  github: GitHubClient,
+  contentDir: string,
+  filename: string,
+): Promise<Response> {
+  assertReadableFilename(filename);
+
+  const sha = new URL(request.url).searchParams.get("sha");
+  if (sha === null || sha === "") {
+    // Required, so that a delete built from a stale post list cannot remove an
+    // edit made since that list was fetched.
+    throw badRequest("sha が必要です");
+  }
+
+  const result = await github.deleteFile({
+    path: `${contentDir}/${filename}`,
+    message: `Delete post: ${slugFromFilename(filename)}`,
+    sha,
+  });
+  return json({
+    filename,
+    path: result.path,
     commitSha: result.commitSha,
     commitUrl: result.commitUrl,
   });

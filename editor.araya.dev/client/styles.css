@@ -44,6 +44,13 @@
     var(--homura-ink)
   );
   --color-shadow: light-dark(rgb(66 37 46 / 25%), rgb(0 0 0 / 60%));
+  /*
+   * Not from the blog's palette: its accent is already a rose, so a danger
+   * colour alone would not read as "this one is different". The delete control
+   * leans on placement and an outlined shape as much as on hue.
+   */
+  --color-danger: light-dark(#a3252b, #f0a0a0);
+  --color-danger-bg: light-dark(#fdeced, #2a1417);
   --accent-gradient-from: light-dark(var(--madoka-rose), var(--homura-purple));
   --accent-gradient-to: light-dark(var(--madoka-pink), var(--homura-lilac));
   --global-nav-bg: light-dark(var(--madoka-pink), var(--homura-dusk));
@@ -129,6 +136,23 @@ body {
   );
   color: light-dark(var(--madoka-white), var(--homura-night));
   font-weight: 600;
+}
+
+/* Outlined, so 保存 keeps the only filled button in the bar. */
+.button--publish {
+  border-color: var(--color-accent);
+  color: var(--color-accent-strong);
+  font-weight: 600;
+}
+
+.button--danger {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+  background: transparent;
+}
+
+.button--danger:hover {
+  background: var(--color-danger-bg);
 }
 
 .button:disabled {
@@ -387,6 +411,19 @@ body {
   color: var(--color-text-muted);
 }
 
+.danger-zone {
+  margin-block-start: 0.5rem;
+  padding-block-start: 1rem;
+  border-top: 1px solid var(--color-border);
+  justify-items: start;
+}
+
+.field__note {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
 .field__hint {
   font-size: 0.8125rem;
   color: var(--color-text-muted);
@@ -504,7 +541,8 @@ body {
 .statusbar {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  /* Tighter than elsewhere: at phone width this row can hold two buttons. */
+  gap: 0.75rem;
   min-height: var(--statusbar-height);
   padding: 0.5rem max(1rem, env(safe-area-inset-left))
     calc(0.5rem + env(safe-area-inset-bottom));

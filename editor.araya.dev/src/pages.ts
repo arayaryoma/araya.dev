@@ -133,6 +133,16 @@ export function appPage(blogOrigin: string): Response {
               <input type="checkbox" data-field="draft" />
               <span>下書き（draft: true のあいだは公開されません）</span>
             </label>
+            <div class="field danger-zone" data-role="danger-zone" hidden>
+              <span class="field__label">この記事を削除</span>
+              <button class="button button--danger" type="button" data-action="delete">
+                削除する
+              </button>
+              <span class="field__note">
+                記事の Markdown だけを削除します。画像は残ります。git
+                の履歴からは復元できます。
+              </span>
+            </div>
           </div>
         </details>
 
@@ -170,6 +180,14 @@ export function appPage(blogOrigin: string): Response {
 
         <div class="statusbar">
           <p class="statusbar__message" data-role="status" aria-live="polite"></p>
+          <button
+            class="button button--publish"
+            type="button"
+            data-action="publish"
+            hidden
+          >
+            公開する
+          </button>
           <button class="button button--primary" type="button" data-action="save">保存</button>
         </div>
       </section>

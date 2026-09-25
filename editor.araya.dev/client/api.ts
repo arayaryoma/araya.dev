@@ -47,6 +47,13 @@ export interface SaveResult {
   commitUrl: string;
 }
 
+export interface DeleteResult {
+  filename: string;
+  path: string;
+  commitSha: string;
+  commitUrl: string;
+}
+
 export interface UploadResult {
   path: string;
   url: string;
@@ -103,6 +110,12 @@ export const api = {
       headers: { "content-type": "application/json" },
       body: JSON.stringify(payload),
     }),
+
+  deletePost: (filename: string, sha: string) =>
+    request<DeleteResult>(
+      `/api/posts/${encodeURIComponent(filename)}?sha=${encodeURIComponent(sha)}`,
+      { method: "DELETE" },
+    ),
 
   uploadImage: (group: string, file: File) => {
     const form = new FormData();

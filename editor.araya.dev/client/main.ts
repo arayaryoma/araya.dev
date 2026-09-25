@@ -31,6 +31,9 @@ const metaDetails = element<HTMLDetailsElement>("[data-role='meta']");
 const slugField = element("[data-role='slug-field']");
 const filenameHint = element("[data-role='filename-hint']");
 const fileInput = element<HTMLInputElement>("[data-role='file']");
+const publishButton = element<HTMLButtonElement>("[data-action='publish']");
+const deleteButton = element<HTMLButtonElement>("[data-action='delete']");
+const dangerZone = element("[data-role='danger-zone']");
 
 const fields = {
   title: element<HTMLInputElement>("[data-field='title']"),
@@ -298,6 +301,7 @@ async function openPost(filename: string): Promise<void> {
     restoreDraftIfNewer(post.filename);
 
     updateFilenameHint();
+    updateDraftControls();
     renderPreview();
     setPane("write");
     showEdit(post.frontmatter.title || post.slug);
@@ -327,6 +331,7 @@ function startNewPost(): void {
   restoreDraftIfNewer(null);
 
   updateFilenameHint();
+  updateDraftControls();
   renderPreview();
   setPane("write");
   showEdit("新規記事");
@@ -360,14 +365,15 @@ function restoreDraftIfNewer(filename: string | null): void {
   editor.value = draft.body;
 }
 
-async function save(): Promise<void> {
-  if (current === null) return;
+/** Returns whether the post reached GitHub, so callers can undo their intent. */
+async function save(): Promise<boolean> {
+  if (current === null) return false;
   const frontmatter = readFrontmatter();
   if (frontmatter.title === "") {
     metaDetails.open = true;
     setStatus("タイトルを入力してください", "error");
     fields.title.focus();
-    return;
+    return false;
   }
 
   let filename: string;
@@ -376,7 +382,7 @@ async function save(): Promise<void> {
   } catch (error) {
     metaDetails.open = true;
     setStatus(errorMessage(error), "error");
-    return;
+    return false;
   }
 
   const saveButton = element<HTMLButtonElement>("[data-action='save']");
@@ -403,6 +409,7 @@ async function save(): Promise<void> {
     slugField.hidden = true;
     fields.date.disabled = true;
     updateFilenameHint();
+    updateDraftControls();
     appTitle.textContent = frontmatter.title;
     setStatusWithLink(
       "保存しました",
@@ -410,11 +417,99 @@ async function save(): Promise<void> {
       result.commitSha.slice(0, 8),
     );
     if (wasNew) void loadList();
+    return true;
   } catch (error) {
     setStatus(errorMessage(error), "error");
+    return false;
   } finally {
     saveButton.disabled = false;
   }
+}
+
+/* --------------------------------------------------------- publish/delete */
+
+/**
+ * The draft checkbox lives in the collapsed settings panel, which is the wrong
+ * place for the one action that puts a post on the internet. This surfaces it
+ * next to 保存 whenever the open post is still a draft.
+ */
+function updateDraftControls(): void {
+  publishButton.hidden = current === null || !fields.draft.checked;
+  // Nothing to delete until the post exists on GitHub.
+  dangerZone.hidden = current?.filename == null || current.sha == null;
+}
+
+async function publish(): Promise<void> {
+  if (current === null) return;
+  const title = fields.title.value.trim() || currentSlug() || "この記事";
+  if (
+    !confirm(
+      `「${title}」を公開します。\n\n` +
+        "draft を外して保存し、blog.araya.dev に反映されます" +
+        "（デプロイ完了まで数分かかります）。",
+    )
+  ) {
+    return;
+  }
+
+  fields.draft.checked = false;
+  updateDraftControls();
+  if (!(await save())) {
+    // The post on GitHub is untouched, so the form must not keep claiming it
+    // is published -- otherwise the next plain 保存 would publish by accident.
+    fields.draft.checked = true;
+    updateDraftControls();
+  }
+}
+
+async function remove(): Promise<void> {
+  const filename = current?.filename;
+  const sha = current?.sha;
+  if (filename == null || sha == null) return;
+
+  if (
+    !confirm(
+      `${filename} を削除します。\n\n` +
+        "・記事の Markdown だけを削除します（画像は残ります）\n" +
+        "・git の履歴からは復元できます\n\n" +
+        "削除しますか？",
+    )
+  ) {
+    return;
+  }
+
+  deleteButton.disabled = true;
+  setStatus("削除中…");
+  try {
+    const result = await api.deletePost(filename, sha);
+    clearDraft(filename);
+    current = null;
+    setStatus("");
+    showList();
+    await loadList();
+    setListMessage(
+      `${filename} を削除しました`,
+      result.commitUrl,
+      result.commitSha.slice(0, 8),
+    );
+  } catch (error) {
+    setStatus(errorMessage(error), "error");
+  } finally {
+    deleteButton.disabled = false;
+  }
+}
+
+/** The status bar belongs to the edit view, so a delete reports on the list. */
+function setListMessage(message: string, href: string, label: string): void {
+  listStatus.hidden = false;
+  listStatus.dataset.tone = "";
+  listStatus.replaceChildren(document.createTextNode(`${message} `));
+  const link = document.createElement("a");
+  link.href = href;
+  link.target = "_blank";
+  link.rel = "noreferrer noopener";
+  link.textContent = label;
+  listStatus.append(link);
 }
 
 /* ------------------------------------------------------------------ images */
@@ -504,6 +599,12 @@ document.addEventListener("click", (event) => {
     case "save":
       void save();
       break;
+    case "publish":
+      void publish();
+      break;
+    case "delete":
+      void remove();
+      break;
     case "upload":
       fileInput.click();
       break;
@@ -531,6 +632,7 @@ editor.addEventListener("input", () => {
 for (const field of Object.values(fields)) {
   field.addEventListener("input", () => {
     updateFilenameHint();
+    updateDraftControls();
     clearTimeout(draftTimer);
     draftTimer = setTimeout(saveDraft, 800);
   });

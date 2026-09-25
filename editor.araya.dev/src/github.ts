@@ -165,6 +165,47 @@ export class GitHubClient {
       commitUrl: body.commit.html_url,
     };
   }
+
+  /**
+   * Delete a file. `sha` is required and must match the blob being removed, so
+   * a delete issued against a stale view of the post is rejected rather than
+   * throwing away an edit made since.
+   */
+  async deleteFile(options: {
+    path: string;
+    message: string;
+    sha: string;
+  }): Promise<Omit<CommitResult, "sha">> {
+    const response = await this.request(this.contentsPath(options.path), {
+      method: "DELETE",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        message: options.message,
+        sha: options.sha,
+        branch: this.repo.branch,
+      }),
+    });
+    if (response.status === 409 || response.status === 422) {
+      throw new HttpError(
+        409,
+        "GitHub 上のファイルが変更されています。再読み込みしてから削除してください。",
+      );
+    }
+    if (response.status === 404) {
+      throw new HttpError(404, `${options.path} は既に存在しません`);
+    }
+    if (!response.ok) {
+      throw new HttpError(502, await githubMessage(response));
+    }
+    const body = (await response.json()) as {
+      commit: { sha: string; html_url: string };
+    };
+    return {
+      path: options.path,
+      commitSha: body.commit.sha,
+      commitUrl: body.commit.html_url,
+    };
+  }
 }
 
 async function githubMessage(response: Response): Promise<string> {
